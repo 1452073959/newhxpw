@@ -1,0 +1,348 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>用户列表</title>
+	<style type="text/css">
+	.wrap {
+		width: 98%;
+		margin-left: 1%;
+		padding-top: 20px;
+	}
+	.onLine-list .layui-col-md3 {
+		margin-top: 20px;
+	}
+	.onLine-list {
+		margin-top: 20px;
+	}
+	.cxBtn{
+		text-align: right;
+	}
+	.layui-breadcrumb a:last-child cite{
+		color: #5FB878;
+	}
+	.layui-table-cell{
+		padding: 0 5px!important;
+	}
+	.scroll-wrapper {  
+	    /*-webkit-overflow-scrolling: touch;*/  
+	    /*overflow-y: scroll;*/  
+	} 
+		.layui-layer-setwin .layui-layer-maxmin{
+		display: inline-block!important;		
+	}
+		
+	</style>
+<link rel="stylesheet" href="/static/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="/static/12/admin/css/font-awesome.min.css" media="all"/>
+<script src="/static/12/admin/js/jquery-2.0.0.js"></script>
+<script src="/static/layui/layui.js"></script>
+
+	<!--<script src="/static/12/admin/js/jquery.min.js"></script>-->
+<script type="text/javascript">
+	function arrayToJson(formArray){
+		var dataArray = {};
+		$.each(formArray,function(){
+			if(dataArray[this.name]){
+				if(!dataArray[this.name].push){
+					dataArray[this.name] = [dataArray[this.name]];
+				}
+				dataArray[this.name].push(this.value || '');
+			}else{
+				dataArray[this.name] = this.value || '';
+			}
+		});
+		return JSON.stringify(dataArray);
+	}
+	function aa(e){
+		if(e.keyCode==116){
+			location.reload();
+			return false;
+		}
+	}
+	document.onkeydown = aa;
+	
+	//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+
+	//ipad端禁止缩放屏幕
+	window.onload=function () {  
+        document.addEventListener('touchstart',function (event) {  
+            if(event.touches.length>1){  
+                event.preventDefault();  
+            }  
+        })  
+        var lastTouchEnd=0;  
+        document.addEventListener('touchend',function (event) {  
+            var now=(new Date()).getTime();  
+            if(now-lastTouchEnd<=300){  
+                event.preventDefault();  
+            }  
+            lastTouchEnd=now;  
+        },false)  
+    }
+</script>
+	<link rel="stylesheet" type="text/css" href="/static/12/admin/css/style.css"/>
+	<link rel="stylesheet" href="/static/12/admin/css/subpage.css"/>
+	<link rel="stylesheet" href="/static/12/admin/css/juheweb.css"/>
+</head>
+<style type="text/css">
+	.simple-header {
+		width: 100%;
+		height: auto;
+		background-color: white;
+		margin-top: 10px;
+		/*margin-left: 2%;*/
+		/* overflow: auto */
+	}
+	body {
+		background: #f9f9f9;
+	}
+	.layui-layer-page .layui-layer-content {
+		padding: 20px !important;
+	}
+	h3.form-group-title {
+		margin-bottom: 20px;
+	}
+	.bj {
+		height: 27px;
+		background: #F9F9F9;
+		width: 100%;
+	}
+	.tab-content-box:after {
+		clear: 0;
+		width: 100%;
+		height: 100%;
+		content: '';
+	}
+	/* .tab{
+		-webkit-overflow-scrolling: touch;
+	    overflow-y: scroll!important;	} */
+	.dectext{
+		width: 150px;
+		height: 50px;
+		color: red;
+		font-size: 17px;
+		line-height: 50px;
+	}
+	.huititle{
+		float: left;
+		width: 100px;
+		height: 37px;
+		margin-left: 10px;
+	}
+	.group_report{
+		padding: 10px;
+		border-bottom: 1px dashed #ccc;
+	}
+	.group_report .red {
+		color: red;
+	}
+	.group_report li{
+		border: 1px solid #03c6b4;
+		color: #03c6b4;
+	}
+	.tab ol li.active {
+		background: #03C6B4;
+		color: #fff;
+	}
+	.demo-class{
+		color:red;
+	}
+	.update-btn {
+		width:70px;
+		height:35px;
+		background:#DDDDDD;
+		border-radius:5px;
+		float:right;
+		margin-top:8px;
+		border:none;
+		color:#fff;
+	}
+
+</style>
+
+<div class="simple-header">
+		<div class="bottom_tools">
+		<a href="#" title="全屏展示" target="_blank" id="feedback"></a>
+		<a id="scrollUp" href="javascript:;" title="回到顶部"></a>
+
+	</div>
+		<div class="tab page-body">
+
+		<div class="simple-content">
+<link rel="stylesheet" type="text/css" href="/static/12/admin/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="/static/12/admin/css/reset.css"/>
+<link rel="stylesheet" type="text/css" href="/static/12/admin/css/style.css"/>
+<!--运营商信息-->
+<style type="text/css">
+	.layui-form-label{
+		width: 90px;
+	}
+	#code_1_yun{
+		display: none;
+	}
+	#cusPwd{
+		display: none;
+	}
+	.layui-layer-page .layui-layer-content{
+		padding: 20px!important;
+	}
+	.detail-table-box .layui-table-cell{
+		padding: 0 0px!important;
+	}
+	.basic_main table th,.basic_main table td{
+		font-size: 12px!important;
+	}
+</style>
+
+<div role="tabpanel" class="tab-pane in active" id="operate">
+	<h3 class="form-group-title" style="color: #03C6B4;margin-bottom: 20px;">
+		订单详情
+	</h3>
+	<div class="page" id="xygsdyunn">
+		<div class="headerone" style="padding: 10px 0px 0px 0px;">      
+			<h1 class="header_title">基础信息</h1>
+		</div>
+		<div class="basic_main">      
+			<table style="margin:10px 0" class="layui-table">          
+				<tr class="px13">              
+					<td width="25%" class="td-border"><span class="f-w">订单 ID：</span>13980977784</td>              
+					<td width="25%" class="td-border"><span class="f-w">订单号：</span>移动</td>              
+					<td width="25%" class="td-border"><span class="f-w">会员：</span>四川成都</td>              
+					<td width="25%" class="td-border"><span class="f-w">电话：</span>2005-02-22</td>          
+				</tr>     
+			</table>      
+			<table class="layui-table">          
+				<tr>              
+					<th width="10%">姓名</th>              
+					<th width="5%">年龄</th>              
+					<th width="20%">身份证号</th>              
+					<th width="15%">身份证归属地</th>              
+					<th width="20%">居住地址</th>              
+					<th width="7.5%">会员等级</th>              
+					<th width="5%">积分值</th>              
+					<th width="7.5%">当前余额</th>              
+					<th width="10%">手机状态</th>          
+				</tr>          
+				<tr>              
+					<td>*晓波</td>              
+					<td>--</td>              
+					<td>--</td>              
+					<td>--</td>              
+					<td>--</td>              
+					<td>五星金</td>              
+					<td>--</td>              
+					<td>-200.7</td>
+					<td>               
+						<em class="green_font">正常</em>
+					</td>      
+				</table>      
+				<table class="table-bordered layui-table">          
+					<tr>              
+						<th rowspan="2">信息核验</th>              
+						<td colspan="4" class="td-border tttt" >姓名与用户注册姓名是否一致               
+							<i class="icon-duigou iconfont"></i>一致              
+						</td>              
+						<td colspan="4" class="td-border">手机号与用户注册手机号是否一致               
+							<i class="icon-duigou iconfont"></i>一致              
+						</td>         
+					</tr>         
+					<tr>              
+						<td colspan="4" class="td-border">身份证号与用户注册身份证号是否一致               
+							<i class="iconfont icon-gantanhao"></i>无法验证(信息为空)              
+						</td>              
+						<td colspan="4" class="td-border">手机号归属地与身份证归属地是否一致               
+							<i class="icon-duigou iconfont"></i>一致              
+						</td>          
+					</tr>      
+				</table>
+			</div>
+			<div class="headerone">
+				<h1 class="header_title">紧急联系人通话信息</h1>
+			</div>
+		<div class="basic_main">
+			<table class="layui-table">      
+				<tr>          
+					<th >联系人姓名（关系）</th>          
+					<th >手机号</th>          
+					<th >手机号归属地</th>          
+					<th>近6个月通话信息</th>      
+				</tr>
+				<tr>
+					<td>爸（亲人 ）</td>
+					<td>13980978272 </td>
+					<td>四川成都移动</td>
+					<td colspan="8">无该联系人通话记录</td>
+				</tr>
+				<tr>
+					<td>吕晓健（亲人 ）</td>
+					<td>13709088340 </td>
+					<td>四川成都移动</td>
+					<td>      <p>最早通话时间：2018-07-01 15:26:33</p>
+					      <p>最近通话时间：2018-12-18 09:43:48</p>      
+					      <p>通话次数<font class="blue_font">263</font>次，时长<font class="blue_font">220.33</font>分钟，时长排名<font class="blue_font">5</font>位      <p></td>
+					</tr>
+					<tr>
+						<td>陈睿（亲人 ）</td>
+						<td>15308078393 </td>
+						<td>四川成都电信</td>
+						<td>      <p>最早通话时间：2018-08-12 10:32:15</p>      <p>最近通话时间：2018-12-14 12:51:01</p>      <p>通话次数<font class="blue_font">32</font>次，时长<font class="blue_font">41.45</font>分钟，时长排名<font class="blue_font">29</font>位      <p></td>
+					</tr>
+				</table>
+			</div>
+</div>
+
+		</div>
+					<div class="layui-fluid" style="text-align: center;margin-bottom: 1rem;">
+					<button id="export-pdf" class="layui-btn">导出详情</button>
+				</div>			</div>
+
+</div>
+<div class="remarkContent" style="display: none;padding-top: 25px;">
+	<div class="layui-form-item">
+		<label for="" class="layui-form-label" style="width: 30px;">备注</label>
+		<div class="layui-input-block" style="margin-left: 60px;">
+			<textarea class="layui-textarea" name="" rows="" cols=""  maxlength="50"></textarea>
+			<p style="width: 50%;float: left;">字数限制在50字内</p>
+			<p style="width: 50%;float: left;text-align: right;" class="text_limit"><span>0</span>/50</p>
+		</div>
+	</div>
+</div>
+
+
+<script>
+
+//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+
+	//ipad端禁止缩放屏幕
+	window.onload=function () {
+        document.addEventListener('touchstart',function (event) {
+            if(event.touches.length>1){
+                event.preventDefault();
+            }
+        })
+        var lastTouchEnd=0;
+        document.addEventListener('touchend',function (event) {
+            var now=(new Date()).getTime();
+            if(now-lastTouchEnd<=300){
+                event.preventDefault();
+            }
+            lastTouchEnd=now;
+        },false)
+    }
+</script>

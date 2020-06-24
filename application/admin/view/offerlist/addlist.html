@@ -1,0 +1,53 @@
+{extend name="index_layout"/}
+<style>
+	.form-control{display: inline-block!important;padding: 5px;}
+</style>
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header">编辑</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" id="myform" action="{:url('admin/Offertype/edit')}" method="post">
+            <div class="area layui-form-item">
+                <div class="layui-input-inline w300">
+                    <input type="text" name="name" autocomplete="off" required="" class="layui-input">
+                    <input type="text" name="other" autocomplete="off" class="layui-input">
+										<input type="hidden" name="id" value="{:input('id')}">
+                </div>
+            </div>
+
+            <div class="layui-form-item w300">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">保存</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Offertype/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#myform').submit(function(){
+            var url = $(this).attr('action'),data = $(this).serialize();
+            $.ajax({
+                url:url,
+                type:"post",
+                data:data,
+                success:function(result){
+                    if(confirm(result.msg)){
+                        if(result.code == 1){
+                            window.location.href=result.url;
+                        }
+                    }
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+
+{/block}

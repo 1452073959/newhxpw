@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>用户列表</title>
+	<style type="text/css">
+	.wrap {width: 98%;margin-left: 1%;padding-top: 20px;}
+	.onLine-list .layui-col-md3 {margin-top: 20px;}
+	.onLine-list {margin-top: 20px;}
+	.cxBtn{text-align: right;}
+	.layui-breadcrumb a:last-child cite{color: #5FB878;}
+	.layui-table-cell{padding: 0 5px!important;}
+	.layui-layer-setwin .layui-layer-maxmin{display: inline-block!important;}
+	</style>
+<link rel="stylesheet" href="__STATIC__/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="__STATIC__/12/admin/css/font-awesome.min.css" media="all"/>
+<script src="__STATIC__/12/admin/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+
+<link rel="stylesheet" href="__STATIC__/12/admin/css/online.css"/>
+<script type="text/javascript" src="__STATIC__/12/admin/js/areadata_min.js"></script>
+<script type="text/javascript" src="__STATIC__/12/admin/js/area.js"></script>
+</head>
+<body>
+<style type="text/css">
+	.onLine-list{width: 100%;margin: 0 auto;margin-top: 20px;box-sizing: border-box;}
+	.layui-btn-group .layui-btn:first-child {width: 30px !important;background: url(/static/12/admin/images/ckxx.png) no-repeat center/15px 12px;}
+	.layui-btn-group .layui-btn:nth-child(2) {width: 30px !important;background: url(/static/12/admin/images/jyjl.png) no-repeat center/15px 12px;}
+	.layui-btn-group .layui-btn:nth-child(3) {
+		width: 30px !important;
+		background: url(/static/12/admin/images/del.png) no-repeat center/15px 12px;
+	}
+	.scroll-wrapper {
+		-webkit-overflow-scrolling: touch;
+		overflow-y: scroll;
+	}
+	.layui-table-header table,.layui-table-body table{
+		width: 100%!important;
+		overflow-y: auto;
+	}
+	.time-box .layui-input-inline{
+		width: 100px!important;
+	}
+	.linkage-box .layui-input-inline {
+		width: 180px!important;
+	}
+	.explain{
+		/*width: 40%!important;*/
+		/*float: right;*/
+		/*position: absolute;
+		right: 15px;
+		bottom: 80px;*/
+	}
+	.explain span{
+		display: inline-block;
+		margin-right: 15px;
+		line-height: 26px;
+	}
+	.explain span:nth-child(1){
+		margin-right: 0px;
+	}
+	#layui-table-page1,#layui-table-page2{
+		float: left;
+		width: 60%!important;
+	}
+	.jsrim{
+		position: relative;
+	}
+	.jstips{
+		display: inline-block;
+		width: 80px;
+		height: 30px;
+		background: #000000;
+		color: #fff;
+		position: absolute;
+		top: 19px;
+		right: 6px;
+	}
+</style>
+   <table class="layui-table" lay-filter="test1" lay-skin="nob">
+  <colgroup>
+    <col width="150">
+    <col width="200">
+    <col>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>昵称</th>
+      <th>手机号码</th>
+      <th>城市</th>
+      <th>行业</th>
+      <th>用户名</th>
+      <th>身份证号码</th>
+      <th>紧急联系人</th>
+      <th>紧急联系人电话</th>  
+      <th>余额</th>
+      <th>状态</th>
+    </tr> 
+  </thead>
+  <tbody>
+    
+    {foreach name="array" item="vo"}
+    <tr>
+      <td>{$vo.Id}</td>
+      <td>{$vo.nickname}</td>
+      <td>{$vo.phone}</td>
+      <td>{$vo.use_city}</td>
+      <td>{$vo.industry}</td>
+      <td>{$vo.use_name}</td>
+      <td>{$vo.use_idcard}</td>
+      <td>{$vo.emergency_contact_name}</td>
+      <td>{$vo.emergency_contact_phone}</td>
+      <td>{$vo.balance}</td>
+      <td><form class="layui-form" action="" method="post">
+            <input type="checkbox" {if $vo['status']==0}checked {/if}  value="{$vo.Id}" name="switch" lay-skin="switch" lay-filter="switchStatus" lay-text="启用|禁用"
+            data-href="{:url('admin/user/openclose',['id'=>$vo.Id])}">
+           </form> 
+       
+      </td>
+      
+    </tr>
+    {/foreach}
+  </tbody>
+</table>
+
+
+</body>
+</html>
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+
+
+<script>
+	//ipad端禁止缩放屏幕
+	window.onload=function () {
+        document.addEventListener('touchstart',function (event) {
+            if(event.touches.length>1){
+                event.preventDefault();
+            }
+        })
+        var lastTouchEnd=0;
+        document.addEventListener('touchend',function (event) {
+            var now=(new Date()).getTime();
+            if(now-lastTouchEnd<=300){
+                event.preventDefault();
+            }
+            lastTouchEnd=now;
+        },false)
+    }
+</script>

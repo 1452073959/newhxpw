@@ -1,0 +1,180 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.form-control{display: inline-block;padding: 5px;}
+.select_tmp{
+    height:30px;
+}
+.layui-btn+.layui-btn{
+    margin-left: 3px;
+}
+.ulall li{float:left;border: 1px solid #ccc;padding: 5px;margin-right: 5px;}
+i{
+    cursor: pointer;
+}
+.layui-tab-title li {
+  padding: 0;
+}
+.layui-tab-title li a{
+  padding: 0 25px;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-tab layui-tab-brief">
+                  <ul class="layui-tab-title">
+                    <li class=""><a href="{:url('admin/offerlist/index',['customer_id'=>input('customer_id')])}">半包</a></li>
+                    <li class="{:input('type')==2? 'layui-this' : ''}"><a href="{:url('admin/furniture_orther/order_list',['customer_id'=>input('customer_id'),'type'=>2])}">主材</a></li>
+                    <li class="{:input('type')==3? 'layui-this' : ''}"><a href="{:url('admin/furniture_orther/order_list',['customer_id'=>input('customer_id'),'type'=>3])}">智能、家电</a></li>
+                    <li class="{:input('type')==4? 'layui-this' : ''}"><a href="{:url('admin/furniture_orther/order_list',['customer_id'=>input('customer_id'),'type'=>4])}">软装</a></li>
+                  </ul>
+                  <div class="layui-tab-content"></div>
+                </div>
+                <div class="layui-inline">
+                   <ul class="ulall">
+                      <li>客户姓名：{$userinfo.customer_name}</li>
+                      <li>工程地址：{$userinfo.address}</li>
+                      <li>联系电话：</li>
+                      <li>报价师姓名：{$userinfo.quoter_name}</li>
+                      <li>设计师姓名：{$userinfo.designer_name}</li>
+                      <li>面积：{$userinfo.area}</li>
+                      <li>房屋类型：{$userinfo.room_type}</li>
+                      <li class="click print" style="display: none" title="打印"><i class="layui-icon layui-icon-print"></i></li>
+                   </ul>
+                </div> 
+            </blockquote>
+     
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3',toolbar:'#',limit:20,page:true,height:600}">
+                <thead >
+                    <tr>
+
+                        <th class="taleft" lay-data="{field:'id', width:60,}">ID</th>
+                        <th class="taleft" lay-data="{field:'customer_name',width:150}">订单种类</th>
+                        <th class="taleft" lay-data="{field:'area',width:120}">订单总价</th>
+                        <th class="taleft" lay-data="{field:'room_type',width:100}">状态</th> 
+						<th class="taleft" lay-data="{field:'status',width:150}">单位</th>     
+                        <th class="taleft" lay-data="{field:'history',width:150}">备注</th>
+                        <th class="taleft" lay-data="{field:'show',event:'show', width:100,}">查看订单</th>
+                        <th class="taleft" lay-data="{field:'entrytime', }">录入时间</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  {foreach name="data" item="v"}
+                     <tr>
+                         <td>{$v.id}</td>
+                         <td>{$type[$v.type]}</td>
+                         <td>{$v.total_price}</td>
+                         <td>{$v.status}</td>
+                         <td>{$v.unit}</td>
+                         <td>{$v.remark}</td>
+                         <td><i class="layui-icon layui-icon-search" title="查看订单"></i></td>
+                         <td>{:date('Y-m-d H:i',$v.addtime)}</td>
+                     </tr>
+                 {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+     function add_tr(o){
+        html  = '     <tr>'
+        html += '       <td><input class="layui-input" name="name[]" /></td>'
+        html += '       <td><input class="layui-input" name="sign[]" /></td>'
+        html += '       <td><input class="layui-input" name="formula[]" /></td>'
+        html += '       <td><input class="layui-input" name="rate[]" /></td>'
+        html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+        html += '     </tr>'
+        $('#add_word tbody').append(html);
+    }
+    function delete_tr(o){
+        $(o).parent().parent().remove();
+    }
+    //简单显示上传文件信息
+     $("#imgInput").change(function(e){
+       var fileMsg = e.currentTarget.files;
+       var fileName = fileMsg[0].name;
+       var fileSize = Math.floor(((fileMsg[0].size)/1024))+'kb';     
+       var fileType = fileMsg[0].type;
+       var _html = '<p>文件名：'+fileName+'</p><p>文件大小：'+fileSize+'</p><p>文件类型：'+fileType+'</p>'
+         layer.tips(_html, '#imgs', {
+          tips: [1, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+       $("#imgs").html("<span style='color:green;position:absolute;top:-25px;right:-5px;font-size:20px'>✔</span>");
+    });       
+    $("#tishi").click(function(){
+      var content = '<p>这是我定义的说明<br />只能导入excel文件。其他后缀名不识别<br />下载空模板可以使用添加数据导入</p>';
+      //自定页
+      layer.tips(content, '#tishi', {
+          tips: [4, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+
+       });
+</script>
+<script type="text/javascript">
+layui.use('table', function(){
+  var table = layui.table;
+
+  //工具栏事件
+  
+
+  //监听单元格事件
+    table.on('tool(test3)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'show'){
+            location.href = '/admin/furniture_orther/order_info/o_id/'+data.id;
+        }
+    });
+
+
+});
+</script>
+{/block}

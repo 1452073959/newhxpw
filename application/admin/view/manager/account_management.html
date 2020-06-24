@@ -1,0 +1,144 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .daoru{position:absolute;top:1px;right:-50px;height:35px}
+    .pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.selectfrom .layui-form-item{
+    margin-bottom:0;
+    float: left;
+    clear:none;
+}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <!-- <a class="layui-btn layui-btn-sm" href="{:url('admin/manager/account_add')}">添加账号</a> -->
+                </div>
+                <div class="layui-input-inline" style="margin-left:30px;">
+                    <form class="layui-form selectfrom" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">账号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="username" value="{:input('username')}"  placeholder="" autocomplete="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">真实姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" value="{:input('name')}"  placeholder="" autocomplete="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="" style="margin-left: 15px">
+                                <button class="layui-btn layui-btn-radius layui-btn-primary" lay-submit lay-filter="formDemo">搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                 </div>  
+                 <!-- 下拉框查询分公司 -->
+            <!--     <div class="layui-input-inline" style="float: right;">
+                    <select name="companyid" lay-filter="companyid">
+                        <option value=""></option>
+               
+                    </select>
+                </div>  -->
+            </blockquote>
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <!-- <th>ID</th> -->
+                        <th>账号</th>
+                        <th>真实姓名</th>
+                        <th>手机号</th>
+                        <th>所属角色</th>
+                        <th>所属公司</th>
+                        <th>E-mail</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name="datas" id="vo"}
+                    <tr>
+                        <!-- <td>{$vo['userid']}</td> -->
+                        <td>{$vo.username}</td>
+                        <td>{$vo.name}{eq name="$vo['pid']" value="0"}<i class="layui-icon layui-icon-about" title="未绑定员工">{/eq}</i></td>
+                        <td>{$vo.phone}</td>
+                        <td>{php} echo model('admin/AuthGroup')->getRoleIdName($vo['roleid']) {/php}</td>
+                        <td>{php} echo $vo['companyid'] ? getcid($vo['companyid']) : '总公司' {/php}</td>
+                        <td>{$vo.email}</td>
+                        <td>
+                            <a class="edit" data-id="{$vo.userid}" data-pid="{$vo.pid}"><i class="layui-icon layui-icon-edit" title="编辑"></i></a>
+                            <a class="ajax-get confirm" data-msg="确定{php} echo ($vo['status']==1)?'禁用':'启用'{/php}该用户吗?" url="{:url('admin/manager/bankai',['id'=>$vo.userid,'status'=>$vo.status])}">{php} echo ($vo['status']==1)?'<i style="color:#3d53ff" class="layui-icon layui-icon-face-smile" title="启用"></i>':'<i style="color:red" class="layui-icon layui-icon-about" title="禁用"></i>'{/php}</a>
+                        </td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+            {$datas|raw}
+        </div>
+    </div>
+</div>
+{/block} {block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $('.edit').click(function(){
+        var tr = $(this).parent().parent();
+        var id = $(this).data('id');
+        var pid = $(this).data('pid');
+        var option =  '{foreach name="personnel" item="v" key="k"}<option value="{$v.id}">{$v.name}</option>{/foreach}'
+        if(option.indexOf('value="'+pid+'"') != -1){
+            option = option.replace('value="'+pid+'"','value="'+pid+'" selected');
+        }
+        var inputs = '<form class="layui-form" action=""><div class="editbox">'
+                +   '<input type="hidden" value="'+id+'" name="aid">'
+                +   '<div class="layui-form-item" style="margin-top:10px">'
+                +      '<label class="layui-form-label">真实姓名</label>'
+                +      '<div class="layui-input-inline w200">'
+                +          '<select name="pid" lay-search>'
+                +               option
+                +          '</select>'
+                +      '</div>'
+                +   '</div>'
+                +   '<div class="layui-form-item" style="text-align:center">'
+                +       '<div class="layui-input-inline" style="float:inherit">'
+                +           '<button class="layui-btn" lay-submit lay-filter="edit_ajax">确认编辑</button>'
+                +       '</div>'
+                +   '</div>'
+                +'</div></form>';
+        layer.open({
+            type: 1,
+            fixed: false,    //取消固定定位，因为固定定位是相对body的
+            // offset: ['30%', '30%'],   //相对定位
+            // skin: 'layui-layer-rim', //加上边框
+            area: ['370px', '400px'], //宽高
+            title:'编辑',
+            content: inputs
+        });
+        layui.use('form', function(){
+            var form = layui.form;
+            form.render();
+            form.on('submit(edit_ajax)', function(data){
+                $.post('{:url("manager/account_edit")}',data.field,function(res){
+                    if(res.code == 1){
+                        layer.closeAll();
+                        layer.msg(res.msg);
+                        setTimeout(function(){
+                            location.reload();
+                        },500);
+                    }else{
+                        layer.msg(res.msg);return false;
+                    }
+                },'json')
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+        });
+    })
+</script>
+{/block}

@@ -1,0 +1,182 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.w60{
+    width: 80%;
+    height:32px;
+    line-height:32px;
+    float: left;
+    margin: 5px 0;
+    padding: 3px;
+}
+.add_input,.del_input{
+    float: left;
+    width:30px;
+    height:30px;
+    line-height:30px;
+    border: 1px solid #ccc;
+    text-align: center;
+    margin: 11px 5px;
+    /*padding:6px 0;*/
+    display: block;
+}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <!-- <a class="layui-btn layui-btn-sm" href="javascript:;">添加空间类型</a> -->
+                    <a class="layui-btn layui-btn-sm" id="add_work" href="javascript:;">添加工种类型</a>
+                </div>
+            </blockquote>
+            <!-- 工种 -->
+			<table class="layui-table w500" id="" >
+                <colgroup>
+                    <col width="150">
+                    <col width="100">
+                    <col width="100">
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>工种名称</th>
+                        <th>添加时间</th>
+                        <!-- <th>操作</th> -->
+                    </tr> 
+                </thead>
+                <tbody>
+                    <?php foreach($datas as $k=>$v){ ?>
+                            <tr>
+                                <td>{$v['name']}</td>
+                                <td>{$v['addtime']|date='Y-m-d H:i'}</td>
+                                <!-- <td> -->
+                                    <!-- <a href="javascript:;" class="edit" data-id="{$v['id']}" data-name="{$v['name']}"><i class="layui-icon layui-icon-edit" title="编辑"></i></a> -->
+                                    <!-- <a href="javascript:;" class="delete" data-id="{$v['id']}" data-name="{$v['name']}"><i class="layui-icon layui-icon-delete" title="删除"></i></a> -->
+                                <!-- </td> -->
+                            </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(document).on('click','.add_input',function(){
+            var html = '<label><input type="text" class="w60" name="add_name[]" placeholder="请输入工种名称" class="layui-input"><a href="javascript:;" class="del_input" >-</a></label>'
+            $('#add_form').append(html);
+        })
+        $(document).on('click','.del_input',function(){
+            $(this).parent().remove();
+        })
+        //添加工种
+        $('#add_work').click(function(){
+            var html = '';
+            html += '<form id="add_form">'
+            html += '<input type="hidden" name="type" value="1">'
+            html += '<label><input type="text" class="w60" name="add_name[]" placeholder="请输入工种名称" class="layui-input"><a href="javascript:;" class="add_input" >+</a></label>'
+            html += '<label><input type="text" class="w60" name="add_name[]" placeholder="请输入工种名称" class="layui-input"><a href="javascript:;" class="del_input" >-</a></label>'
+            html += '</form>'
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                area: ['350px', '400px'], //宽高
+                content: html,
+                title:'添加工种',
+                btn: ['提交', '取消'],
+                    yes: function(index, layero){
+                        var add_name = $('#add_name').val();
+                        $.post('/admin/offertype/ajax_add_word',$('#add_form').serializeArray(),function(res){
+                            if(res.code === 0){
+                                layer.msg(res.msg);
+                            }else{
+                                layer.msg(res.msg);
+                                window.location.reload();
+                            }
+                        },'json')
+                    },
+                    btn2: function(index, layero){
+                        layer.close(index);
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }); 
+        })
+
+        //编辑工种
+        $('.edit').click(function(){
+            var that = this;
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                content: '<input type="text" id="edit_name" placeholder="请输入工种名称" value="'+name+'" class="layui-input">',
+                title:'编辑工种',
+                btn: ['编辑', '取消'],
+                    yes: function(index, layero){
+                        var edit_name = $('#edit_name').val();
+                        $.post('/admin/offertype/ajax_edit_word',{name:edit_name,type:1,id:id},function(res){
+                            if(res.code === 0){
+                                layer.msg(res.msg);
+                            }else{
+                                $(that).parent().parent().find('td').eq(0).text(edit_name);
+                                layer.msg(res.msg);
+                            }
+                        },'json')
+                    },
+                    btn2: function(index, layero){
+                        layer.close(index);
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }); 
+        })
+
+        //删除工种
+        $('.delete').click(function(){
+            var that = this;
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                content: '确定要删除工种：'+name+'吗？',
+                title:'删除工种',
+                btn: ['删除', '取消'],
+                    yes: function(index, layero){
+                        $.post('/admin/offertype/ajax_delete_word',{id:id},function(res){
+                            if(res.code === 0){
+                                layer.msg(res.msg);
+                            }else{
+                                //成功 隐藏删除项
+                                $(that).parent().parent().remove();
+                                layer.msg(res.msg);
+                            }
+                        },'json')
+                    },
+                    btn2: function(index, layero){
+                        layer.close(index);
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }); 
+        })
+    })
+</script>
+{/block}

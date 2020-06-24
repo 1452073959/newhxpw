@@ -1,0 +1,124 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style>
+    textarea:disabled {
+        background-color: #ffffff;
+        border-color:#e6e6e6;
+    }
+</style>
+<div class="layui-card">
+    <div class="layui-card-header">添加</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="" accept-charset="gbk"  _charset="gbk" method="post">
+            <input type="hidden" name="bp_id" value="{:input('id')}">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择分公司</label>
+                <div class="layui-input-inline w300">
+                  <select name="fid" required lay-verify="required" {$admininfo['userid'] == 1?'':'disabled'}  lay-filter="business" lay-search>
+                    <option value=""></option>
+                      {volist name="frame" id="vo"}
+                        <option {$vo.id==$admininfo['companyid']?'selected':''} value="{$vo.id}">{$vo.name}</option>
+                      {/volist}
+                  </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="" disabled value="{$info.name}" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">单位</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="" disabled value="{$info.unit}" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">工艺说明</label>
+                <div class="layui-input-inline w300">
+                    <textarea style="width:300px;height:150px" disabled>{$info.content}</textarea>
+                </div>
+            </div>
+
+            
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">辅材单价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="quota" required lay-verify="required|number|price" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">人工单价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="craft_show" required lay-verify="required|number|price" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">人工成本</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="labor_cost" required lay-verify="required|number|price" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            {if($fmaterials)}
+                <p style="margin-left: 110px">说明： 编号 - 出库价格 - 品牌 - 产地 - 来源</p>
+                {foreach name="fmaterials" item="v" key="k"}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$k}</label>
+                        <div class="layui-input-inline w300">
+                            <select style="width:50px" name="material[{$k}]" lay-search>
+                                {foreach name="v" item="v2" key="k2"}
+                                    <option value="{$v2.amcode}">{$v2.amcode} -  {$v2.price} - {$v2.brank} - {$v2.place} - {$v2.source}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                 {/foreach}
+            {/if}
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/basis_data/pproject')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script>
+layui.use('form', function(){
+    var form = layui.form;
+    form.verify({
+        price: function(value, item){ //value：表单的值、item：表单的DOM对象
+            if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value))){
+                return '请输入正确的金额格式';
+            }
+        } 
+    });   
+    //监听提交
+    form.on('submit(formDemo)', function(data){
+        console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+        $.post('/admin/basis_data/add_fproject_operation',data.field,function(res){
+            if(res.code == 1){
+                layer.msg(res.msg);
+                setTimeout(function(){
+                    window.location.href = res.url
+                },1000);
+            }else{
+                layer.msg(res.msg);
+            }
+        },'json')
+        return false;
+    });
+});
+
+
+</script>
+{/block}

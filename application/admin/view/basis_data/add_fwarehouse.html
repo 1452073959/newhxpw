@@ -1,0 +1,120 @@
+{extend name="index_layout"/}
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header">添加</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="" method="post">
+            <input type="hidden" name="bs_id" value="{:input('id')}">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择分公司</label>
+                <div class="layui-input-inline w300">
+                  <select name="fid" required lay-verify="required" {$admininfo['userid'] == 1?'':'disabled'}  lay-filter="business" lay-search>
+                    <option value=""></option>
+                      {volist name="frame" id="vo"}
+                        <option {$vo.id==$admininfo['companyid']?'selected':''} value="{$vo.id}">{$vo.name}</option>
+                      {/volist}
+                  </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">辅材名称</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="" disabled value="{$info.name}" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">单位</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="" disabled value="{$info.unit}" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">品牌 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="brank" required lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产地</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="place" required lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入库价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="in_price" required lay-verify="required|number|price" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出库价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="price" required lay-verify="required|number|price" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出库单位</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="pack" required lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">包装规格</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="phr" required lay-verify="required|number|price" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">来源</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="source" required lay-verify="required" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/basis_data/pwarehouse')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script>
+layui.use('form', function(){
+    var form = layui.form;
+    form.verify({
+        price: function(value, item){ //value：表单的值、item：表单的DOM对象
+            if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(value))){
+                return '请输入正确的金额格式';
+            }
+        } 
+    });  
+    //监听提交
+    form.on('submit(formDemo)', function(data){
+        console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+        $.post('/admin/basis_data/add_fwarehouse_operation',data.field,function(res){
+            if(res.code == 1){
+                layer.msg(res.msg);
+                setTimeout(function(){
+                    window.location.href = res.url
+                },1000);
+            }else{
+                layer.msg(res.msg);
+            }
+        },'json')
+        return false;
+    });
+});
+
+
+</script>
+{/block}

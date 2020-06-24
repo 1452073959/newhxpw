@@ -1,0 +1,87 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+
+
+            <table class="layui-table">
+                <thead >
+                <tr>
+                    <th>客户姓名</th>
+                    <th>申请人姓名</th>
+                    <th>实际领料金额</th>
+                    <th>申请领料金额</th>
+                    <th>审核人</th>
+                    <th>领料时间</th>
+                    <th>领料状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $history as $key=>$vo }
+                <tr>
+
+                    <td>{$vo.client.customer_name}</td>
+                    <td>{$vo.user.name}</td>
+                    <td>{$vo.total_money}</td>
+                    <td>{$vo.actual_total_money}</td>
+                    <td>
+                        {if $vo.user1.name==0}该订单还未审核
+                        {else /}
+                        {$vo.user1.name}
+                        {/if}</td>
+                    <td>{$vo.addtime}</td>
+                    <td>
+                        {if $vo.status==1}未审核
+                        {elseif $vo.status==2 /}正在配货
+                        {elseif $vo.status==3 /}待领料
+                        {elseif $vo.status==4 /}已领料
+                        {elseif $vo.status==5 /}审核不通过
+                        {else /}状态异常,请联系管理员
+                        {/if}
+                    </td>
+<td><a href="/admin/statistical/particulars?pmid={$vo.id}" class="layui-btn layui-btn-primary">查看领料详情</a></td>
+
+                </tr>
+                {/foreach}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+{/block}

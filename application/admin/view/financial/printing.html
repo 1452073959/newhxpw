@@ -1,0 +1,90 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style>
+    .printing {
+        width: 100%;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        flex-flow: row wrap;
+    }
+
+    .title {
+        font-size: 30px;
+        letter-spacing: 10px;
+    }
+
+    .content {
+        height: 300px;
+        margin: 30px auto;
+        /*border: solid  1px black;*/
+    }
+
+</style>
+
+<div class="printing" id="export-table">
+    {foreach $audit as $k=>$v}
+    <div style="height: 440px">
+        <div class="container">
+            <div class="title">
+                <u>借支单</u>
+            </div>
+        </div>
+        <div class="content">
+
+            <table border="1" width="600" height="200px" align="center">
+                <caption style="position: relative;left: 250px;letter-spacing: 20px;">年月日</caption>
+                <tr align="center">
+                    <td>客户姓名</td>
+                    <td colspan="2">{$v.offer.customer_name}</td>
+                    <td>工程地址</td>
+                    <td colspan="4">{$v.offer.address}</td>
+                </tr>
+                <tr align="center">
+                    <td>借支原因</td>
+                    <td colspan="7">{$v.so}</td>
+                </tr>
+                <tr align="center">
+                    <td>借支金额</td>
+                    <td colspan="2">{$v.money}</td>
+                    <td>借支人</td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr align="center">
+                    <td>工程经理</td>
+                    <td colspan="2"></td>
+                    <td>财务</td>
+                    <td colspan="3"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    {/foreach}
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="__STATIC__/bootstrap/js/table/printThis.min.js"></script>
+<script>
+    //打印
+    window.onload = function () {
+        $("#export-table").printThis({
+            debug: false,
+            importCSS: true,
+            importStyle: true,
+            printContainer: true,
+            loadCSS: "__STATIC__/bootstrap/css/printThis-p.css",
+            // pageTitle: '　',
+            removeInline: false,
+            printDelay: 333,
+            header: null,
+            formValues: false
+        });
+    }
+
+
+</script>
+{/block}

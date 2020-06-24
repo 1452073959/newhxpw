@@ -1,0 +1,167 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .fenname{padding:10px;padding-right:8px;line-height:30px}
+    #sougs{line-height:35px;background-color:#009688;color:#fff;padding:5px;border-radius:2px;cursor:pointer;}
+</style>
+<div class="layui-card">
+    <div class="layui-card-header">添加</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/Offerlist/addentry')}" method="post">
+            <input type="hidden" name="id" value="{$nid}" />
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目编号</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="item_number" autocomplete="off" placeholder="项目编号" class="layui-input">
+                </div>
+                <span id="sougs"  onclick="return myquery()">校检编号</span>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="project" autocomplete="off" placeholder="项目名称" class="layui-input" readonly >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">空间类型</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="kongjian" autocomplete="off" placeholder="空间类型" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">工种</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="type_of_work" autocomplete="off" placeholder="工种" class="layui-input" readonly >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工程量</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" id="gcl" name="gcl" autocomplete="off" placeholder="工程量" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">单位</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="company" autocomplete="off" placeholder="单位" class="layui-input" readonly >
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">辅材基价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="quota" autocomplete="off" placeholder="辅材基价" class="layui-input" readonly >
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">辅材合价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="quotaall" autocomplete="off" placeholder="辅材合价" class="layui-input" readonly>
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">人工基价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="craft_show" autocomplete="off" placeholder="人工基价" class="layui-input" readonly >
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">人工合价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="craft_showall" autocomplete="off" placeholder="人工合价" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">施工工艺及材料说明</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="material" autocomplete="off" placeholder="施工工艺及材料说明" class="layui-input" readonly >
+                </div>
+            </div>
+
+            
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Offerlist/edit',array('id'=>$nid))}">返回</a>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+function myquery(){
+     var getval = $('input[name="item_number"]').val();
+     if(!getval){layer.msg("请填入项目编号");return false;}
+        // alert(getval);
+        $.ajax({
+          type : 'post',
+          url  :  '{:url("Offerlist/ajaxquery")}',
+          dataType : 'json',
+          data : {value:getval},
+          success : function(re){
+               if(re.status!=0){
+                  layer.msg(re.msg);return false;
+               }else{
+                  layer.msg(re.msg);//查询成功
+                  $('input[name="project"]').val(re.data.project);
+                  $('input[name="type_of_work"]').val(re.data.type_of_work);
+                  $('input[name="quota"]').val(re.data.quota);
+                  $('input[name="company"]').val(re.data.company);
+                  $('input[name="craft_show"]').val(re.data.craft_show);
+                  $('input[name="material"]').val(re.data.material);   
+                
+               }
+          }
+        })
+   }
+
+   $(function(){ 
+      $('#gcl').bind('input propertychange', function() {
+           var gcl = $('#gcl').val();
+           var quota = $('input[name="quota"]').val();  
+           var craft_show = $('input[name="craft_show"]').val();  
+           if (isNaN(gcl)) {layer.msg('请输入正确的数字');return false;}
+           if (!quota || !craft_show){layer.msg('数据基数不完整');return false;}
+
+
+           $('input[name="quotaall"]').val(gcl*quota);
+           $('input[name="craft_showall"]').val(gcl*craft_show);
+           // layer.msg(quota+'--'+craft_show);
+
+      });
+    });
+</script>
+<script>
+layui.use(['layedit','form','laydate'], function(){
+  var laydate = layui.laydate;  
+  // var layedit = layui.layedit;
+  // layedit.build('demo'); //建立编辑器
+   //常规用法
+    // laydate.render({
+    //       elem: '#test1'
+    // });
+    //点我触发
+  laydate.render({
+    elem: '#test1'
+    ,eventElem: '#test1'
+    ,trigger: 'click'
+     ,format: 'yyyy年MM月dd日'
+  });
+   // $("#test1").click(function(){
+   //      laydate.render({
+   //        elem: '#test1'
+   //      });
+   // });
+   
+
+});
+
+
+</script>
+{/block}

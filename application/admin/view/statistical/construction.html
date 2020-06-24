@@ -1,0 +1,45 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <table class="layui-table" style="text-align: center">
+                <thead >
+                <tr>
+                    <td>客户姓名</td>
+                    <td>工程地址</td>
+                    <td>房屋类型</td>
+                    <td>面积</td>
+                    <td>工程报价</td>
+                </tr>
+                </thead>
+                <tbody>
+            {foreach $construction as $k=>$v}
+                <tr>
+                    <td>{$v.customer_name} </td>
+                    <td>{$v.address} </td>
+                    <td>{$v.room_type} </td>
+                    <td>{$v.area} </td>
+                    <td>{$v.discount_proquant} </td>
+                </tr>
+            {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+
+{/block}

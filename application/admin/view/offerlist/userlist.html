@@ -1,0 +1,257 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.form-control{display: inline-block;padding: 5px;}
+.layui-form-item{
+    margin-bottom: 10px;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+.ml50{
+    margin-left: 50px;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-input-inline">
+                    <a class="layui-btn layui-btn-sm" href="{:url('Offerlist/add')}">新建客户</a>
+                </div>     
+				<div class="layui-input-inline" style="margin-left: 30px;">
+					<form class="layui-form" method="get" action="{:url('Offerlist/userlist')}" class="layui-form form-signin" enctype="multipart/form-data">
+                        {if($admininfo['roleid']==1)}
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">分公司</label>
+                                <div class="layui-input-block">
+                                    <select name="fid" lay-search>
+                                        <option value=""></option>
+                                        {foreach($frame as $k=>$v)}
+                                            <option {if(input('fid')==$v['id'])}selected{/if} value="{$v['id']}">{$v['name']}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                        {/if}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">客户姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="customer_name" placeholder="" value="{:input('customer_name')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">报价师</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="quoter_name" placeholder="" value="{:input('quoter_name')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">设计师</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="designer_name" placeholder="" value="{:input('designer_name')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">工程地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="address" placeholder="" value="{:input('address')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">客户经理</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="manager_name" placeholder="" value="{:input('manager_name')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">开始时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" id="begin_time" name="begin_time" value="<?php echo input('begin_time') ?>" placeholder="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" id="end_time" name="end_time" value="<?php echo input('end_time') ?>" placeholder="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否已签单</label>
+                            <div class="layui-input-block">
+                                <select name="oi">
+                                    <option value=""></option>
+                                    <option {if(input('oi')==1)}selected{/if} value="1">已签单</option>
+                                    <option {if(input('oi')==2)}selected{/if} value="2">未签单</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item ml50">
+                            <button type="submit" class="layui-btn layui-btn-blue">搜索</button>
+                            <a href="{:url('Offerlist/userlist')}" class="layui-btn layui-btn-blue">清空筛选</a>
+                        </div>
+                    </form>
+			    </div>
+                <!-- <a class="layui-btn layui-btn-sm" style="float:right;margin-left:10px" href="__TEMPLATE__/报价空模板.xls">下载空模板</a> -->
+                <!-- <a class="layui-btn layui-btn-sm" style="float:right;" onclick="exportExcel()">导出excel</a> -->
+                <a id="tishi" title="点我查看" style="float:right;" > <i class="layui-icon">&#xe702;</i></a>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+              <div class="layui-btn-container">
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckData" id="batch">批量修改数据</button> -->
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button> -->
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
+              </div>
+            </script>
+     
+            <table class="layui-table">
+                <colgroup>
+                    <col width="100">
+                    {if($admininfo['roleid'] == 1)}
+                       <col width="150">
+                    {/if}
+                    <col width="200">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col width="1000">
+                    <col width="200">
+                    <col width="130">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th>ID</th>
+                        {if($admininfo['roleid'] == 1)}
+                            <th>分公司</th>
+                        {/if}
+                        <th>客户姓名</th>
+                        <th>面积</th>
+                        <th>房屋类型</th>
+                        <th>报价师姓名</th>
+                        <th>设计师姓名</th>
+                        <th>商务经理</th>
+                        <th>地址</th>
+                        <th>添加时间</th>
+                        <!-- <th>报价历史</th> -->
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  {foreach name="data" item="vo"}
+                    <tr>   
+                      <td >{$vo.id}</td> 
+                        {if($admininfo['roleid'] == 1)}
+                            <td >{$frame[$vo['frameid']]['name']}</td> 
+                        {/if}
+                      <td >{$vo.customer_name}{eq name="$vo['is_new']" value="9"}<i title="旧客户" style="color: red" class="layui-icon layui-icon-username"></i>{/eq}</td> 
+                      <td >{$vo.area}</td> 
+                      <td >{$vo.room_type}</td> 
+                      <td >{$vo.quoter_name}</td> 
+                      <td >{$vo.designer_name}</td> 
+                      <td >{$vo.manager_name}</td> 
+                      <td >{$vo.address}</td> 
+                      <td >{$vo.addtime|date='Y-m-d'}</td> 
+                      <!-- <td><a class="" href="{:url('admin/offerlist/index',['customer_id'=>$vo.id])}"><i class="layui-icon layui-icon-search" title="查看历史"></i></a></td> -->
+                      <td >
+                        
+                        
+                            <a class="add_order" data-userid="{$vo.id}"  href="javascript:;"><i class="layui-icon layui-icon-add-1" title="业务报价"></i></a>
+                        <a class="" href="{:url('admin/offerlist/index',['customer_id'=>$vo.id])}" ><i class="layui-icon layui-icon-search" title="查看报价"></i></a>
+                            <a class="" href="{:url('admin/offerlist/user_edit',['id'=>$vo.id])}"><i class="layui-icon layui-icon-edit" title="编辑"></i></a>
+                        <!-- 编辑删除只有最高管理员可以 -->
+                        {eq name="$userinfo['roleid']" value="1"}
+                            <a class="" href="{:url('admin/offerlist/user_delete',['id'=>$vo.id])}"><i class="layui-icon layui-icon-delete" title="删除" onclick="javascript:if(!confirm('确定要删除选择客户吗？\n此操作不可以恢复！')) { return false; }"></i></a>
+                        {/eq}
+                      </td>    
+                 {/foreach}
+                </tbody>
+            </table>
+              {$data|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+    $('.add_order').on('click','',function(){
+        var userid = $(this).data('userid');
+        layui.use('layer', function(){
+            var html = '';
+            html += '<ul style="text-align:center;padding:10px">'
+            html += '<li style="margin:3px;"><a style="width:150px" href="/admin/offerlist/add_order/customer_id/'+userid+'" class="layui-btn layui-btn-radius layui-btn-primary">半包报价</a></li>'
+            html += '<li style="margin:3px;"><a  style="width:150px" href="/admin/furniture_orther/add_order/customer_id/'+userid+'/type/2" class="layui-btn layui-btn-radius layui-btn-primary">主材报价</a></li>'
+            html += '<li style="margin:3px;"><a  style="width:150px" href="/admin/furniture_orther/add_order/customer_id/'+userid+'/type/3" class="layui-btn layui-btn-radius layui-btn-primary">智能、家电报价</a></li>'
+            html += '<li style="margin:3px;"><a  style="width:150px" href="/admin/furniture_orther/add_order/customer_id/'+userid+'/type/4" class="layui-btn layui-btn-radius layui-btn-primary">软装报价</a></li>'
+            html += '</ul>'
+            layer.open({
+                title: '选择报价内容',
+                type:1,
+                area: ['200px'],
+                content:html
+            }); 
+        })
+    })
+
+  layui.use('laydate', function(){
+    var laydate = layui.laydate;
+    //常规用法
+    laydate.render({
+      elem: '#begin_time'
+    });
+    laydate.render({
+      elem: '#end_time'
+    });
+  })
+</script>
+{/block}

@@ -1,0 +1,66 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+<form class="layui-form" action="/admin/Offerlist/gcjledit" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="project" required  lay-verify="required" value="{$data['project']}" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单位</label>
+        <div class="layui-input-block">
+            <input type="text" name="company" required  lay-verify="required" value="{$data['company']}" placeholder="请输入单位" autocomplete="off" class="layui-input">
+            <input type="hidden" name="id" value="{$data['id']}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">辅材单价</label>
+        <div class="layui-input-block">
+            <input type="text" name="quota" required  lay-verify="required" value="{$data['quota']}" placeholder="请输入辅材单价" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">人工单价</label>
+        <div class="layui-input-block">
+            <input type="text" name="craft_show" required  lay-verify="required" value="{$data['craft_show']}" placeholder="请输入人工单价" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">工艺说明</label>
+        <div class="layui-input-block">
+            <input type="text" name="material" required  lay-verify="required" value="{$data['material']}" placeholder="请工艺说明" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+{/block}

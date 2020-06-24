@@ -1,0 +1,66 @@
+{extend name="index_layout"/}
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header">添加工种</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" id="myform" action="{:url('admin/Offertype/addconditions')}" method="post">
+            <div class="area layui-form-item">
+                <div class="layui-input-inline w300">
+                    <span class="operation">
+                        <a title="添加"class="addone">
+                          <i class="layui-icon"></i>
+                        </a>
+                        <a title="删除">
+                          <i class="layui-icon layui-icon-delete"></i>
+                        </a>
+                      </span>
+                    <input type="text" name="addname[]" autocomplete="off" placeholder="工种名称" required="" class="layui-input">
+                    <input type="text" name="addother[]" autocomplete="off" placeholder="其他备注" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Offertype/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+		//添加一条
+        $(document).on('click','a.addone',function(){
+            var html='<div class="layui-input-inline w300"><span class="operation"><a title="添加"class="addone"><i class="layui-icon"></i></a><a class="deleteone" title="删除"><i class="layui-icon layui-icon-delete"></i></a></span><input type="text" name="addname[]" required="" autocomplete="off" placeholder="工种名称" class="layui-input"><input type="text" name="addother[]" autocomplete="off" placeholder="其他备注" class="layui-input"></div>';
+            $('.area').append(html);
+         });
+		//删除一条
+        $(document).on('click','a.deleteone',function(){
+            $(this).parent().parent().remove();
+        });
+        $('#myform').submit(function(){
+            var url = $(this).attr('action'),data = $(this).serialize();
+            $.ajax({
+                url:url,
+                type:"post",
+                data:data,
+                success:function(result){
+                    if(confirm(result.msg)){
+                        if(result.code == 1){
+                            window.location.href=result.url;
+                        }
+                    }
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+
+{/block}

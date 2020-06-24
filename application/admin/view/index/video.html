@@ -1,0 +1,111 @@
+{extend name="index_layout"/}
+
+{block name="main"}
+<style type="text/css">
+    video::-internal-media-controls-download-button {
+        display:none;
+    }
+
+    video::-webkit-media-controls-enclosure {
+        overflow:hidden;
+    }
+    /*video::-webkit-media-controls-panel {
+        width: calc(100% + 50px); 
+    }*/
+    #main{
+        width: 1300px;
+        height:800px;
+        margin:0 auto;
+    }
+    #left{
+        width: 200px;
+        height:700px;
+        float: left;
+        /*background-color: red*/
+    }
+    #right{
+        margin-left: 5px;
+        float: left;
+    }
+    #left .layui-nav{
+        margin-top: 75px;
+    }
+</style>
+<div id="main">
+    <div id="left">
+        <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+            {if(in_array($admininfo['roleid'],[1,2,10,12,17]))}
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">报价师</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="__UPLOADS__/video/baojia.mp4">报价师功能介绍</a></dd>
+                    </dl>
+                </li>
+            {/if}
+            {if(in_array($admininfo['roleid'],[1,10,12,17]))}
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">分总经理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="__UPLOADS__/video/fenz.mp4">分总经理介绍</a></dd>
+                        <dd><a href="javascript:;" data-src="__UPLOADS__/video/basis_data.mp4">分公司后台数据配置</a></dd>
+                    </dl>
+                </li>
+            {/if}
+            {if(in_array($admininfo['roleid'],[1,19]))}
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">数据配置</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="__UPLOADS__/video/basis_data.mp4">台数据配置</a></dd>
+                    </dl>
+                </li>
+            {/if}
+            {if(in_array($admininfo['roleid'],[1,10,11,12,17]))}
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">人事</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="__UPLOADS__/video/rs.mp4">人事功能介绍</a></dd>
+                    </dl>
+                </li>
+            {/if}
+            {if(in_array($admininfo['roleid'],[1,10,12,17]))}
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">小程序</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-src="__UPLOADS__/video/jl.mp4">监理功能讲解</a></dd>
+                        <dd><a href="javascript:;" data-src="__UPLOADS__/video/cg.mp4">仓管功能讲解</a></dd>
+                    </dl>
+                </li>
+            {/if}
+        </ul>
+    </div>
+    <div id="right">
+        <video width="800" height="600" id="myVideo" controls="controls" oncontextmenu="return(false)" controlslist="nodownload">
+            <source src="" type="video/mp4">
+            您的浏览器不支持视频播放标签。
+        </video>
+    </div>
+{/block}
+</div>
+
+
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#myVideo').bind('contextmenu',function() { return false; });
+    });
+    $('dd a').click(function(){
+        var src = $(this).data('src');
+        var sourceDom = $("<source src="+src+">");
+        $("#myVideo").html('您的浏览器不支持视频播放标签。');
+        $("#myVideo").append(sourceDom);
+        setTimeout(function () { 
+            $("#myVideo").load()
+        }, 1000); // 延时1秒
+        
+    })
+</script>
+
+{/block}

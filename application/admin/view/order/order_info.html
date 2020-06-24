@@ -1,0 +1,525 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>订单列表</title>
+	<style type="text/css">
+	.wrap {
+		width: 98%;
+		margin-left: 1%;
+		padding-top: 20px;
+	}
+	.onLine-list .layui-col-md3 {
+		margin-top: 20px;
+	}
+	.onLine-list {
+		margin-top: 20px;
+	}
+	.cxBtn{
+		text-align: right;
+	}
+	.layui-breadcrumb a:last-child cite{
+		color: #5FB878;
+	}
+	.layui-table-cell{
+		padding: 0 5px!important;
+	}
+	.scroll-wrapper {  
+	    /*-webkit-overflow-scrolling: touch;*/  
+	    /*overflow-y: scroll;*/  
+	} 
+		.layui-layer-setwin .layui-layer-maxmin{
+		display: inline-block!important;		
+	}
+		
+	</style>
+<link rel="stylesheet" href="/static/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="/static/12/admin/css/font-awesome.min.css" media="all"/>
+<!-- <script src="/static/12/admin/js/jquery-2.0.0.js"></script> -->
+<script src="/static/layui/layui.js"></script>
+	<script src="/static/12/admin/js/jquery-1.7.min.js" type="text/javascript"></script>
+    <script src="/static/12/admin/viewer/js/viewer.min.js"></script>
+    <script src="/static/12/admin/viewer/js/viewer-jquery.min.js"></script>
+    <script src="/static/12/admin/viewer/js/jquery.min.js"></script>
+<!-- <script src="/static/12/admin/viewer/js/jquery.min.js"></script> -->
+	<!-- <script src="/static/12/admin/js/jquery.min.js"></script> -->
+<script type="text/javascript">
+	function arrayToJson(formArray){
+		var dataArray = {};
+		$.each(formArray,function(){
+			if(dataArray[this.name]){
+				if(!dataArray[this.name].push){
+					dataArray[this.name] = [dataArray[this.name]];
+				}
+				dataArray[this.name].push(this.value || '');
+			}else{
+				dataArray[this.name] = this.value || '';
+			}
+		});
+		return JSON.stringify(dataArray);
+	}
+	function aa(e){
+		if(e.keyCode==116){
+			location.reload();
+			return false;
+		}
+	}
+	document.onkeydown = aa;
+	
+	//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+
+	//ipad端禁止缩放屏幕
+	window.onload=function () {  
+        document.addEventListener('touchstart',function (event) {  
+            if(event.touches.length>1){  
+                event.preventDefault();  
+            }  
+        })  
+        var lastTouchEnd=0;  
+        document.addEventListener('touchend',function (event) {  
+            var now=(new Date()).getTime();  
+            if(now-lastTouchEnd<=300){  
+                event.preventDefault();  
+            }  
+            lastTouchEnd=now;  
+        },false)  
+    }
+</script>
+	<link rel="stylesheet" href="/static/12/admin/css/subpage.css"/>
+</head>
+<style type="text/css">
+	.simple-header {
+		width: 100%;
+		height: auto;
+		background-color: white;
+		margin-top: 10px;
+		/*margin-left: 2%;*/
+		/* overflow: auto */
+	}
+	body {
+		background: #f9f9f9;
+	}
+	.layui-layer-page .layui-layer-content {
+		padding: 20px !important;
+	}
+	h3.form-group-title {
+		margin-bottom: 20px;
+	}
+	.bj {
+		height: 27px;
+		background: #F9F9F9;
+		width: 100%;
+	}
+	.tab-content-box:after {
+		clear: 0;
+		width: 100%;
+		height: 100%;
+		content: '';
+	}
+	/* .tab{
+		-webkit-overflow-scrolling: touch;
+	    overflow-y: scroll!important;	} */
+	.dectext{
+		width: 150px;
+		height: 50px;
+		color: red;
+		font-size: 17px;
+		line-height: 50px;
+	}
+	.huititle{
+		float: left;
+		width: 100px;
+		height: 37px;
+		margin-left: 10px;
+	}
+	.group_report{
+		padding: 10px;
+		border-bottom: 1px dashed #ccc;
+	}
+	.group_report .red {
+		color: red;
+	}
+	.group_report li{
+		border: 1px solid #03c6b4;
+		color: #03c6b4;
+	}
+	.tab ol li.active {
+		background: #03C6B4;
+		color: #fff;
+	}
+	.demo-class{
+		color:red;
+	}
+	.update-btn {
+		width:70px;
+		height:35px;
+		background:#DDDDDD;
+		border-radius:5px;
+		float:right;
+		margin-top:8px;
+		border:none;
+		color:#fff;
+	}
+
+</style>
+
+<div class="simple-header">
+		<div class="bottom_tools">
+		<a href="#" title="全屏展示" target="_blank" id="feedback"></a>
+		<a id="scrollUp" href="javascript:;" title="回到顶部"></a>
+
+	</div>
+		<div class="tab page-body">
+
+		<div class="simple-content">
+<link rel="stylesheet" type="text/css" href="/static/12/admin/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="/static/12/admin/css/style.css"/>
+<link rel="stylesheet" href="/static/12/admin/viewer/css/viewer.min.css" />
+<style type="text/css">
+    .page .headerone .header_title {
+	    font-size: 20px;
+	    color: white;
+	    background: #03C6B4;
+	    padding: 8px;
+	    text-align: center;
+	}
+	.layui-form-label{
+		width: 90px;
+	}
+	#code_1_yun{
+		display: none;
+	}
+	#cusPwd{
+		display: none;
+	}
+	.layui-layer-page .layui-layer-content{
+		padding: 20px!important;
+	}
+	.detail-table-box .layui-table-cell{
+		padding: 0 0px!important;
+	}
+	.basic_main table th,.basic_main table td{
+		font-size: 12px!important;
+	}
+</style>
+
+<div role="tabpanel" class="tab-pane in active" id="operate">
+	<h3 class="form-group-title" style="color: #03C6B4;margin-bottom: 20px;">
+		订单详情
+	</h3>
+	<div class="page" id="xygsdyunn">
+		<div class="headerone" style="padding: 10px 0px 0px 0px;">      
+			<h1 class="header_title">基础信息</h1>
+		</div>
+		<div class="basic_main">      
+			<table style="margin:10px 0" class="layui-table">          
+				<tr class="px13">              
+					<td  class="td-border"><span class="f-w">订单 ID：</span>{$info['id']|default=''}</td>              
+					<td  class="td-border"><span class="f-w">订单号：</span>{$info['oid']|default=''}</td>              
+					<td  class="td-border"><span class="f-w">会员：</span>{$user['name']|default=''}</td>              
+					<td  class="td-border"><span class="f-w">电话：</span>{$user['phone']|default=''}</td>          
+					<td  class="td-border"><span class="f-w">应付：</span>{$info['money']|default='0'}元</td>          
+					<td  class="td-border"><span class="f-w">订单状态：</span>{$info['order_status']|default=''}</td>          
+					<td  class="td-border"><span class="f-w">下单时间：</span>{$info['add_time']|default=''}</td>          
+				</tr>     
+			</table>           
+				<table class="table-bordered layui-table">          
+					<tr>              
+						<th rowspan="4">收货信息：</th>
+					</tr> 
+					<tr>              
+						<td colspan="4" class="td-border tttt" >收货人：{$info['name']|default=''}</td>              
+					</tr>        
+					<tr>              
+						<td colspan="4" class="td-border">联系方式：{$info['phone']|default=''}</td>              
+					</tr>
+					<tr>              
+						<td colspan="4" class="td-border">地址信息：{$info['address']|default=''}</td>              
+					</tr>       
+				</table>
+			</div>
+			<div class="headerone">
+				<h1 class="header_title">产品信息</h1>
+			</div>
+		<div class="basic_main">
+			<table class="layui-table" id="img">      
+				<tr>          
+					<th >产品</th>          
+					<th >类型</th>          
+					<th >标签</th>          
+					<th>产品价格</th>      
+				</tr>
+				{notempty name="goods"}
+				{foreach name="goods" item="value" key="key" }
+				<tr>
+					<td>{$value.g_name}</td>
+					<td>{$value.tr_id} </td>
+					<td>{$value.la_id.'/'.$value.ln_id}</td>
+					<td colspan="8"  >{$value.price}元</td>
+				</tr>
+				<tr>
+					<th colspan="4" style="text-align: center;">产品图片</th>
+				</tr>
+				<tr id="loan_four">
+					<td colspan="4" style="text-align: center;" class="bigpictuer1"><img src="{$value.pic}"></td>
+				</tr>
+				{/foreach}
+				{/notempty}
+			</table>
+		</div>
+		<div class="headerone">
+				<h1 class="header_title">项目详情</h1>
+			</div>
+		<div class="basic_main">
+			<table class="layui-table">      
+				<tr colspan="4">          
+					<th colspan="4" style="text-align: center;">查看/修改合同信息</th>
+				</tr>
+				<tr colspan="4">
+					<td colspan="4" style="text-align: center;">
+						<a href="/admin/order/compact?id={$info['id']|default=''}" class="layui-btn">请点击查看</a>
+					</td> 
+				</tr>
+			</table>
+		</div>
+		<div class="headerone">
+				<h1 class="header_title">项目进展</h1>
+			</div>
+		<div class="basic_main">
+			<table class="layui-table">      
+				<tr>          
+					<th style="text-align:right;" width="50%">定制产品</th>
+					<td >
+						 {if $info['evolve1'] == 0}
+							<img src="/static/12/admin/images/refuse.png" onclick="addstate1(this,1)" data-url="/Admin/Order/addstate1">
+						{else}
+							<img src="/static/12/admin/images/pass.png" onclick="delstate1(this,1)" data-url="/Admin/Order/delstate1">
+						{/if}
+					</td> 
+				</tr>
+				<tr>
+					<th style="text-align:right;" width="50%">已成功确定项目合同</th> 
+					<td >
+						{if $info['evolve2'] == 0}
+							<img src="/static/12/admin/images/refuse.png" onclick="addstate1(this,2)" data-url="/Admin/Order/addstate1">
+						{else}
+							<img src="/static/12/admin/images/pass.png" onclick="delstate1(this,2)" data-url="/Admin/Order/delstate1">
+						{/if}
+					</td>         
+					
+				</tr>
+				<tr>
+					<th style="text-align:right;" width="50%">已成功支付项目金额</th> 
+					<td >
+						{if $info['evolve3'] == 0}
+							<img src="/static/12/admin/images/refuse.png" onclick="addstate1(this,3)" data-url="/Admin/Order/addstate1">
+						{else}
+							<img src="/static/12/admin/images/pass.png" onclick="delstate1(this,3)" data-url="/Admin/Order/delstate1">
+						{/if}
+					</td>         
+					
+				</tr>
+				<tr>
+					<th style="text-align:right;" width="50%">项目开发进行中</th> 
+					<td >
+						{if $info['evolve4'] == 0}
+							<img src="/static/12/admin/images/refuse.png" onclick="addstate1(this,4)" data-url="/Admin/Order/addstate1">
+						{else}
+							<img src="/static/12/admin/images/pass.png" onclick="delstate1(this,4)" data-url="/Admin/Order/delstate1">
+						{/if}
+					</td>     
+				</tr>
+				<tr>
+					<th style="text-align:right;" width="50%">已接收项目</th> 
+					<td >
+						{if $info['evolve5'] == 0}
+							<img src="/static/12/admin/images/refuse.png" onclick="addstate1(this,5)" data-url="/Admin/Order/addstate1">
+						{else}
+							<img src="/static/12/admin/images/pass.png" onclick="delstate1(this,5)" data-url="/Admin/Order/delstate1">
+						{/if}
+					</td>     
+				</tr>
+				<input type="hidden" value="{$info['id']|default=''}" id="id">
+			</table>
+		</div>
+		<div class="headerone">
+				<h1 class="header_title">操作订单</h1>
+			</div>
+		<div class="basic_main"> 
+			<table style="margin:10px 0" class="layui-table">
+                    <tbody>
+                    <tr colspan="4">
+                        <th colspan="4" style="text-align: center;">操作备注</th>
+                    </tr>
+                    <tr colspan="4">
+                    	<td colspan="4">
+                            <form name="frm" id="order-action">
+                                <textarea style="text-align: center;" name="note" placeholder="请输入操作备注" rows="3" class="layui-textarea"></textarea>
+                            </form>
+                    	</td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" style="text-align: center;">当前可执行操作</th>
+                    </tr>
+                    <tr>
+                    	<td colspan="4" style="text-align: center;">
+                                <div class="input-group">
+                                	{switch name="$info['order_status']"}
+                                		{case value="已付款"}
+									    	<button class="layui-btn btn btn-primary margin" data-id="4" type="button" id="confirm">开始项目</button>
+									    {/case}
+									    {case value="待付款"}
+									    	<button class="layui-btn btn btn-primary margin" data-id="-1" type="button" id="confirm">取消订单</button>
+									    {/case}
+									    {case value="待交付"}
+                        					<button class="layui-btn btn btn-primary margin" data-id="10" type="button" id="confirm">确认收货</button>
+									    {/case}
+									    {case value="第一期"}
+                        					<button class="layui-btn btn btn-primary margin" data-id="5" type="button" id="confirm">进入第二期</button>
+									    {/case}
+									    {case value="第二期"}
+                        					<button class="layui-btn btn btn-primary margin" data-id="6" type="button" id="confirm">进入第三期</button>
+									    {/case}
+									    {case value="第三期"}
+                        					<button class="layui-btn btn btn-primary margin" data-id="3" type="button" id="confirm">待交付</button>
+									    {/case}
+									    {default /}
+									{/switch}
+                        			<button class="layui-btn btn btn-primary margin" data-id="0"   type="button" id="confirm">删除订单</button>
+                                </div>
+                            </td>
+                    </tr>
+                    </tbody>
+                </table>
+			</div>
+			<div class="headerone">
+				<h1 class="header_title">操作记录</h1>
+			</div>
+		<div class="basic_main">
+			<table class="layui-table" id="img">      
+				<tr>          
+					<th >操作者</th>          
+					<th >操作时间</th>          
+					<th >订单状态</th>      
+					<th>备注</th>      
+				</tr>
+				{notempty name="operation"}
+				{foreach name="operation" item="value" key="key" }
+				<tr>
+					<td>{$value.admin_name}</td>
+					<td>{$value.operation_time} </td>
+					<td>{$value.code}</td>
+					<td colspan="8"  >{$value.beizhu}</td>
+				</tr>
+				{/foreach}
+				{/notempty}
+			</table>
+		</div>
+</div>
+
+		</div>		
+			</div>
+
+</div>
+<div class="remarkContent" style="display: none;padding-top: 25px;">
+	<div class="layui-form-item">
+		<label for="" class="layui-form-label" style="width: 30px;">备注</label>
+		<div class="layui-input-block" style="margin-left: 60px;">
+			<textarea class="layui-textarea" name="" rows="" cols=""  maxlength="50"></textarea>
+			<p style="width: 50%;float: left;">字数限制在50字内</p>
+			<p style="width: 50%;float: left;text-align: right;" class="text_limit"><span>0</span>/50</p>
+		</div>
+	</div>
+</div>
+</div>
+
+<script>
+	var img = document.getElementById("img"); 
+	var viewer = new Viewer(img);
+//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+	layui.use(['layer'], function () {
+			var layer = layui.layer;
+	});
+	$(document).on('click', '.margin', function () {
+		var status = $(this).attr('data-id');
+		var code   = $(this).text();
+		var id = {$info['id']|default=''};
+		$.post('/admin/order/order_info', {id : id, status : status, code : code, beizhu : $('[name=note]').val()}, function (data) {
+			if(data.status == 1){
+				layer.msg(data.info,{time: 3000}, function (index) {
+                    parent.location.reload();
+	                var indexs = parent.layer.getFrameIndex(window.name); 
+	                parent.layer.close(indexs);     
+	                parent.close_open();
+	            });
+			}
+		});
+	});
+	function addstate1(obj,evolve){
+       var id = $('#id').val();
+        if(evolve){
+            $.ajax({
+                type : 'post',
+                url : $(obj).attr('data-url'),
+                data : {evolve:evolve,id:id},
+                dataType : 'json',
+                success : function(data){
+                    if(data.status == 1){
+                        self.location.reload();
+                    }else{
+                        layer.alert('操作失败', {icon: 2});   //alert('用户名或密码不能为空');// alert(data);
+                    }
+                }
+            })
+        }
+    }
+    function delstate1(obj,evolve){
+       var id = $('#id').val();
+        if(evolve){
+            $.ajax({
+                type : 'post',
+                url : $(obj).attr('data-url'),
+                data : {evolve:evolve,id:id},
+                dataType : 'json',
+                success : function(data){
+                    if(data.status == 1){
+                        self.location.reload();
+                    }else{
+                        layer.alert('操作失败', {icon: 2});   //alert('用户名或密码不能为空');// alert(data);
+                    }
+                }
+            })
+        }
+    }
+	//ipad端禁止缩放屏幕
+	window.onload=function () {
+        document.addEventListener('touchstart',function (event) {
+            if(event.touches.length>1){
+                event.preventDefault();
+            }
+        })
+        var lastTouchEnd=0;
+        document.addEventListener('touchend',function (event) {
+            var now=(new Date()).getTime();
+            if(now-lastTouchEnd<=300){
+                event.preventDefault();
+            }
+            lastTouchEnd=now;
+        },false)
+    }
+</script>

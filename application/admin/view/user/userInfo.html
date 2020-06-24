@@ -1,0 +1,333 @@
+{include file="common/header1"}
+<!--个人信息-->
+<div role="tabpanel" class="tab-pane in action" id="home" style="background: #fff">
+    <form class="form-inline del_null" name="frm" method="post" data-post="" action="/admin/index.php/user/member/edit_info.html">
+        <input type="hidden" name="id" value="3336028"/>
+                <h3 class="form-group-title " style="border-bottom: 1px solid #e5e5e5;margin-bottom: 10px;">
+            基本信息
+        </h3>
+        <div class="tableBox layui-form">
+            <h3 class="tab-head">基本信息</h3>
+        </div>
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>注册手机号</th>
+                <th>用户类型</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{$user['phone']|default=''}</td>
+                <td>{$user['type']}</td>
+                <td>{$user['add_time']|default=''}</td>
+            </tr>
+            </tbody>
+        </table>
+        <h4 class="title-xx">个人信息</h4>
+        <div class="layui-container xx-container">
+            <div class="layui-row xx-row">
+            {notempty name="user.name"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="1">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label control-label">真实姓名</label>
+                        <div class="layui-input-inline info-content">
+                            <span class="text-info">{$user['name']|default=''}</span>
+                        </div>
+                    </div>
+                </div>
+            {/notempty}
+            {notempty name="user.user_card"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="2">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label control-label">身份证号</label>
+                        <div class="layui-input-inline info-content">
+                            <span class="text-info">{$user['user_card']|default=''}</span>
+                        </div>
+                    </div>
+                </div>
+            {/notempty}
+            {notempty name="user.province"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="10">
+                        <div class="layui-form-item address-item">
+                            <label class="layui-form-label">所在省</label>
+                            <div class="layui-input-inline sm-input-inline info-content" style="">
+                                <span class="text-info">{$user['province']}</span>
+                            </div>
+                        </div>
+                </div>
+            {/notempty}
+            {notempty name="user.city"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="10">
+                        <div class="layui-form-item address-item">
+                            <label class="layui-form-label">所在市</label>
+                            <div class="layui-input-inline sm-input-inline info-content">
+                                <span class="text-info">{$user['city']}</span>
+                            </div>
+                        </div>
+                </div>
+            {/notempty}
+            {notempty name="user.area"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="10">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">所在区</label>
+                            <div class="layui-input-inline sm-input-inline info-content">
+                                <span class="text-info">{$user['area']}</span>
+                            </div>
+                        </div>
+                </div>
+            {/notempty}
+            {notempty name="user.address"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="10">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">详细地址</label>
+                            <div class="layui-input-block info-content" style="line-height: 38px;margin-left: 120px;">
+                                <span class="text-info">{$user['address']}</span>
+                            </div>
+                        </div>
+                </div>
+            {/notempty}
+            {notempty name="user.email"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label control-label">电子邮箱</label>
+                        <div class="layui-input-inline info-content">
+                            <span class="text-info">{$user['email']}</span>
+                        </div>
+                    </div>
+                </div>
+            {/notempty}
+            {notempty name="user.qq"}
+                <div class="layui-col-xs12 layui-col-sm6" data-id="15">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label control-label">QQ</label>
+                        <div class="layui-input-inline info-content">
+                            <span class="text-info">{$user['qq']}</span>
+                        </div>
+                    </div>
+                </div>
+            {/notempty}
+             </div>
+        </div>
+        <div class="layui-container xx-container" style="overflow: hidden;">
+            <div class="layui-row xx-row"></div>
+            <div class="form-group col-sm-6 layui-form-item" id="iden">
+                    <div class="col-sm-8 col-sm-offset-2 layui-input-block">
+                        <input type="submit" class="btn btn-success layui-btn" value="确认"/>
+                        <input type="button" class="btn btn-default cancel layui-btn layui-btn-primary" value="取消"/>
+                    </div>
+            </div>
+        </div>
+    <!--</div>-->
+</form>
+
+
+</div>
+<script src="/static/12/admin/js/AreaData_min.js" type="text/javascript"></script>
+<script src="/static/12/admin/js/Area.js" type="text/javascript"></script>
+
+<script src="/static/12/admin/js/jquery-1.7.min.js"></script>
+<script src="/static/layui/layui.all.js"></script>
+<!--<script src="/admin/skin/js/login/bootstrap.min.js"></script>-->
+<script src="/static/12/admin/js/viewer.js"></script>
+<script>
+        if (window == top) {
+            $(".title-img").html("图片信息");
+        }
+        function ow(){
+            var tmp=window.open("about:blank","","fullscreen=1");
+            tmp.focus();
+            var url = window.location.href;
+            tmp.location=url;
+        }
+</script>
+<script type="text/javascript">
+                    window.addEventuserener('DOMContentLoaded', function () {
+                var galley = document.getElementById('galley');
+                var viewer = new Viewer(galley, {
+                    url : 'data-original'
+                });
+            });
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        initComplexArea('seachprov', 'seachcity', 'seachdistrict', area_array, sub_array, '0', '0', '0');
+        /*开始!       删除基本信息,联系人信息,职业信息为空的项目*/
+        var set_purviews = function (purviews) {
+            if (purviews) {
+                $.each(purviews, function (k, v) {
+                    $('[data-id="' + v.id + '"]').show();
+                });
+            }
+        };
+        $('[name=frm]').on('submit',function(){
+            var lindex=layer.load();
+            $.post('',$('[name=frm]').serialize(),function(data){
+                if(data.status == 1){
+                    layer.alert(data.info,function(){
+                        location.reload();
+                    })
+                }else{
+                    layer.alert(data.info);
+                }
+                layer.close(lindex);
+            },'json');
+            return false;
+        })
+        $('#edit-content').on('click', function () {
+            $('.edit-content').show();
+            $('.info-content').hide();
+            $('#img_info').hide();
+            $('#iden').show();
+        });
+        $('.cancel').on('click', function () {
+            $('.edit-content').hide();
+            $('.info-content').show();
+            $('#img_info').show();
+            $('#iden').hide();
+        });
+
+    });
+</script>
+
+<script>
+    //ipad端禁止缩放屏幕
+    window.onload=function () {
+        document.addEventuserener('touchstart',function (event) {
+            if(event.touches.length>1){
+                event.preventDefault();
+            }
+        })
+        var lastTouchEnd=0;
+        document.addEventuserener('touchend',function (event) {
+            var now=(new Date()).getTime();
+            if(now-lastTouchEnd<=300){
+                event.preventDefault();
+            }
+            lastTouchEnd=now;
+        },false)
+    }
+</script>
+        </div>          </div>
+
+</div>
+<script src="/static/12/admin/js/jquery-1.9.1.js"></script>
+<script src="/static/12/admin/js/juheweb.js"></script>
+<script>
+    var downPdf = document.getElementById("btn-html2canvas");
+    downPdf.onclick = function () {
+        var index = layer.load(1, {
+                shade: [0.5,'#000'] //0.1透明度的背景
+            });
+        html2canvas(
+                document.getElementById("home"),
+                {
+                    dpi: 172,//导出pdf清晰度
+                    onrendered: function (canvas) {
+                        var contentWidth = canvas.width;
+                        var contentHeight = canvas.height;
+
+                        //一页pdf显示html页面生成的canvas高度;
+                        var pageHeight = contentWidth / 592.28 * 841.89;
+                        //未生成pdf的html页面高度
+                        var leftHeight = contentHeight;
+                        //pdf页面偏移
+                        var position = 0;
+                        //html页面生成的canvas在pdf中图片的宽高（a4纸的尺寸[595.28,841.89]）
+                        var imgWidth = 595.28;
+                        var imgHeight = 592.28 / contentWidth * contentHeight;
+
+                        var pageData = canvas.toDataURL('image/jpeg', 1.0);
+                        var pdf = new jsPDF('', 'pt', 'a4');
+
+                        //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+                        //当内容未超过pdf一页显示的范围，无需分页
+                        if (leftHeight < pageHeight) {
+                            pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                        } else {
+                            while (leftHeight > 0) {
+                                pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+                                leftHeight -= pageHeight;
+                                position -= 841.89;
+                                //避免添加空白页
+                                if (leftHeight > 0) {
+                                    pdf.addPage();
+                                }
+                            }
+                        }
+                        pdf.save('用户详情.pdf');
+                    },
+                    //背景设为白色（默认为黑色）
+                    background: "#fff"  
+                })
+                setTimeout(function(){
+                     layer.close(index);
+                 },2000)               
+    }
+        </script>
+<style>
+    .disabled{
+        background: #f2f2f2!important;
+        color: #999!important;
+        border: none!important;
+    }
+</style>
+
+<div id="export_excel" style="display: none">
+    <form name="export_excel" class="">
+        <input type="hidden" name="is_excel" value="1" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">导出数量</label>
+            <div class="layui-input-block dc-block" style="line-height: 36px;" id="export_num_select">
+                <label style="margin-right: 10px;">
+                        <input type="radio" name="number" value="100" checked/>100                  </label><label style="margin-right: 10px;">
+                        <input type="radio" name="number" value="500" />500                 </label><label style="margin-right: 10px;">
+                        <input type="radio" name="number" value="1000" />1000                   </label><label style="margin-right: 10px;">
+                        <input type="radio" name="number" value="2000" />2000                   </label><label style="margin-right: 10px;">
+                        <input type="radio" name="number" value="4000" />4000                   </label>            </div>
+        </div>
+    </form>
+</div>
+     </div>
+    </div>
+     </table>
+    </div>
+
+   </div>
+   <div class="layui-table-page">
+    <div id="layui-table-page1"></div>
+   </div>
+   <style>.laytable-cell-1-uid{ width: 50px; }.laytable-cell-1-id{ width: 60px; }.laytable-cell-1-name{ width: 128px; }.laytable-cell-1-sex{ width: 55px; }.laytable-cell-1-phone{ width: 90px; }.laytable-cell-1-token{ width: 128px; }.laytable-cell-1-transaction{ width: 128px; }.laytable-cell-1-identity{ width: 128px; }.laytable-cell-1-type{ width: 128px; }.laytable-cell-1-create_date{ width: 130px; }.laytable-cell-1-share{ width: 128px; }.laytable-cell-1-user_type{ width: 128px; }.laytable-cell-1-mobile_price{ width: 128px; }.laytable-cell-1-mark_count{ width: 128px; }.laytable-cell-1-caozuo{ width: 128px; }</style>
+  </div>
+ </body>
+</html>
+<script>
+
+//  判断如果是顶层页面禁止全屏展示按钮出现
+    if (window == top) {
+        $("#feedback").hide();
+    } else {
+        var url = window.location.href;
+        $("#feedback").attr("href", url);
+    }
+
+    //ipad端禁止缩放屏幕
+    window.onload=function () {
+        document.addEventuserener('touchstart',function (event) {
+            if(event.touches.length>1){
+                event.preventDefault();
+            }
+        })
+        var lastTouchEnd=0;
+        document.addEventuserener('touchend',function (event) {
+            var now=(new Date()).getTime();
+            if(now-lastTouchEnd<=300){
+                event.preventDefault();
+            }
+            lastTouchEnd=now;
+        },false)
+    }
+</script>

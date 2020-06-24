@@ -1,0 +1,75 @@
+{extend name="index_layout"/}
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header">添加车辆信息</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/Carlist/add')}" method="post">
+      
+            <div class="layui-form-item">
+                <label class="layui-form-label">车辆名</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="name" autocomplete="off" placeholder="车辆名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">载重</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="load" autocomplete="off" placeholder="车辆名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">长*宽*高</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="lwh" autocomplete="off" placeholder="长宽高" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">载货体积</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="volume" autocomplete="off" placeholder="载货体积" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">起步价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="start_money" autocomplete="off" placeholder="起步价" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">超里程</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="extra_mileage" autocomplete="off" placeholder="超里程" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-inline w300">
+                    <input type="number" name="sort" value="0" autocomplete="off" placeholder="数值越大排序越前" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="remarks" value="0" autocomplete="off" placeholder="备注" class="layui-input">
+                </div>
+            </div>
+
+<!--             <div class="layui-form-item">
+                <label class="layui-form-label">是否隐藏</label>
+                <div class="layui-input-inline w300">
+                    <input type="checkbox" name="status" lay-skin="switch" lay-text="否|是" value="1" checked="">
+                </div>
+            </div> -->
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Carlist/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+{/block}

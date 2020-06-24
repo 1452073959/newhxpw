@@ -1,0 +1,1109 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>订单列表</title>
+	<style type="text/css">
+	.wrap {
+		width: 98%;
+		margin-left: 1%;
+		padding-top: 20px;
+	}
+	.onLine-list .layui-col-md3 {
+		margin-top: 20px;
+	}
+	.onLine-list {
+		margin-top: 20px;
+	}
+	.cxBtn{
+		text-align: right;
+	}
+	.layui-breadcrumb a:last-child cite{
+		color: #5FB878;
+	}
+	.layui-table-cell{
+		padding: 0 5px!important;
+	}
+	.scroll-wrapper {
+	    /*-webkit-overflow-scrolling: touch;*/
+	    /*overflow-y: scroll;*/
+	}
+		.layui-layer-setwin .layui-layer-maxmin{
+		display: inline-block!important;
+	}
+
+
+	</style>
+<link rel="stylesheet" href="/static/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="/static/12/admin/css/font-awesome.min.css" media="all"/>
+<script src="/static/12/admin/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+
+<link rel="stylesheet" href="/static/12/admin/css/online.css"/>
+<script type="text/javascript" src="/static/12/admin/js/areadata_min.js"></script>
+<script type="text/javascript" src="/static/12/admin/js/area.js"></script>
+</head>
+<body>
+<style type="text/css">
+	.onLine-list{
+		width: 100%;
+		margin: 0 auto;
+		margin-top: 20px;
+		box-sizing: border-box;
+	}
+	.layui-btn-group .layui-btn:first-child {
+		width: 30px !important;
+		background: url(/static/12/admin/images/ckxx.png) no-repeat center/15px 12px;
+	}
+	.layui-btn-group .layui-btn:nth-child(2) {
+		width: 30px !important;
+		background: url(/static/12/admin/images/jyjl.png) no-repeat center/15px 12px;
+	}
+	.layui-btn-group .layui-btn:nth-child(3) {
+		width: 30px !important;
+		background: url(/static/12/admin/images/del.png) no-repeat center/15px 12px;
+	}
+	.scroll-wrapper {
+		-webkit-overflow-scrolling: touch;
+		overflow-y: scroll;
+	}
+	.layui-table-header table,.layui-table-body table{
+		width: 100%!important;
+		overflow-y: auto;
+	}
+	.time-box .layui-input-inline{
+		width: 100px!important;
+	}
+	.linkage-box .layui-input-inline {
+		width: 180px!important;
+	}
+	.explain{
+		/*width: 40%!important;*/
+		/*float: right;*/
+		/*position: absolute;
+		right: 15px;
+		bottom: 80px;*/
+	}
+	.explain span{
+		display: inline-block;
+		margin-right: 15px;
+		line-height: 26px;
+	}
+	.explain span:nth-child(1){
+		margin-right: 0px;
+	}
+	#layui-table-page1,#layui-table-page2{
+		float: left;
+		width: 60%!important;
+	}
+	.jsrim{
+		position: relative;
+	}
+	.jstips{
+		display: inline-block;
+		width: 80px;
+		height: 30px;
+		background: #000000;
+		color: #fff;
+		position: absolute;
+		top: 19px;
+		right: 6px;
+	}
+</style>
+<div class="wrap">
+	<span class="layui-breadcrumb" lay-separator=">" style="visibility: visible;">
+		<span>您当前所在位置：</span>
+		<!--<a href="">首页</a>-->
+		<a href="javascript:;">订单管理</a>
+		<a><cite>订单列表</cite></a>
+	</span>
+	<div class="onLine-list">
+
+		<div class="layui-container need-width">
+
+			<form class="layui-form form-search" name="frm" method="get" action="">
+				<input type="hidden" name="id" value=""/>
+				<div class="layui-row">
+					<div class="layui-col-xs12 layui-col-sm9 layui-col-md9">
+						<div class="layui-form-item">
+							<label class="layui-form-label">会员信息</label>
+							<div class="layui-input-inline">
+								<input style="width:190px;" class="layui-input" type="text" name="word" value="" placeholder="请输入会员手机号或者姓名"/>
+							</div>
+							<label class="layui-form-label">订单编号</label>
+							<div class="layui-input-inline">
+								<input style="width:190px;" class="layui-input" type="text" name="oid" value="" placeholder="请输入订单编号"/>
+							</div>
+							<div class="layui-input-inline" style="width: 100px;">
+								<input type="submit" value="查询" class="layui-btn layui-btn-normal"/>
+
+							</div>
+							<div class="layui-input-inline" style="width: 100px;">
+								<input style="width:100px;" class="layui-btn layui-btn-normal advanced-search" type="button" name="" value="高级筛选"/>
+								<div class="triangle"></div>
+							</div>
+							<div class="layui-input-inline" style="width: 100px;">
+															</div>
+						</div>
+					</div>
+
+					<div class="layui-col-xs12 layui-col-sm3 layui-col-md3" style="margin-top: 0;text-align: right;">
+							<div class="layui-form-item" style="">
+								<button class="layui-btn layui-btn-normal export_excel" type="button" id="wq_btn_export">导出</button>
+							</div>
+						</div>
+				</div>
+				<div class="layui-row advanced-row" style="display: none;">
+					<div class="layui-col-xs12 layui-col-sm6 layui-col-md4 layui-col-lg3">
+						<div class="layui-form-item">
+							<label class="layui-form-label">订单状态</label>
+							<div class="layui-input-inline">
+								<select name="order_status" lay-verify="required" lay-search="">
+									<option value="">全部</option>
+									<option value="-1">已取消</option>
+									<option value="1">已付款</option>
+									<option value="2">待付款</option>
+									<option value="3">待交付</option>
+									<option value="4">第一期 </option>
+									<option value="5">第二期</option>
+									<option value="6">第三期</option>
+									<option value="7">第四期</option>
+									<option value="10">已完成</option>
+                                </select>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="layui-col-xs12 layui-col-sm6 layui-col-md4 layui-col-lg3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">商户名称</label>
+								<div class="layui-input-inline">
+
+									<div class="layui-input-inline">
+										<input style="width:190px;" class="layui-input" type="text" name="oid" value="" placeholder="请输入商户名称"/>
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<!-- <div class="layui-col-xs12 layui-col-sm6 layui-col-md4 layui-col-lg3">
+							<div class="layui-form-item">
+								<label class="layui-form-label">客服</label>
+								<div class="layui-input-inline">
+									<select name="service" lay-verify="required" lay-search="">
+										<option value="">全部</option>
+                                        <option value="1" >未分配</option>
+									</select>
+								</div>
+							</div>
+						</div> -->
+						<div class="layui-input-inline time-box">
+							<div class="layui-form-item">
+								<label class="layui-form-label">下单日期</label>
+
+								<!--
+    <script>
+        var is_limit_time = false; // 是否限制时间到今天之前 默认:是
+        var search_default_time = true;// 设置默认当前时间
+        var laydate_id = 'time'; // 日期插件 id前缀名称
+     </script>
+-->
+<script>
+	// 格式化日期格式
+	Date.prototype.Format = function (fmt) { //author: meizz
+	    var o = {
+	        "M+": this.getMonth() + 1, //月份
+	        "d+": this.getDate(), //日
+	        "H+": this.getHours(), //小时
+	        "m+": this.getMinutes(), //分
+	        "s+": this.getSeconds(), //秒
+	        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+	        "S": this.getMilliseconds() //毫秒
+	    };
+	    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	    for (var k in o)
+	        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	    return fmt;
+	}
+
+	// laydate实例ID
+    if(typeof laydate_id == "undefined"){
+        laydate_id = 'laydate';
+    }
+
+    // 日期插件默认值处理
+    if(typeof search_default_time != "undefined" && search_default_time === true){
+        now_date = new Date();
+        var date_value_start = date_value_end = now_date.Format("yyyy-MM-dd");
+    }else if(typeof search_default_time == "undefined" || search_default_time === false){
+		var date_value_start = "";
+        var date_value_end = "";
+    }else{
+        var date_value_start = date_value_end = search_default_time;
+    }
+</script>
+<div class="layui-input-inline sm-input-inline">
+    <script>
+        document.write('<input type="text" name="search_date_start" value="'+date_value_start+'" lay-verify="date" placeholder="开始时间" autocomplete="off" class="layui-input" id="'+laydate_id+'_start">');
+    </script>
+
+</div>
+<div class="layui-input-inline sm-input-inline">
+    <script>
+        document.write('<input type="text" name="search_date_end" value="'+date_value_end+'" lay-verify="date" placeholder="结束时间" autocomplete="off" class="layui-input" id="'+laydate_id+'_end">');
+    </script>
+</div>
+<script>
+
+    function search_item_time_area_fun(is_limit_time, id_pre){
+        var search_date_start_obj, search_date_end_obj;
+        var now_time = new Date();
+        // 处理是否限制最大值为当前日期
+        if(is_limit_time){
+            var max = 'new Date()';
+        }else{
+            var max = '2099-01-01';
+        }
+
+        // 日期插件默认值处理
+        if(typeof search_default_time == "undefined"){
+            var search_default_time = false;
+        }else{
+            var search_default_time = new Date();
+        }
+        // 实例
+        layui.use(['laydate'], function () {
+            // 开始日期
+            search_date_start_obj = layui.laydate.render({
+                elem : '#'+id_pre+'_start'
+                ,max : max
+                ,trigger: 'click'
+                ,value : search_default_time                ,done: function(value,date){
+                    if(value) {
+                        search_date_end_obj.config.min = {
+                            year: date.year,
+                            month: date.month-1,
+                            date: date.date
+                        };
+                    }else{
+                        search_date_end_obj.config.min = false;
+                    }
+                }
+            });
+            // 结束日期
+            search_date_end_obj = layui.laydate.render({
+                elem : '#'+id_pre+'_end'
+                ,max : max
+                ,trigger: 'click'
+                ,value : search_default_time                ,done: function(value,date){
+                    if(value){
+                        search_date_start_obj.config.max = {
+                            year: date.year,
+                            month: date.month-1,
+                            date: date.date
+                        };
+                    }else{
+                        if(is_limit_time){
+                            search_date_start_obj.config.max = {
+                                year: now_time.getFullYear(),
+                                month: now_time.getMonth(),
+                                date: now_time.getDate()
+                            }
+                        }else{
+                            search_date_start_obj.config.max = {
+                                year: 2099,
+                                month: 1,
+                                date: 20
+                            };
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    var append_script = document.createElement("script");
+    append_script.type = "text/javascript";
+
+    if(typeof is_limit_time == "undefined"){
+        is_limit_time = true;
+    }
+
+    append_script.appendChild(document.createTextNode("search_item_time_area_fun("+is_limit_time+",'"+laydate_id+"');"));
+    document.body.appendChild(append_script);
+</script>
+
+							</div>
+						</div>
+				</div>
+			</form>
+
+		</div>
+		<div class="box"></div>
+		<table class="layui-hide" id="demo" lay-filter="test" style="position: relative;">
+
+		</table>
+	</div>
+	<!--备注详情-->
+	<div id="beizhu_content" style="display: none">
+		<div class="beizhuCont" style="padding:0;">
+			<div class="layui-tab layui-tab-card" lay-filter="beizhu_tab" style="height:100%;border:0px;margin:0;">
+				<ul class="layui-tab-title">
+					<li class="layui-this tab_one">贷前信审</li>
+					<li>贷后催收</li>
+				</ul>
+				<div class="layui-tab-content">
+					<div class="layui-tab-item layui-show dai_before">内容1</div>
+					<div class="layui-tab-item dai_after">内容2</div>
+				</div>
+			</div>
+			<!--<div class="layui-row">
+				<div class="layui-col-xs12">
+					<p>[2017-09-28] 客服1<span style="color: red">&lt;客服&gt;</span>:</p>
+					<blockquote class="layui-elem-quote">好嘎哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</blockquote>
+				</div>
+			</div>-->
+		</div>
+		<textarea placeholder="请输入内容..." name="remarks" style="resize: none;" class="layui-textarea"></textarea>
+	</div>
+
+	<div id="userinfo" style="display: none">
+	</div>
+	<!--excel导出-->
+	<script>
+               var $export_url='/admin/user/userYes.html';
+		</script>
+
+<!--/*
+	wenqiang:
+	暂不支持单页面，多个导出功能
+    yaoyao:
+    <script>
+        var $export_url='U("financial/api/bill_index")'; // 导出url
+        var $search_form_name='frm'; // 可以空 搜索条件表单name
+        var $per_class_name='.layui-show'; // 可以空 取某个dom下的page和limit
+        var $open_export_window_after_callfun = function()... // 可以空 打开导出框后回调
+    </script>
+    include file="./Tpl/Public/export_excel_select.html"
+*/-->
+
+<style>
+	.disabled{
+		background: #f2f2f2!important;
+		color: #999!important;
+		border: none!important;
+	}
+</style>
+
+<div id="export_excel" style="display: none">
+	<form name="export_excel" class="">
+		<input type="hidden" name="is_excel" value="1" />
+		<div class="layui-form-item">
+		    <label class="layui-form-label">导出数量</label>
+		    <div class="layui-input-block dc-block" style="line-height: 36px;" id="export_num_select">
+		    	<label style="margin-right: 10px;">
+		    			<input type="radio" name="number" value="100" checked/>100		    		</label><label style="margin-right: 10px;">
+		    			<input type="radio" name="number" value="500" />500		    		</label><label style="margin-right: 10px;">
+		    			<input type="radio" name="number" value="1000" />1000		    		</label><label style="margin-right: 10px;">
+		    			<input type="radio" name="number" value="2000" />2000		    		</label><label style="margin-right: 10px;">
+		    			<input type="radio" name="number" value="4000" />4000		    		</label>		    </div>
+		</div>
+	</form>
+</div>
+     </div>
+    </div>
+     </table>
+    </div>
+
+   </div>
+   <div class="layui-table-page">
+    <div id="layui-table-page1"></div>
+   </div>
+   <style>.laytable-cell-1-uid{ width: 50px; }.laytable-cell-1-id{ width: 60px; }.laytable-cell-1-name{ width: 128px; }.laytable-cell-1-sex{ width: 55px; }.laytable-cell-1-phone{ width: 90px; }.laytable-cell-1-token{ width: 128px; }.laytable-cell-1-transaction{ width: 128px; }.laytable-cell-1-identity{ width: 128px; }.laytable-cell-1-type{ width: 128px; }.laytable-cell-1-create_date{ width: 130px; }.laytable-cell-1-share{ width: 128px; }.laytable-cell-1-user_type{ width: 128px; }.laytable-cell-1-mobile_price{ width: 128px; }.laytable-cell-1-mark_count{ width: 128px; }.laytable-cell-1-caozuo{ width: 128px; }</style>
+  </div>
+ </body>
+</html>
+<script>
+
+    /**
+     * 获取导出需要分页参数
+     * @author yaoyao
+     */
+    function getExportParam(){
+        if(typeof($per_class_name) == 'undefined'){
+            $per_class_name = '';
+        }else{
+            $per_class_name += ' ';
+        }
+        var export_excel = $('[name=export_excel]').serialize(); // number
+        var $limit = $($per_class_name+'.layui-laypage-limits [selected]').val();
+        var $page = $($per_class_name+'.layui-laypage-skip [type=text]').val();
+        return export_excel+'&page='+$page+'&limit='+$limit;
+    }
+
+    if(typeof($selectCount) == 'undefined' || typeof($selectCount) == ''){
+        $selectCount  ='';
+    }
+    // 为导出按钮添加点击事件
+    if(typeof($export_url) != 'undefined' && $selectCount == ''){
+        if(!document.querySelector(".export_excel")){
+        	alert('系统出错：未检测到类名export_excel的导出按钮');
+        }
+        else{
+            document.querySelector(".export_excel").onclick = function(){
+
+                // 判断当前导出条数是否为0条
+                var data_num = $('.layui-laypage-count').text();
+                if(data_num == ""){
+                    alert('没有数据, 无法导出');
+                    return false;
+                }
+                data_num = data_num.replace("共","");
+                data_num = data_num.replace("条","");
+                parseInt(data_num);
+                if(data_num == 0){
+                    alert('没有数据, 无法导出!');
+                    return false;
+                }
+
+                layer.open({
+                    type       : 1,
+                    title      : '导出',
+                    content    : $('#export_excel'),
+                    time       : 0,
+                    shade      : 0.5,
+                    area       : ['500px'],
+                    shadeClose : true,
+                    btn        : ['确定', '取消'],
+                    maxmin     : true,
+                    scrollbar  : false,
+                    yes        : function (index) {
+                    	if($(".layui-layer-btn0").hasClass("disabled")){
+                    		return;
+                    	}else{
+                    		var lindex    = layer.load(1);
+                            var frm = 'frm';
+                            if(typeof($search_form_name) != 'undefined'){
+                                frm = $search_form_name;
+                            }
+                            var frm_where = $('[name='+frm+']').serialize();
+                            var lhref     = $export_url + '?' + frm_where + '&' + getExportParam();
+
+                            location.href = lhref;
+                            layer.close(lindex);
+                            layer.close(index);
+                    	}
+
+                    }
+                });
+            };
+        }
+    }
+    else if($selectCount ==2){  //lcq
+        document.querySelector(".export_excel").onclick = function(){
+
+            layer.open({
+                type       : 1,
+                title      : '导出',
+                content    : '',
+                time       : 0,
+                shade      : 0.5,
+                area       : ['500px'],
+                shadeClose : true,
+                btn        : ['确定', '取消'],
+                maxmin     : true,
+                scrollbar  : false,
+                yes        : function (index) {
+                    if($(".layui-layer-btn0").hasClass("disabled")){
+                        return;
+                    }else{
+                        var lindex    = layer.load(1);
+                        var frm = 'frm';
+                        if(typeof($search_form_name) != 'undefined'){
+                            frm = $search_form_name;
+                        }
+                        var frm_where = $('[name='+frm+']').serialize();
+                        var lhref     = $export_url + '?' + frm_where + '&' + getExportParam();
+
+                        location.href = lhref;
+                        layer.close(lindex);
+                        layer.close(index);
+                    }
+
+                }
+            });
+        };
+
+    }
+    else{
+        alert('系统错误：缺少导出URL');
+    }
+
+</script>	<!--<script src="js/jquery.min_6.js"></script>-->
+<script type="text/javascript">
+	function arrayToJson(formArray){
+		var dataArray = {};
+		$.each(formArray,function(){
+			if(dataArray[this.name]){
+				if(!dataArray[this.name].push){
+					dataArray[this.name] = [dataArray[this.name]];
+				}
+				dataArray[this.name].push(this.value || '');
+			}else{
+				dataArray[this.name] = this.value || '';
+			}
+		});
+		return JSON.stringify(dataArray);
+	}
+	function aa(e){
+		if(e.keyCode==116){
+			location.reload();
+			return false;
+		}
+	}
+	document.onkeydown = aa;
+
+	//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+
+	//ipad端禁止缩放屏幕
+	window.onload=function () {
+        document.addEventListener('touchstart',function (event) {
+            if(event.touches.length>1){
+                event.preventDefault();
+            }
+        })
+        var lastTouchEnd=0;
+        document.addEventListener('touchend',function (event) {
+            var now=(new Date()).getTime();
+            if(now-lastTouchEnd<=300){
+                event.preventDefault();
+            }
+            lastTouchEnd=now;
+        },false)
+    }
+</script>
+	<script type="text/javascript">
+		//额度筛选jq
+        $(document).ready(function(){
+            $("#minedu").keyup(function(){
+                $this=$(this);
+                $("#maxedu").val($this.val());
+            });
+        });
+        var checked_json = {};
+
+        function reload_table() {
+            // sjson = $('[name=frm]').serializeArray();
+            // sjson = arrayToJson(sjson);
+            // sjson = $.parseJSON(sjson);
+            // table.reload('idtest', {
+            //     where : sjson,
+				// page : {
+            //         curr : 1 //重新从第 1 页开始
+            //     }
+            // });
+            $('.layui-laypage-btn').trigger('click');
+            $('.layui-layer-close').trigger('click');
+        }
+        // initComplexArea('seachprov', 'seachcity', 'seachdistrict', area_array, sub_array, '', '', '');
+        var layer, $form;
+        layui.use(['layer', 'form', 'element'], function () {
+			var element = layui.element,
+				layer = layui.layer,
+				$form = layui.form;
+
+            $form.on('select(seachprov)', function (data) {
+                changeComplexProvince(data.value, sub_array, 'seachcity', 'seachdistrict');
+                $form.render('select');
+            });
+            $form.on('select(seachcity)', function (data) {
+                changeCity(data.value, 'seachdistrict', 'seachdistrict');
+                $form.render('select');
+            });
+			//监听Tab切换，按钮是否隐藏
+			element.on('tab(beizhu_tab)', function(){
+				var parent = $(this).parents(".layui-layer-content").parent();
+				if($(this).hasClass("tab_one")){
+					parent.find("div.layui-layer-btn").css("display","block");
+				}else{
+					parent.find("div.layui-layer-btn").hide();
+				}
+			});
+        });
+
+        function field_hide(njson) {
+            if (!njson) {
+                return false;
+            }
+            $form.render('checkbox')
+            /*$.each(njson, function (index, item) {
+                if (item == 0) {
+                    $('[data-field="' + index + '"]').hide();
+                } else {
+                    $('[data-field="' + index + '"]').show();
+                }
+            });*/
+        }
+        
+
+        $(document).on('click', '.check_delete', function () {
+            //删除信息
+            var id = $(this).attr('data-id');
+            layer.confirm('确认要删除该信息吗？', {icon : 3, title : '警告'}, function () {
+                var lindex = layer.load(2);
+                $.post("/admin/user/deluser", {id : id}, function (data) {
+                    layer.close(lindex);
+                    if (data.status == 1) {
+                        layer.msg(data.info,{icon : 3, title : '警告',btn:[],time: 3000}, function (index) {
+                            reload_table();
+                            layer.close(index);
+
+                        });
+
+                    } else {
+                    	var msg = '未授权访问';
+	                	if (data.info) {
+	                		msg = data.info;
+	                	}
+                        layer.alert(msg);
+                    }
+                }, 'json');
+            });
+
+        }).on('click', '.check_orderinfo', function () {
+            //查看信息
+            var id     = $(this).attr('data-id');
+            var lindex = layer.open({
+                type       : 2,
+                title      : '查看信息',//不显示标题栏
+                area       : ['99%', '100%'],
+//				offset     : '100px',
+                shade      : 0.5,
+                shadeClose : true,
+                id         : 'LAY_layuipro',//设定一个id，防止重复弹出
+                btn        : ['关闭'],
+                btnAlign   : 'c',
+                moveType   : 1,//拖拽模式，0或者1
+                maxmin     : true,
+                content    : "/admin/order/order_info" + '?id=' + id,
+                success    : function (layero) {
+                    $(layero).addClass("scroll-wrapper");//苹果 iframe 滚动条失效解决方式
+                    //layer.iframeAuto(lindex);
+                    layer.full(lindex);
+                }
+            });
+        });
+        layui.use(['form', 'layedit', 'table'], function () {
+            var form    = layui.form,
+                layedit = layui.layedit,
+                laydate = layui.laydate;
+                table   = layui.table;
+
+           /*  layer.open({type : 4, content : '加载中'});
+            //layer.load(2);
+            //layer.open({type:3});
+            function rolding_close(res) {
+                layer.closeAll();
+            } */
+
+            var sjson = $('[name=frm]').serializeArray();
+            sjson     = arrayToJson(sjson);
+            sjson     = $.parseJSON(sjson);
+            var id    = $('[name=frm] [name=id]').val();
+            //第一个实例
+            table.render({
+                elem      : '#demo'
+                , id      : 'idtest'
+                , loading : true
+                , even    : true
+                , where   : sjson
+                , url     : '/admin/Order/order_list' //数据接口
+                , method  : 'post' //http请求类型
+                                , page    : true //开启分页
+                    , cols    : [[ //表头
+                {type:'checkbox', field : 'id',width:40}
+                ,{field : 'id', width:60, title : '订单ID', sort : true,width:71}
+                , {field : 'name', title : '订单编号' }
+                , {field : 'phone', title : '会员手机号', sort : true}
+                , {field : 'name', title : '会员姓名'}
+                , {field : 'money', title : '总金额'}
+                , {field : 'order_status', title : '订单状态'}
+                , {field : 'add_time', title : '订单创建时间'}
+        , {field : 'caozuo', title : '操作', minWidth:100}
+        ]],
+            done      : function (res, curr) {
+                //鼠标悬停 图标提示
+                var tipsi;
+                $(".hitsimg").hover(function(data){
+                    tipsi = layer.tips($(this).data('val'),this,{time:0});
+                },function(){
+                    layer.close(tipsi);
+                });
+					// if(res.limit){
+     //                 $('[name=excel_limit]').val(res.limit);
+					// }
+     //            alert($('[name=excel_limit]').val());
+     //            rolding_close(res);
+                if (res.code != 0) {
+                    $('.layui-none').html(res.msg);
+                }
+                $('[name=id]').val('');
+                if (id) {
+                    $('.check_userinfo').trigger('click');
+                }
+                id=0;
+                var sjson = '';
+                if (sjson) {
+                    sjson = JSON.parse(sjson);
+                }
+                checked_json = sjson;
+                $.each(sjson, function (index, item) {
+                    if (item == 0) {
+                        $('.table-list [name="' + index + '"]').prop('checked', false);
+                    } else {
+                        $('.table-list [name="' + index + '"]').prop('checked', 'checked');
+                    }
+                });
+                field_hide(sjson);
+
+             	// 处理导出按钮
+            	if(res.count <= 0){
+            		$("#wq_btn_export").attr({disabled:"disabled"}).addClass("disabled");
+            	}else{
+            		$("#wq_btn_export").attr({disabled:false}).removeClass("disabled");
+            	}
+            }
+
+        });
+            //批量操作（通过，拒绝）
+            var active = {
+                batchPass: function(ids){ //批量通过
+                    batch_user(ids,1);
+                }
+                ,batchRefuse: function(ids){ //批量拒绝
+                    batch_user(ids,2);
+                }
+            };
+            $('.demoTable .layui-btn').on('click', function(){
+                var checkStatus = table.checkStatus('idtest')
+                    ,data = checkStatus.data;
+                var uids         = '';
+                $.each(data, function (item, index) {
+                    if (uids) {
+                        uids = uids + ',' + index.uid;
+                    } else {
+                        uids = index.uid;
+                    }
+                });
+                if (!uids) {
+                    layer.alert('至少选择一个用户');
+                    return false;
+                }
+				  var type = $(this).data('type');
+
+				  layer.confirm('确定要这样操作吗？', {icon: 3, title:'提示'}, function(index){
+				  //do something
+				  active[type] ? active[type].call(this,uids) : '';
+ 				});
+             });
+            //table.reload('#demo', {id : 1});
+            $('.form-search').on('submit', function () {
+				if($('[name=amount_type]').val() > 0){
+					if($('#maxedu').val() =="" || $('#minedu').val()==""){
+						 layer.alert("额度最大值或最小值不能为空");
+						 return false;
+					}
+			    	if ( parseInt($('#maxedu').val()) < parseInt($('#minedu').val())){
+					    layer.alert("额度最大值不能小于最小值");
+					    return false;
+			     	}
+					if ( parseInt($('#maxedu').val()) <0 ||  parseInt($('#minedu').val())<0){
+						layer.alert("额度最大值或最小值不能小于0");
+						return false;
+					}
+				}
+
+
+                sjson = $('[name=frm]').serializeArray();
+                sjson = arrayToJson(sjson);
+                sjson = $.parseJSON(sjson);
+
+                table.reload('idtest', {
+                    where : sjson, page : {
+                        curr : 1 //重新从第 1 页开始
+                    }
+                });
+                //审核中的用户显示批量操作
+                var ptid = $('[name=pattern]').val();
+
+                if (ptid == 9) {
+                    $('#batch_btn').show();
+                }else{
+					$('#batch_btn').hide()
+				}
+
+                return false;
+            });
+
+            //创建一个编辑器
+            var editIndex = layedit.build('LAY_demo_editor');
+
+            //自定义验证规则
+            form.verify({
+                title   : function (value) {
+                    if (value.length < 5) {
+                        return '标题至少得5个字符啊';
+                    }
+                },
+                pass    : [/(.+){6,12}$/, '密码必须6到12位'],
+                content : function (value) {
+                    layedit.sync(editIndex);
+                }
+            });
+
+            //监听指定开关
+            form.on('switch(switchTest)', function (data) {
+                layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+                    offset : '6px'
+                });
+                layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+            });
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                layer.alert(JSON.stringify(data.field), {
+                    title : '最终的提交信息'
+                })
+                return false;
+            });
+
+        });
+
+		//用户批量操作方法
+		function batch_user(ids,type){
+            var lindex     = layer.load(2);
+            $.post("/admin/index.php/user/api/batch_user.html", {ids : ids, type : type}, function (data) {
+                if (data.code == 1) {
+                    layer.alert(data.msg);
+                } else {
+                	var msg = '未授权访问';
+                	if (data.info) {
+                		msg = data.msg;
+                	}
+                    layer.alert(msg);
+                    return false;
+                }
+            }, 'json');
+            layer.close(lindex);
+            reload_table();
+            return false;
+		}
+
+        layui.use('layer', function () { //独立版的layer无需执行这一句
+            var $     = layui.jquery,
+                layer = layui.layer; //独立版的layer无需执行这一句
+
+            //触发事件
+            var active = {
+                setTop       : function () {
+                    var that = this;
+                    //多窗口模式，层叠置顶
+                    layer.open({
+                        type    : 2 //此处以iframe举例
+                        ,
+                        title   : '当你选择该窗体时，即会在最顶端',
+                        area    : ['390px', '260px'],
+                        shade   : 0,
+                        maxmin  : true,
+                        offset  : [ //为了演示，随机坐标
+                            Math.random() * ($(window).height() - 300), Math.random() * ($(window).width() - 390)
+                        ],
+                        content : 'http://layer.layui.com/test/settop.html',
+                        btn     : ['继续弹出', '全部关闭'] //只是为了演示
+                        ,
+                        yes     : function () {
+                            $(that).click();
+                        },
+                        btn2    : function () {
+                            layer.closeAll();
+                        }
+
+                        ,
+                        zIndex  : layer.zIndex //重点1
+                        ,
+                        success : function (layero) {
+                            layer.setTop(layero); //重点2
+                        }
+                    });
+                },
+                confirmTrans : function () {
+                    //配置一个透明的询问框
+
+                    layer.msg('<div class="beizhuCont"></div><input type="text" class="beizhuText"/>', {
+                        type       : 0,
+                        time       : 0,
+                        shade      : 0.8,
+                        area       : ['50%', '50%'],
+                        shadeClose : true,
+                        btn        : ['确定', '取消']
+                    });
+                },
+                offset       : function (othis) {
+                    var type = othis.data('type'),
+                        text = othis.text();
+
+                    layer.open({
+                        type     : 1,
+                        offset   : type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                        ,
+                        id       : 'layerDemo' + type //防止重复弹出
+                        ,
+                        content  : '<div style="padding: 20px 100px;">' + text + '</div>',
+                        btn      : '关闭全部',
+                        btnAlign : 'c' //按钮居中
+                        ,
+                        shade    : 0 //不显示遮罩
+                        ,
+                        yes      : function () {
+                            layer.closeAll();
+                        }
+                    });
+                }
+
+            };
+
+            $('#layerDemo .layui-btn').on('click', function () {
+                var othis  = $(this),
+                    method = othis.data('method');
+                active[method] ? active[method].call(this, othis) : '';
+            });
+
+            $.fn.extend({
+                toggleWin   : function (winBox, boolean) {
+                    //this 点击显示winBox 点击除了this的 其他地方则隐藏winBox
+                    //boolean赋值 且 == true 点击除了this和winBox 的 其他地方则隐藏winBox
+                    $(this).click(function (ev) {
+                        $(winBox).show();
+                        ev.stopPropagation();
+                    });
+                    $(document).click(function (e) {
+                        $(winBox).hide();
+                    });
+                    if (boolean && boolean == true) {
+                        $(winBox).click(function (ev) {
+                            ev.stopPropagation();
+                        });
+                    }
+                },
+                toggSpecify : function (winBox, closeBar) {
+                    //this 被点击显示winBox
+                    //closeBar被点击则关闭 winBox,默认 closeBar=#mb
+                    var winBoxBg = '<div id=\"mb\"></div>'
+                    $(this).click(function () {
+                        if (!$("#mb")) {
+                            $("body").append(winBoxBg);
+                        }
+                        $("#mb," + winBox).show();
+                    });
+                    closeBar ? closeBar : closeBar = "#mb";
+                    $(closeBar).click(function () {
+                        $("#mb," + winBox).hide();
+                    });
+                }
+
+            });
+            $(".records").toggleWin(".record", true);
+
+            $(".tab-ul li").click(function () {
+                nowTwo = $(this).index();
+                tabTwo();
+            });
+
+            function tabTwo() {
+                $(".record-table ol>li").eq(nowTwo).addClass('cur').siblings().removeClass('cur');
+            }
+
+        });
+
+ 		 //悬浮框
+        var val=$(".hitsimg").attr('date-value');
+		$(".hitsimg").attr({title:val});
+
+        //高级筛选
+        $(".advanced-search").click(function () {
+            $(".advanced-row").toggleClass("advanced-block");
+            $(".triangle").toggleClass("advanced-block");
+        });
+        //表格过滤
+        $(".filter-btn").click(function () {
+            $(".filter-box").toggleClass("advanced-block");
+            //			$(".triangle2").toggleClass("advanced-block");
+        });
+        $('[name=can_amount]').on('change',function(){
+            var can_amount=$('[name=edu] [name=can_amount]').val(),amount=$('[name=edu] [name=amount]').val(),loan=$('[name=edu] [name=current_total_loan]').val();
+            amount=parseInt(can_amount)+parseInt(loan);
+            $('[name=edu] [name=amount]').val(amount);
+        });
+        $(document).on('click', ".btn-sure", function () {
+            //修改表格列表
+            var index = layer.load();
+            var njson = {};
+            $('[name=frm-table] [type=checkbox]').each(function (index, item) {
+                njson[$(item).attr('name')] = $(item).is(':checked') ? 1 : 0;
+            });
+            checked_json = njson;
+            $.post('/admin/index.php/user/member/set_member_field.html', {set_member_field : njson}, function (data) {
+                layer.msg(data.info);
+            }, 'json');
+            layer.close(index);
+            field_hide(njson);
+
+            $(".layui-table-body table").css({'width' : '100%'});
+            $(".layui-table-header table").css({'width' : '100%'})
+            $(".filter-box").removeClass("advanced-block");
+            $(".btn-cancel").trigger("click");
+        }).on('click', ".btn-cancel", function () {
+            //取消表格
+
+            $.each(checked_json, function (index, item) {
+                if (item == 0) {
+                    $('.table-list [name="' + index + '"]').attr('checked', false);
+                } else {
+                    $('.table-list [name="' + index + '"]').attr('checked', 'checked');
+                }
+
+            });
+            $form.render();
+            $(".filter-box").removeClass("advanced-block");
+        });
+		
+	</script>
+</body>
+
+</html>
+
+<script>
+	//ipad端禁止缩放屏幕
+	window.onload=function () {
+        document.addEventListener('touchstart',function (event) {
+            if(event.touches.length>1){
+                event.preventDefault();
+            }
+        })
+        var lastTouchEnd=0;
+        document.addEventListener('touchend',function (event) {
+            var now=(new Date()).getTime();
+            if(now-lastTouchEnd<=300){
+                event.preventDefault();
+            }
+            lastTouchEnd=now;
+        },false)
+    }
+</script>

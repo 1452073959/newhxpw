@@ -1,0 +1,58 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-tab layui-tab-brief">
+            <ul class="layui-tab-title">
+                <li class=""><a href="{:url('admin/basis_data/tmp_report')}">公司基础数据</a></li>
+                <li class="layui-this"><a href="{:url('admin/basis_data/tmp_report2')}">取费模板</a></li>
+            </ul>
+        <div class="layui-tab-content"></div>
+        </div>
+        <div class="layui-form">
+
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['filter', 'exports','print'],page: true,limit:20,limits:[20,50,100,500]}">
+                <thead >
+                    <tr>
+                        <th lay-data="{field:'f_id',align:'center',sort:true,width:140}">分公司</th>
+                        <th lay-data="{field:'tmp_name',align:'center',sort:true,width:140}">模板名称</th>
+                        <th lay-data="{field:'name',align:'center',sort:true,width:200}">费率名称</th>
+                        <th lay-data="{field:'sign',align:'center',sort:true,width:185}">标识符</th>
+                        <th lay-data="{field:'formula',align:'center',sort:true,width:185}">公式</th>
+                        <th lay-data="{field:'rate', align:'center',sort:true,width:185}">费率（%）</th>
+                        <th lay-data="{field:'content',align:'center',sort:true,width:175}">说明</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {foreach name="data" item="vo"}
+                        <tr>
+                            <td class="">{$frame[$vo['f_id']]['name'] ?: ''}</td>
+                            <td class="">{$vo.tmp_name}</td>
+                            <td class="">{$vo.name}</td>
+                            <td class="">{$vo.sign}</td>
+                            <td class="">{$vo.formula}</td>
+                            <td class="">{$vo.rate}</td>
+                            <td class="">{$vo.content}</td>
+                        </tr>       
+                     {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+    });
+</script>
+{/block}

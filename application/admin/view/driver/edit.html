@@ -1,0 +1,142 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">.p_tex{line-height:38px;color:#666;}.layui-form-label{width: 120px}</style>
+<div class="layui-card">
+    <div class="layui-card-header">司机审核修改</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/driver/edit')}" method="post">
+    
+            <div class="layui-form-item">
+               
+                <label class="layui-form-label">头像</label>
+                <div class="layui-input-inline w300">
+                     <p class="p_tex"><img src="{$urls}uploads/{$data.headerimg}" width="50px"></p>
+                </div>
+                 <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline w300">
+                     <p class="p_tex">{$data.surname}{$data.truename}</p>         
+                </div>
+                <label class="layui-form-label">身份证号码</label>
+                <div class="layui-input-inline w300">
+                     <p class="p_tex">{$data.idcard}</p>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">呢称</label>
+                <div class="layui-input-inline w300">
+                    <p class="p_tex">{$data.idcard}</p>
+                </div>
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline w300">
+                    <p class="p_tex">{$data.mobile}</p>
+                </div>
+                <label class="layui-form-label">车型</label>
+                <div class="layui-input-inline w300">
+                    <p class="p_tex">{$data.vehicle_type_id}</p>
+                </div>
+
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">紧急联系人</label>
+                <div class="layui-input-inline w300">
+                    <p class="p_tex">{$data.emergency_contact}</p>
+                </div>
+                <label class="layui-form-label">紧急联系人手机号</label>
+                <div class="layui-input-inline w300">
+                    <p class="p_tex">{$data.emergency_contact_phone}</p>
+                </div>
+                <label class="layui-form-label">城市</label>
+                <div class="layui-input-inline w300">
+                    <p class="p_tex">{$data.city}</p>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">车牌号</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex">{$data.license_plate}</p>
+                </div>
+                 <label class="layui-form-label">驾驶证</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex">{$data.driver_license_number}</p>
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">身份证正面</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.card_zm}" width="50px"></p>
+                </div>
+                 <label class="layui-form-label">身份证反面</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.card_fm}" width="50px"></p>
+                </div>
+                 <label class="layui-form-label">手持身份证</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.card_cx}" width="50px"></p>
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">车辆正面</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.car_zm}" width="50px"></p>
+                </div>
+                 <label class="layui-form-label">车辆反面</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.car_fm}" width="50px"></p>
+                </div>
+                 <label class="layui-form-label">车辆侧面</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.car_cm}" width="50px"></p>
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">驾驶证正面</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.dri_lic_zm}" width="50px"></p>
+                </div>
+                 <label class="layui-form-label">驾驶证反面</label>
+                <div class="layui-input-inline w300">
+                <p class="p_tex"><img src="{$urls}peopleinfo/{$data.dri_lic_fm}" width="50px"></p>
+                </div>
+               
+            </div>
+
+
+          <!--   <div class="layui-form-item">
+                <label class="layui-form-label">是否启用</label>
+                <div class="layui-input-inline w300">
+                    <input type="checkbox" name="status" lay-skin="switch" lay-text="启用|禁用" {eq name="data.status" value="1" } value="1" {else} value="0" {/eq} {eq name="data.status" value="0" }checked{/eq}>
+                </div>
+            </div> -->
+             <div class="layui-form-item">
+                <label class="layui-form-label">是否启用</label>
+               <div class="layui-input-block">
+                  <input type="radio" name="status" value="0" title="启用" {eq name="data.status" value="0" }checked{/eq}>
+                  <input type="radio" name="status" value="1" title="禁用" {eq name="data.status" value="1" }checked{/eq}>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否认证</label>
+               <div class="layui-input-block">
+                  <input type="radio" name="pass" value="0" title="未认证" {if $data['pass']==0}checked{/if}>
+                  <input type="radio" name="pass" value="1" title="已认证" {if $data['pass']==1}checked{/if}>
+                </div>
+            </div>
+            <input type="hidden" name="id" value="{$data.id}" />
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/driver/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+{/block}

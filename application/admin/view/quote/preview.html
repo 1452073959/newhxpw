@@ -1,0 +1,131 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.p_tex{line-height:38px;color:#666;}
+.layui-form-label{width: 120px}
+.layui-table-view .layui-table{width:100%}
+.layui-form-label{width:40px}
+.layui-form-item{margin:20px 0}
+#frameid{    width: 250px;
+    padding: 10px;}
+.text-center{text-align: center !important;}
+.bolder{font-weight: bolder;}
+.text-large{font-size:24px!important;font-weight:900!important;}
+.text-right{text-align: right !important;}
+.text-left{text-align: left !important;}
+.form-control{display: inline-block;padding: 5px;}
+input[type="checkbox"]{
+  display: inline-block!important;
+}
+.myinput{border:none;display: inline-block;background-color: #eeeeee;padding:5px;}
+.text-limit{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;max-width: 110px;}
+</style>
+<div class="layui-card">
+    <div class="layui-card-header">
+        <a class="layui-btn" id="export" href="{:url('admin/quote/excel_export',['id'=>input('id')])}">导出模板</a>
+        <a class="layui-btn" href="{:url('admin/quote/index')}">查看模板</a>
+	</div>
+    <div class="layui-card-body">
+			<h2 class="text-center"></h2>
+            <table class="layui-table mould"> 
+                <thead>
+                    <tr>
+						<th rowspan="2" colspan="2"><img style="max-width:200px;" src="__STATIC__/imgs/logo.png"></th>
+                        <th class="text-center text-large" colspan="6"><h3>住宅装饰工程造价预算书</h3></th>
+						<th rowspan="2" colspan="2"></th>
+                    </tr>
+					<tr>
+						<th class="text-center" colspan="6">全国统一24小时客服热线：400-6281-968</th>
+					</tr>
+                    <tr>
+                        <th style="text-align:center;" colspan="10">
+                          单位：
+                        </th>        
+                    </tr>
+                    <tr>
+                        <th colspan="3">工程名称：</th>       
+                        <th colspan="3">客户姓名：</th>       
+                        <th colspan="2">设计师姓名：</th>       
+                        <th colspan="2">报价师姓名：</th>       
+                    </tr>
+                    <tr>
+						<th class="text-left" style="width:20px;" rowspan="2">序号</th> 
+                        <th class="text-center" rowspan="2" colspan="2">工程项目名称</th>         
+                        <th class="text-center" rowspan="2">工程量</th>       
+                        <th class="text-center" rowspan="2">单位</th>
+                        <th class="text-center" colspan="2">辅材费</th> 
+                        <th class="text-center" colspan="2">人工费</th>    
+                        <th class="text-center" rowspan="2">施工工艺及材料说明</th> 
+                    </tr>
+                    <tr>   
+                        <th class="text-center">辅材基价</th>       
+                        <th class="text-center">辅材合价</th>       
+                        <th class="text-center">人工基价</th>       
+                        <th class="text-center">人工合价</th> 
+                      </tr>
+                </thead>
+
+                <tbody>
+                    <?php 
+                        $num1 = 65;
+                    ?>
+					{foreach name="data" item="vos" key="key"}
+						<tr data-cate="">
+							<td class="text-left" ><?php echo chr($num1) ?></td>
+							<td colspan="2" class="text-center bolder">{$offer_type[$key]['name']}</td>
+							<td colspan="7"></td>
+						</tr>
+                        <?php $num1++;$num2=97; ?>
+						{foreach name="$vos" key="k" item="v"}
+							<tr id="tr{$k}">
+								<td ><?php echo chr($num2) ?></td>
+								<td colspan="9">{$offer_type[$k]['name']}</td>
+							</tr>
+                            <?php $num2++; ?>
+							{foreach name="$v" item="vv" key="kk"}
+								<tr class="tr'.$conditionsid.$roomid.'">
+									<td>{$kk*1+1}</td>
+									<td colspan="2">{$offerquota[$vv.item_number]['project']}</td>
+									<td>{$vv.num}</td>
+									<td>{$offerquota[$vv.item_number]['company']}</td>
+									<td>{$offerquota[$vv.item_number]['quota']}</td>
+									<td>{$vv.num?$vv.num*$offerquota[$vv.item_number]['quota']:''}</td>
+									<td>{$offerquota[$vv.item_number]['craft_show']}</td>
+									<td>{$vv.num?$vv.num*$offerquota[$vv.item_number]['craft_show']:''}</td>
+									<td class="limit text-limit" title="点击查看详情">{$offerquota[$vv.item_number]['material']}</td>
+								</tr>
+							{/foreach}
+						{/foreach}
+					{/foreach}
+                </tbody>
+            </table>
+			<input type="hidden" name="html" value="" />
+		</div>
+</div>
+
+<div>
+
+</div>
+
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$(document).on('mouseover','.limit',function(){
+			$(this).css({'cursor':'pointer'});
+		});
+		$(document).on('click','.limit',function(){
+			if($(this).hasClass('text-limit')){
+				$(this).removeClass('text-limit');
+			}else{
+				$(this).addClass('text-limit');
+			}
+		})
+		$('#export').click(function(){
+			window.location.href = "{:url('admin/quote/excel_export',['id'=>input('id')])}";
+		});
+	});
+</script>
+{/block}

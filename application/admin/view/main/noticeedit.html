@@ -1,0 +1,42 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+<div>
+    <form class="layui-form" action="/admin/main/noticeedit" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input" value="{$notice.title}">
+                <input type="hidden" name="id"  value="{$notice.id}">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block" style="width: 1200px;height: 50px;">
+                <script id="container" name="content" type="text/plain">
+                <?php
+echo htmlspecialchars_decode($notice['content']);
+?>
+                </script>
+                <!-- 配置文件 -->
+                <script type="text/javascript" src="/utf8-php/ueditor.config.js"></script>
+                <!-- 编辑器源码文件 -->
+                <script type="text/javascript" src="/utf8-php/ueditor.all.js"></script>
+                <!-- 实例化编辑器 -->
+                <script type="text/javascript">
+                    // var ue = UE.getEditor('container',;
+                    var ue = UE.getEditor('container');
+                    // var ue = UE.getEditor('container',{toolbars: [['simpleupload','insertimage']]});
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-form-item" style=" float: right;margin-right: 5%;">
+            <div class="layui-input-block">
+                <button class="layui-btn">立即发布</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}

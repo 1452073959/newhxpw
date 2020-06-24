@@ -1,0 +1,29 @@
+ <!-- footer -->
+        <div class="layui-footer footer" id="admin-footer">
+            <div class="layui-main">
+                <p></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="tpl" class="layui-hide"></div>
+
+    <style type="text/css">
+        .item-action {display: list-item;}
+        .item-remove {display: none;}
+    </style>
+  <script type="text/javascript">
+
+    $('.layui-nav-item').click(function() {
+        var id = $(".layui-nav-item").index(this);
+        $('.layui-nav-tree').children().eq(id).show().siblings().hide();
+    })
+
+    $(".layui-header .layui-nav-item").click(function() {
+        $(this).toggleClass("item-action").siblings(".item-remove").removeClass("item-action");
+       })
+
+  </script>
+</body>
+</html>

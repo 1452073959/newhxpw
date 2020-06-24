@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>创标助手系统后台</title>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="stylesheet" href="/static/12/admin/css/admin.css">
+        <link rel="stylesheet" href="/static/12/admin/css/layer.css">
+        <link rel="stylesheet" href="/static/12/admin/css/iconfont.css">
+        <link rel="stylesheet" href="/static/12/admin/css/jquery-ui.min.css">
+        <script src="/static/12/admin/js/jquery-2.1.4.min.js"></script>
+        <script src="/static/12/admin/js/admin.js"></script>
+        <script src="/static/12/admin/js/common.js"></script>
+        <script src="/static/12/admin/js/layer.js"></script>
+        <script type="text/javascript" src="/static/layui/layui.js"></script>
+        <style type="text/css">
+          .layui-layer-content{
+                text-align: center;
+                  font-size: 20px;
+          }
+        </style>
+    </head>
+    <body>
+        <div id="append_parent"></div>
+        <div id="ajaxwaitid"></div>
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>产品管理</h3>
+                <h5></h5>
+            </div>
+            <ul class="tab-base ds-row">
+        <li><a href="/admin/Merchant/goods_list.html?status=0"><span>所有产品</span></a></li>
+        <li><a href="/admin/Merchant/goods_list.html?shelf_status=2&status=1"><span>下架产品</span></a></li>
+        <li><a href="/admin/Merchant/goods_list.html?audit_status=2&status=2"><span>待审核</span></a></li>
+    </ul>
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  
+  <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示" class="arrow"></span>
+        </div>
+        <ul>
+            <li>上架，当产品处于非上架状态时，前台将不能浏览该产品，店主可控制产品上架状态</li>
+            <li>违规下架，当产品处于违规下架状态时，前台将不能购买该产品，只有管理员可控制产品违规下架状态，并且产品只有重新编辑后才能上架</li>
+        </ul>
+    </div>
+  <form method="get" name="formSearch" id="formSearch">
+      <div class="ds-search-form">
+            <dl>
+                <dt>产品名称</dt>
+                <dd><input type="text" value="{$where['g_name']|default=''}" name="g_name" id="search_goods_name"  class="txt"></dd>
+            </dl>
+            <dl>
+                <dt>产品ID</dt>
+                <dd><input type="text" value="{$where['id']|default=''}" name="id" id="search_commonid"  class="txt" /></dd>
+            </dl>
+            <dl>
+              <dt>产品类型</dt>
+              <dd id="searchgc_td"></dd>
+              <select name="type" lay-verify="">
+                <option value="">请选择</option>
+                <option value="1" {if isset($where['type']) && $where['type'] == '1'}selected{/if}>成品</option>
+                </option>
+                <option value="2" {if isset($where['type']) && $where['type'] == '2'}selected{/if}>定制</option>
+              </select>
+            </dl>
+            <dl>
+              <dt>试用选项</dt>
+              <dd id="searchgc_td"></dd>
+              <select name="trial" lay-verify="">
+                <option value="">请选择</option>
+                <option value="1" {if isset($where['trial']) && $where['trial'] == '1'}selected{/if}>可试用</option>
+                <option value="2" {if isset($where['trial']) && $where['trial'] == '2'}selected{/if}>不可试用</option>
+              </select>
+            </dl>
+          <dl>
+              <dt>分类</dt>
+              <dd id="searchgc_td"></dd>
+              <select name="tr_id" lay-verify="">
+                <option value="">请选择行业</option>
+                {notempty name="trade"}
+                 <{foreach name="trade" item="val"}
+                <option value="{$val['id']}" {if isset($where['tr_id']) && $where['tr_id'] == $val['id']}selected{/if}>{$val['trade_name']}
+                </option>
+                {/foreach}
+                {/notempty}
+              </select>
+              <select name="la_id" lay-verify="" >
+                <option value="">请选择开发语言</option>
+                {notempty name="language"}
+                <{foreach name="language" item="val"}
+                <option value="{$val['id']}" {if isset($where['la_id']) && $where['la_id'] == $val['id']}selected{/if}>{$val['language_name']}
+                </option>
+                {/foreach}
+                {/notempty}
+              </select> 
+          </dl>
+          <dl style="    margin-right: 35px;">
+              <dt>所属商户</dt>
+              <dd><input type="text" value="{$map['name']|default=''}" name="name" id="search_store_name" class="txt" ></dd>
+          </dl>
+          <dl>
+                            <dt>上架</dt>
+              <dd>
+                  <select name="shelf_status">
+                      <option value="">请选择...</option>
+                        <option value="1" {if isset($where['shelf_status']) && $where['shelf_status'] == '1'}selected{/if}>展示中</option>
+                        <option value="2" {if isset($where['shelf_status']) && $where['shelf_status'] == '2'}selected{/if}>下架</option>
+                                        </select>
+              </dd>
+          </dl>
+          <dl>
+              <dt>等待审核</dt>
+              <dd>
+                  <select name="audit_status">
+                      <option value=""  >请选择...</option>
+                                            <option value="1" {if isset($where['audit_status']) && $where['audit_status'] == '1'}selected{/if}>通过</option>
+                                            <option value="2" {if isset($where['audit_status']) && $where['audit_status'] == '2'}selected{/if}>未通过</option>
+                                            <option value="0" {if isset($where['audit_status']) && $where['audit_status'] == '0'}selected{/if}>等待审核</option>
+                                        </select>
+              </dd>
+                        </dl>
+          
+            <div class="btn_group">
+                 <a href="javascript:void(0);" id="dssubmit" class="btn " title="查询">查询</a>     
+                 <a href="/admin/goods/goods_list.html" class="btn btn-default" title="取消">取消</a>
+            </div>
+        </div>
+  </form>
+  
+      
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th class="w24"></th>
+          <th class="w24"></th>
+          <th class="w60 align-center">产品ID</th>
+          <th colspan="2">产品名称</th>
+          <th>类型&分类</th>
+          <th class="w72 align-center">价格(元)</th>
+          <th class="w72 align-center">试用状态</th>
+          <th class="w72 align-center">产品状态</th>
+          <th class="w72 align-center">审核状态</th>
+          <th class="w200 align-center" >操作</th>
+        </tr>
+      </thead>
+      <tbody>   
+                {notempty name="data"}
+                {foreach $data as $key=>$value}
+                <tr class="hover edit" id="ds_row_118">
+          <td><input type="checkbox" value="{$value['id']}" class="checkitem"></td>
+          <td><i class="iconfont icon-jia" status="open"  style="cursor: pointer;" dstype="ajaxGoodsList" data-comminid="{$value['id']}" title="点击展开查看此产品全部规格；规格值过多时请横向拖动区域内的滚动条进行浏览。"></i></td>
+          <td class="align-center">{$value['id']}</td>
+          <td class="w60 picture"><div class="size-56x56"><span class="thumb size-56x56"><i></i><img src="{$value['pic']}" onload="javascript:ResizeImage(this,100,100);"/></span></div></td>
+          <td>
+          <dl class="goods-info"><dt class="goods-name">{$value['g_name']}</dt>
+            <dd class="goods-store">平台商户：{$value['sname']}</dd></dl>
+            </td>
+          <td>
+            <p>{$value['class']}</p>
+            </td>
+          <td class="align-center">{$value['price']}</td>
+          <td class="align-center">{$value['trial']}</td>
+          <td class="align-center">{$value['shelf_status']}</td>
+          <td class="align-center">{$value['audit_status']}</td>
+          <td class="align-center">
+              <a href="/index.php/home/goods/index.html?goods_id=127" class="dsui-btn-view"><i class="iconfont"></i>查看</a>
+              
+                            <a href="javascript:void(0);" data-id="{$value['id']}"  class="dsui-btn-del goods_lockup"><i class="iconfont"></i>下架</a>
+                        </td>
+        </tr>
+              {/foreach}
+              {else /}
+              <tr class="no_data">
+                <td colspan="15">没有符合条件的记录</td>
+              </tr>
+              {/notempty}
+              </tbody>
+      <tfoot>
+        <tr class="tfoot">
+            &nbsp;&nbsp;
+                        <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+            <td colspan="16"><label for="checkallBottom">全选</label>
+            <a href="JavaScript:void(0);" class="btn btn-small" dstype="lockup_batch"><span>批量下架</span></a>
+            </td>
+                    </tr>
+      </tfoot>
+    </table>
+    <div id="goods_lockup" style="display: none">
+      <div class="layui-form-item" style="padding-top: 10px;">
+      <form method="post" name="form1" id="form1">
+        <input type="hidden" value="" name="id">
+        <table class="ds-default-table nobdb">
+            <tbody>
+                <tr class="noborder">
+                    <td class="vatop rowform">确定要下架该产品吗？</textarea></td>
+                </tr>
+            </tbody>
+        </table>
+      </form>
+    </div>
+    </div>
+    {$show_page|raw}
+<script type="text/javascript">
+    $('#dssubmit').click(function(){
+        $('#formSearch').submit();
+    });
+    layui.use(['table','element'], function () {
+        var table = layui.table,
+            element = layui.element;
+    });
+
+    // 违规下架批量处理
+    $('a[dstype="lockup_batch"]').click(function(){
+        ids_str = getItems();
+        if (ids_str) {
+            goods_lockup(ids_str);
+        }
+    });
+    // 违规下架批量处理
+    $('.goods_lockup').click(function(){
+      var id    = $(this).attr('data-id');
+
+         layer.open({
+          type       : 1,
+          title : '警告',area: '340px', content : '确认“<span style="color:red;">下架该产品</span>”吗？', btn : ['确认', '取消'],
+          yes        : function (index) {
+            $.post('/admin/Merchant/goods_lockup.html',{id:id,status:1}, function (data) {
+                if (data.status == 1) {
+                    layer.alert(data.info,function(){
+                      window.location.href='/admin/Merchant/goods_list';
+                    });
+                }
+            });
+          }
+
+          });
+    });
+    // ajax获取产品列表
+    $('i[dstype="ajaxGoodsList"]').click(
+        function(){
+        
+            var status = $(this).attr("status");
+                    if (status == 'open') {
+                        $(this).attr('status', 'close');
+                        $(this).removeClass('icon-jia').addClass('icon-jian');
+            var _parenttr = $(this).parents('tr');
+            var _commonid = $(this).attr('data-comminid');
+            var _div = _parenttr.next().find('.dssc-goods-sku');
+            if (_div.html() == '') {
+                $.getJSON('/admin/goods/goods_list.html' , {commonid : _commonid}, function(date){
+                    if (date != 'false') { 
+                        var _ul = $('<ul class="dssc-goods-sku-list"></ul>');
+                                var res = eval('(' + date + ')');
+                                for (var i = 0; i < res.length; i++)
+                                {
+                                    $('<li><div class="goods-thumb" title="商家货号：' + res[i].goods_serial + '"><a href="' + res[i].url + '" target="_blank"><image src="' + res[i].goods_image + '" ></a></div>' + res[i].goods_spec + '<div class="goods-price">价格：<em title="￥' + res[i].goods_price + '">￥' + res[i].goods_price + '</em></div><div class="goods-storage">库存：<em title="' + res[i].goods_storage + '">' + res[i].goods_storage + '</em></div><a href="' + res[i].url + '" target="_blank" class="dssc-btn-mini">查看产品详情</a></li>').appendTo(_ul);
+                                    _ul.appendTo(_div);
+                                    _parenttr.next().show();
+                                }
+                        
+                        // 计算div的宽度
+                        _div.css('width', document.body.clientWidth-54);
+                        
+//                        _div.perfectScrollbar();
+                    }
+                });
+            } else {
+            	_parenttr.next().show()
+            }
+                    }else{
+                        $(this).attr('status', 'open');
+                        $(this).removeClass('icon-jian').addClass('icon-jia');
+            $(this).parents('tr').next().hide();
+                    }
+            
+        }
+    );
+    function getUrlParam(name)
+    {
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r!=null) return unescape(r[2]); return null; //返回参数值
+    }
+
+    get();
+    function get(){
+      var status =  getUrlParam('status');
+       $('.ds-row').children().eq(0).children().addClass('current');
+      if(status == 0){
+      $('.ds-row').children().eq(0).children().addClass('current');
+     }
+     if(status == 1){
+      $('.ds-row').children().eq(1).children().addClass('current');
+      $('.ds-row').children().eq(0).children().removeClass('current');
+     }
+     if(status == 2){
+      $('.ds-row').children().eq(2).children().addClass('current');
+      $('.ds-row').children().eq(0).children().removeClass('current');
+     }
+    }
+    
+    // 获得选中ID
+    function getItems() {
+        /* 获取选中的项 */
+        var items = '';
+        $('.checkitem:checked').each(function () {
+            items += this.value + ',';
+        });
+        if (items != '') {
+            items = items.substr(0, (items.length - 1));
+        }else{
+            layer.alert('请勾选选项', {icon: 2})  
+        }
+        return items;
+    }
+
+    // 产品下架
+    function goods_lockup(ids_str) {
+       layer.open({
+          type       : 1,
+          title : '警告',area: '340px', content : '确认“<span style="color:red;">下架产品</span>”吗？', btn : ['确认', '取消'],
+          yes        : function (index) {
+            $.post('/admin/Merchant/goods_lockup.html',{id:ids_str,status:2}, function (data) {
+                if (data.status == 1) {
+                    layer.alert(data.info,function(){
+                      window.location.href='/admin/Merchant/goods_list';
+                    });
+                }
+            });
+          }
+
+          });
+    }
+    
+    // 产品审核
+    function goods_verify(ids_str) {
+        _uri = ADMINSITEURL+"/Goods/goods_verify?commonid=" + ids_str;
+        dsLayerOpen(_uri,'审核产品','400px','200px');
+    }
+    
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Goods/goods_del.html?common_id=" + ids_str;
+        dsLayerConfirm(_uri,'您确定要删除吗?');
+    }
+</script>
+
+
+
+
+

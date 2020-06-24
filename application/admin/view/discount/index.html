@@ -1,0 +1,294 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.tmp_datas{
+    background-color: #ffffff;
+    padding-top:20px;
+    height:600px;
+}
+.mt30{
+    margin-left: 30px;
+}
+.m30{
+    margin: 30px;
+}
+.discout_table{
+    width: 80%;
+}
+.w50{
+    width: 60px !important;
+    height: 28px;
+    line-height: 28px;
+    float: left;
+    padding: 9px 3px;
+}
+.div_right{
+    margin-left: 65px;
+    padding: 9px 5px;
+}
+.div_right ul{
+    display: inline-block;
+    width: 100%;
+    /*height:100px;*/
+}
+.div_right ul li{
+    /*display: flex;*/
+    float: left;
+    min-width: 30px;
+    height:26px;
+    line-height: 26px;
+    text-align: center;
+    border:1px solid #999;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 0 10px;
+}
+.div_right ul li:hover{
+    color:#333;
+}
+.prew li{
+    margin:0 !important;
+    margin-left: 10px !important; 
+    position: relative;
+    cursor:default !important; 
+}
+.prew li i{
+    position: absolute;
+    top:-7px;
+    right:0;
+    font-style: normal;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.w250{
+    width: 250px;
+}
+</style>
+<div class="tmp_datas">
+    <a class="layui-btn mt30" id="add_discount">新增优惠</a>
+    <table class="layui-table m30 discout_table">
+        <colgroup>
+            <col width="100">
+            <col width="120">
+            <col width="150">
+            <col width="60">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>优惠名称</th>
+                <th>公式</th>
+                <th>说明</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $discount as $k=>$v}
+                <tr>
+                    <td>{$v['name']}</td>
+                    <td>{$v['formula']}</td>
+                    <td>{$v['content']}</td>
+                    <td><a href="javascript:;" class="edit_discount" data-id="{$v['id']}" data-name="{$v['name']}" data-formula="{$v['formula']}" data-content="{$v['content']}">编辑</a></td>
+                </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+<div>
+    
+</div>
+{/block}
+{block name="script"}
+    <script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+    <script src="/static/admin/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('#add_discount').click(function(){
+            var html = '';
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">字段</label>'
+            html += '    <div class="div_right">'
+            html += '        <ul class="click_ul">'
+            html += '           <li>工程直接费</li>'
+            html += '           <li>材料直接费</li>'
+            html += '           <li>人工直接费</li>'
+            html += '           <li>工程报价</li>'
+            html += '           <li>纯人工项目</li>'
+            html += '           <li>特价项目</li>'
+            html += '           <li>设计费</li>'
+            html += '           <li>打拆工程</li>'
+            html += '           <li>电工工程</li>'
+            html += '           <li>加建工程</li>'
+            html += '           <li>镜钢玻璃类</li>'
+            html += '           <li>木工工程</li>'
+            html += '           <li>泥瓦工程</li>'
+            html += '           <li>水工工程</li>'
+            html += '           <li>油灰工程</li>'
+            html += '           <li>综合类</li>'
+            html += '           <li>现金</li>'
+            html += '        </ul>'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">字段</label>'
+            html += '    <div class="div_right">'
+            html += '        <ul class="click_ul">'
+            html += '            <li>+</li>'
+            html += '            <li>-</li>'
+            html += '            <li>×</li>'
+            html += '            <li>÷</li>'
+            html += '            <li>(</li>'
+            html += '            <li>)</li>'
+            html += '        </ul>'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">预览</label>'
+            html += '    <div class="div_right" style="border:1px solid #c9c9c9;padding:3px 5px;height:28px">'
+            html += '        <ul class="prew">'
+            html += '        </ul>'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">优惠名称</label>'
+            html += '    <div class="div_right">'
+            html += '        <input class="layui-input w250" name="discount_name" />'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">优惠说明</label>'
+            html += '    <div class="div_right">'
+            html += '        <input class="layui-input " name="discount_content" />'
+            html += '    </div>'
+            html += '</div>'
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    content: html,
+                    area: ['60%', '60%'],
+                    title:'添加优惠',
+                    btn: ['确认','取消'],
+                    yes: function(index, layero){
+                        var discount_name = $('input[name="discount_name"]').val();
+                        var discount_content = $('input[name="discount_content"]').val();
+                        var discount_val = '';
+                        $('.prew').find('li').each(function(k,v){
+                            discount_val += $(v).find('span').text();
+                        })
+                        $.post('/admin/discount/add_basis_discount',{discount_val:discount_val,discount_name:discount_name,discount_content:discount_content},function(res){
+                            if(res.code == 1){
+                                layer.msg('添加成功');
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 1000);
+                            }else{
+                                layer.msg(res.msg);
+                            }
+                        },'json')
+
+                        return false;
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }); 
+        })
+        $('.edit_discount').click(function(){
+            var id = $(this).attr('data-id');
+            var name = $(this).attr('data-name');
+            var formula = $(this).attr('data-formula');
+            var content = $(this).attr('data-content');
+            var html = '';
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">字段</label>'
+            html += '    <div class="div_right">'
+            html += '        <ul class="click_ul">'
+            html += '           <li>工程直接费</li>'
+            html += '           <li>材料直接费</li>'
+            html += '           <li>人工直接费</li>'
+            html += '           <li>工程报价</li>'
+            html += '           <li>纯人工项目</li>'
+            html += '           <li>特价项目</li>'
+            html += '           <li>设计费</li>'
+            html += '           <li>打拆工程</li>'
+            html += '           <li>电工工程</li>'
+            html += '           <li>加建工程</li>'
+            html += '           <li>镜钢玻璃类</li>'
+            html += '           <li>木工工程</li>'
+            html += '           <li>泥瓦工程</li>'
+            html += '           <li>水工工程</li>'
+            html += '           <li>油灰工程</li>'
+            html += '           <li>综合类</li>'
+            html += '           <li>现金</li>'
+            html += '        </ul>'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">字段</label>'
+            html += '    <div class="div_right">'
+            html += '        <ul class="click_ul">'
+            html += '            <li>+</li>'
+            html += '            <li>-</li>'
+            html += '            <li>×</li>'
+            html += '            <li>÷</li>'
+            html += '            <li>(</li>'
+            html += '            <li>)</li>'
+            html += '        </ul>'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">预览</label>'
+            html += '    <div class="div_right" style="border:1px solid #c9c9c9;padding:3px 5px;height:28px">'
+            html += '        <ul class="prew">'
+            html += '        </ul>'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">优惠名称</label>'
+            html += '    <div class="div_right">'
+            html += '        <input class="layui-input w250" name="discount_name" value="'+name+'" />'
+            html += '    </div>'
+            html += '</div>'
+            html += '<div class="layui-form-item">'
+            html += '    <label class="w50">优惠说明</label>'
+            html += '    <div class="div_right">'
+            html += '        <input class="layui-input " name="discount_content" value="'+content+'" />'
+            html += '    </div>'
+            html += '</div>'
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    content: html,
+                    area: ['60%', '60%'],
+                    title:'添加优惠',
+                    btn: ['确认','取消'],
+                    yes: function(index, layero){
+                        var discount_name = $('input[name="discount_name"]').val();
+                        var discount_content = $('input[name="discount_content"]').val();
+                        var discount_val = '';
+                        $('.prew').find('li').each(function(k,v){
+                            discount_val += $(v).find('span').text();
+                        })
+                        $.post('/admin/discount/add_basis_discount',{discount_val:discount_val,discount_name:discount_name,discount_content:discount_content},function(res){
+
+                        },'json')
+
+                        return false;
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }); 
+        })
+        $(document).on('click','.click_ul li',function(){
+            var val = $(this).text();
+            var html = '<li><span>'+val+'</span><i class="close_li">×</i></li>';
+            $('.prew').append(html);
+        })
+        $(document).on('click','.prew .close_li',function(){
+            $(this).parent().remove();
+        })
+    </script>
+{/block}

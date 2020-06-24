@@ -1,0 +1,632 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.layui-form-select{float:left;margin-right:10px}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+#add_html .layui-form-item{
+    width:350px;
+    line-height: 38px;
+}
+.project_select .layui-form-select{
+    width:100px;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-tab layui-tab-brief">
+                  <ul class="layui-tab-title">
+                    <li class=""><a href="{:url('admin/basis_data/pproject')}">基础报价库</a></li>
+                    <li class="layui-this"><a href="{:url('admin/basis_data/apply_new_project_index')}">新报价申请列表</a></li>
+                  </ul>
+                  <div class="layui-tab-content"></div>
+                </div>
+                <form class="layui-form layui-inline" action="">
+                    {if ($admininfo['userid'] == 1)}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择分公司</label>
+                            <div class="layui-input-block">
+                              <select name="fid" lay-search>
+                                <option value=""></option>
+                                  {volist name="frame" id="vo"}
+                                    <option {$vo.id==input('fid')?'selected':''} value="{$vo.id}">{$vo.name}</option>
+                                  {/volist}
+                              </select>
+                            </div>
+                        </div>
+                    {/if}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-block">
+                          <select name="status" lay-search>
+                                <option value=""></option>
+                                <option {if(input('status') == 1)}selected{/if} value="1">待处理</option>
+                                <option {if(input('status') == 2)}selected{/if} value="2">已处理</option>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">项目名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="material" placeholder="" value="{:input('material')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-left:10px">
+                        <div class="layui-input-inline">
+                          <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                          <a href="/admin/basis_data/apply_new_project_index" class="layui-btn layui-btn-primary">重置</a>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <!-- <a class="layui-btn layui-btn-sm" href="javascript:;" lay-event="apply_new">申请新辅材</a>  -->
+                </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['print'],limit:20}">
+                <colgroup>
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th class="" lay-data="{field:'id',width:100,hide:true}">id</th>
+                        <th class="" lay-data="{field:'p_item_number',width:100,hide:true}">绑定编码</th>
+                        <th class="" lay-data="{field:'name',width:200}">项目名称</th>
+                        <th class="" lay-data="{field:'quota',width:100}">辅材单价报价</th>
+                        <th class="" lay-data="{field:'craft_show',width:100}">人工单价报价</th>
+                        <th class="" lay-data="{field:'labor_cost',width:100}">人工成本</th>
+                        <th class="" lay-data="{field:'unit',width:100}">单位</th>
+                        <th class="" lay-data="{field:'content',width:300}">施工工艺与材料说明</th>
+                        {if($admininfo['userid'] == 1)}
+                            <th class="" lay-data="{field:'material',width:200}">所需辅材</th>
+                            <th class="" lay-data="{field:'operation',width:180}">操作</th>
+                            <th class="" lay-data="{field:'fid',width:180}">分公司</th>
+                        {/if}
+                        <th class="" lay-data="{field:'fine_info',width:200}">所需辅材分类</th>
+                        <th class="" lay-data="{field:'status',width:180}">状态</th>
+                        <th class="" lay-data="{field:'addtime',width:180}">申请时间</th>
+                        
+                    </tr>
+                </thead>
+                <tbody> 
+                    {foreach name="datas" item="vo"}
+                        <tr>
+                            <td class="">{$vo.id}</td>
+                            <td class="">{$vo.p_item_number}</td>
+                            <td class="">{$vo.name}</td>
+                            <td class="">{$vo.quota}</td>
+                            <td class="">{$vo.craft_show}</td>
+                            <td class="">{$vo.labor_cost}</td>
+                            <td class="">{$vo.unit}</td>
+                            <td class="">{:htmlspecialchars_decode($vo.content)}</td>
+                            {if($admininfo['userid'] == 1)}
+                                <td class="">{$vo.material}</td>
+                                <td class="">
+                                    {if($vo['status'] == 1)}
+                                        <a style="color:red" href="javascript:;" lay-event="add_pmaterial">添加基础项目</a>
+                                        <a style="color:green" href="javascript:;" lay-event="bind_pproject">绑定</a>
+                                    {else /}
+                                        <a style="color:blue">已处理({$vo.p_item_number})</a>
+                                        <!-- <a style="color:green" href="javascript:;" lay-event="change_bind">换绑</a> -->
+                                    {/if}
+                                </td>
+                                <td>
+                                    {$frame[$vo['fid']]['name']}
+                                </td>
+                            {/if}
+                            <td class="">
+                                {if( isset($vo['fine_info']))}
+                                    <?php foreach($vo['fine_info']['has'] as $k=>$v){
+                                        echo '<span style="margin:0 5px">'.$v.'</span>';
+                                    } ?>
+                                    <?php foreach($vo['fine_info']['nohas'] as $k=>$v){
+                                        echo '<span style="margin:0 5px;color:red">'.$v.'</span>';
+                                    } ?>
+                                {/if}
+                            </td>
+                            <td class="">
+                                {if($vo['status'] == 2)}
+                                    {if($admininfo['userid'] == 1)}
+                                        已处理
+                                    {else /}
+                                        {if(in_array($vo['p_item_number'],$p_item_number))}<i style="margin-left:5px;color:red" class="layui-icon layui-icon-ok" title="已添加"></i>{/if}
+                                        <a style="color:blue" href="javascript:;" data-id="{$vo.p_item_number}" lay-event="add_fwarehouse">添加到仓库</a>
+                                    {/if}
+                                    
+                                {else /}
+                                    <a style="color:red">待处理</a>
+                                {/if}
+                                <a style="color:blue" href="javascript:;" data-id="{$vo.id}" lay-event="del_fwarehouse">删除</a>
+                            </td>
+                            <td class="">{$vo.addtime}</td>
+                            
+                            
+                            
+                        </tr>       
+                    {/foreach}
+                </tbody>
+            </table>
+            {$datas->render()|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    layui.use('form', function(){
+        var form = layui.form;
+        //添加
+        form.on('submit(add_projcet)', function(data){
+            var go = 1;
+            $.each(data.field,function(index,value){  //arrTmp数组数据
+                if(value == '' && index != 'material'){
+                    alert('所填资料不能为空');
+                    go = 0;
+                    return false;
+                }
+            });
+            if(go != 1){
+                return false;
+            }
+            $.post('/admin/basis_data/add_public_project',data.field,function(res){
+                if(res.code == 1){
+                    layer.msg(res.msg);
+                    setTimeout(function(){
+                    　　window.location.reload()
+                    },1000);
+                }else{
+                    alert(res.msg);
+                }
+            },'json')
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('submit(add_f_projcet)', function(data){
+            //验证数据 不能使用自带的  自带的弹框会关闭输入的内容
+            if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(data.field.quota))){
+                alert('辅材单价格式错误');
+                return false;
+            }
+            if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(data.field.craft_show))){
+                alert('人工单价格式错误');
+                return false;
+            }
+            if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(data.field.labor_cost))){
+                alert('人工成本格式错误');
+                return false;
+            }
+            console.log(data.field);
+            $.post('/admin/basis_data/add_fproject_operation',data.field,function(res){
+                if(res.code == 1){
+                    layer.msg(res.msg);
+                    setTimeout(function(){
+                    　　window.location.reload()
+                    },1000);
+                }else{
+                    alert(res.msg);
+                }
+            },'json')
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+    layui.use('table', function(){
+        var table = layui.table;
+
+        table.on('tool(test3)',function(obj){
+            var data = obj.data;
+            ///删除申请条目
+            if(obj.event == 'del_fwarehouse'){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        content: '确定删除选中条目吗',
+                        title:'删除报价',
+                        btn: ['确定','取消'],
+                        yes: function(index, layero){
+                            $.post('/admin/basis_data/del_new_project',{id:data.id},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    setTimeout(function(){
+                                    　　  window.location.reload()
+                                    },1000);
+                                    return false;
+                                }else{
+                                    layer.msg(res.msg);
+                                    return false;
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }); 
+            }
+            //添加到公司仓库
+            if(obj.event == 'add_fwarehouse'){
+                $.post('/admin/basis_data/get_public_project',{item_number:data.p_item_number},function(res){
+                    //获取细类
+                    var ajax_true = 1;
+                    var option = '';
+                    //ajax改成同步请求
+                    $.ajaxSettings.async = false;
+                    $.post('/admin/basis_data/get_fine',{item_number:data.p_item_number},function(res){
+                        if(res.code == 1){
+                            if(res.msg != 'none'){
+                                option += '<div class="layui-form-item" style="margin:10px 0"><p style="margin-left: 85px">名字 - 品牌 - 规格</p></div>'
+                                $.each(res.data, function (key, val) {
+                                    option += '<div class="layui-form-item" style="margin:10px 0">'
+                                    option += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">'+key+'：</label>'
+                                    option += '  <div class="layui-input-block" style="margin-left:85px">'
+                                    option += '    <select name="material['+key+']">'
+                                    $.each(val, function (k, v) {
+                                        option +=         '<option value="'+v.amcode+'">'+v.name+' - '+v.brank+' - '+v.pack+v.unit+'/'+v.phr   +'</option>'
+                                    });
+                                    option += '    </select>'
+                                    option += '  </div>'
+                                    option += '</div>'
+                                });
+                            }
+                        }else{
+                            layer.msg(res.msg);
+                            ajax_true = 0;
+                            return false;
+                        }
+                    },'json')
+                    //改回异步
+                    $.ajaxSettings.async = true;
+                    if(ajax_true != 1){
+                        return false;
+                    }
+                    // var html = '';
+                    var html = '<form id="add_html" class="layui-form">';
+
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">编码：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <input type="text" name="p_item_number" value="'+res.data.item_number+'" disabled autocomplete="off" class="layui-input">'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">工种类别：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <input type="text" name="" value="'+res.data.type_word+'" disabled autocomplete="off" class="layui-input">'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">项目名称：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <input type="text" name="" value="'+res.data.name+'" disabled autocomplete="off" class="layui-input">'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">单位：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <input type="text" name="" value="'+res.data.unit+'" disabled autocomplete="off" class="layui-input">'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">施工工艺与材料说明：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <textarea name="" disabled class="layui-textarea">'+res.data.content+'</textarea>'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    // html += '<div class="layui-form-item" style="margin:5px 0">'
+                    // html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">名称额外说明：</label>'
+                    // html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    // html += '    <input type="text" name="remark" placeholder="以括号形式添加到名称里(可为空)" autocomplete="off" class="layui-input">'
+                    // html += '  </div>'
+                    // html += '</div>'
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">辅材单价：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <input type="text" name="quota" autocomplete="off" class="layui-input">'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">人工单价：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <input type="text" name="craft_show" autocomplete="off" class="layui-input">'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    html += '<div class="layui-form-item" style="margin:5px 0">'
+                    html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">人工成本：</label>'
+                    html += '  <div class="layui-input-block" style="margin-left:85px">'
+                    html += '    <input type="text" name="labor_cost" autocomplete="off" class="layui-input">'
+                    html += '  </div>'
+                    html += '</div>'
+
+                    html += option
+
+                    html += '<div class="layui-form-item" style="margin:5px 0;text-align:center">'
+                    html += '   <button class="layui-btn" style="margin:0 auto;" id="add_f_projcet" lay-submit lay-filter="add_f_projcet">立即提交</button>'
+                    html += '</div>'
+
+                    html += '</form>'
+                    
+                    layui.use('layer', function(){
+                        var layer = layui.layer;
+                        layer.open({
+                            content: html,
+                            area:['500px', '80%'],
+                            title:'添加报价项目',
+                            btn: ['取消'],
+                            success:function(layero, index){
+                                layui.use('form', function(){
+                                    var form = layui.form;
+                                    form.render();
+                                });
+                            },
+                            yes: function(index, layero){
+                                 layer.close(index);
+                                return false;
+                            },
+                            cancel: function(){ 
+                            //return false 开启该代码可禁止点击该按钮关闭
+                            }
+                        });
+                    });
+
+                },'json')
+            }
+
+            //绑定
+            if(obj.event == 'bind_pproject'){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        content: '<input type="text" class="layui-input" placeholder="请输入项目编码" id="bind_item_number" value=""/>',
+                        title:'绑定项目',
+                        btn: ['绑定', '取消'],
+                        yes: function(index, layero){
+                            var id = data.id;
+                            var bind_item_number = $('#bind_item_number').val();
+                            $.post('/admin/basis_data/bind_project',{id:id,item_number:bind_item_number},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    setTimeout(function(){
+                                    　　window.location.reload()
+                                    },1000);
+                                }else{
+                                    alert(res.msg);
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                });
+            }
+
+            //绑定
+            if(obj.event == 'change_bind'){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        content: '<input type="text" class="layui-input" placeholder="请输入项目编码" id="change_bind_item_number" value=""/>',
+                        title:'换绑项目',
+                        btn: ['换绑', '取消'],
+                        yes: function(index, layero){
+                            var id = data.id;
+                            var change_bind_item_number = $('#change_bind_item_number').val();
+                            $.post('/admin/basis_data/bind_project',{id:id,item_number:change_bind_item_number},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    setTimeout(function(){
+                                    　　window.location.reload()
+                                    },1000);
+                                }else{
+                                    alert(res.msg);
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                });
+            }
+
+            //添加到基础库
+            if (obj.event == 'add_pmaterial'){
+                var option = '';
+                <?php foreach($type_work as $k=>$v){ ?>
+                    option += '<option value="{$v['id']}" >{$v['name']}</option>'
+                <?php } ?>
+                var html = '<form id="add_html" class="layui-form">';
+
+                html += '<input type="hidden" name="apply_project_id" value="'+data.id+'" />'
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">编号：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="item_number" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">工种类别：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <select name="type_word_id" lay-search>'
+                html +=         option
+                html += '    </select>'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">名称：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="name" value="'+data.name+'" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">单位：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="unit" value="'+data.unit+'" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">施工工艺与材料说明：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '   <textarea name="content" class="layui-textarea">'+data.content+'</textarea>'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">所需辅材分类</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="material" placeholder="格式为：分类1-5,分类2-3,分类3-1" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">用料：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px;line-height:36px;">'
+                html += '    <a href="javascript:;:;" onclick="add_material(1)"><i style="font-size: 24px" class="layui-icon layui-icon-add-circle-fine"></i></a>'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0;text-align:center">'
+                html += '   <button class="layui-btn" style="margin:0 auto;" id="add_projcet" lay-submit lay-filter="add_projcet">立即提交</button>'
+                html += '</div>'
+
+                html += '</form>'
+
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        content: html,
+                        area:['400px', '600px'],
+                        title:'添加报价项目',
+                        btn: ['取消'],
+                        success:function(layero, index){
+                            layui.use('form', function(){
+                                var form = layui.form;
+                                form.render();
+                            });
+                        },
+                        yes: function(index, layero){
+                            
+                            layer.close(index);
+                            return false;
+                            
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                });
+            }
+        })
+    })
+    function add_material(type){
+        if(type == 1){
+            var type = 'add_projcet';
+        }else{
+             var type = 'edit_projcet';
+        }
+        // var type = '';
+        var option = '<option value=""></option>';
+        var unit = '';
+        <?php foreach($fines as $k=>$v){ ?>
+            if(unit == ''){
+                unit = '{$v['unit']}'
+            }
+            option += '<option value="{$v['fine']}" data-unit="{$v['unit']}">{$v['fine']}</option>'
+        <?php } ?>
+        html  = '<div class="layui-form-item project_select" style="margin:5px 0;">'
+        html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">辅材：</label>'
+        html += '  <div class="layui-input-block" style="margin-left:85px">'
+        html += '    <a style="float:left" href="javascript:;" onclick="del_material(this)"><i class="layui-icon layui-icon-close"></i></a>'
+        html += '    <select style="width:50px" name="find[]" lay-filter="test1" lay-search>'
+        html +=         option
+        html += '    </select>'
+        html += '    <input type="text" style="width:130px;" name="funit[]" autocomplete="off" placeholder="数量 - 单位：'+unit+'" class="layui-input">'
+        html += '  </div>'
+        html += '</div>'
+        $('#'+type).before(html);
+        layui.use('form', function(){
+            var form = layui.form;
+            form.render();
+            form.on('select(test1)', function(data){
+              $(data.elem).parent().find('input').attr('placeholder','数量 - 单位：' + $('option[value="'+data.value+'"]').data('unit'))
+            });  
+        });
+    }
+    function del_material(o){
+        $(o).parent().parent().remove();
+    }
+</script>
+{/block}

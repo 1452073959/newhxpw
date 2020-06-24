@@ -1,0 +1,711 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    /*分页样式*/
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .pagination li {
+        margin: 0px 10px;
+        border: 1px solid #e6e6e6;
+        padding: 3px 8px;
+        display: inline-block;
+    }
+
+    .pagination .active {
+        background-color: #dd1a20;
+        color: #fff;
+    }
+
+    .pagination .disabled {
+        color: #aaa;
+    }
+
+    .layui-form-select {
+        float: left;
+        margin-right: 10px
+    }
+
+    .onfile {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+
+    .onfile input {
+        position: absolute;
+        font-size: 20px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .onfile:hover {
+        opacity: 0.8;
+        color: #1E88C7 /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+    }
+
+    .daoru {
+        position: absolute;
+        top: 1px;
+        right: -90px;
+    }
+
+    .daorus {
+        position: absolute;
+        top: 1px;
+        right: -50px;
+        height: 35px
+    }
+
+    .bigbox {
+        padding: 10px
+    }
+
+    .bigbox input {
+        margin-bottom: 10px
+    }
+
+    #imgs {
+        position: relative;
+    }
+
+    .batchs span {
+        cursor: pointer;
+    }
+
+    .layui-form-item {
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear: none;
+    }
+    .red{
+        color:red;
+    }
+    .h38{
+        height: 38px;
+        line-height: 38px;
+    }
+</style>
+<div style="display: none">
+    <?php if(empty(session('name'))): ?>
+    <div id="msg">{:Session::pull('msg')}</div>
+    <div id="msg1"> {:Session::pull('msg1')}</div>
+    <?php endif?>
+</div>
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-form layui-inline" action="">
+                    {if ($admininfo['userid'] == 1)}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">选择分公司</label>
+                        <div class="layui-input-block">
+                            <select name="fid" lay-search>
+                                <option value=""></option>
+                                {volist name="frame" id="vo"}
+                                <option {$vo.id==input('fid')?'selected':''} value="{$vo.id}">{$vo.name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    {/if}
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">编码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="amcode" placeholder="" value="{:input('amcode')}"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">辅材名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" placeholder="" value="{:input('name')}"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">辅材分类</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="fine" placeholder="" value="{:input('fine')}"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">系统添加</label>
+                        <div class="layui-input-block">
+                            <select name="auto_add">
+                                <option></option>
+                                <option {if(input('auto_add') == 1)}selected{/if} value="1">是</option>
+                                <option {if(input('auto_add') === '0')}selected{/if} value="0">不是</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-left:10px">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                            <a href="/admin/basis_data/fwarehouse_list" class="layui-btn layui-btn-primary">重置</a>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="excel" id="excel">导入辅材数据</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="pricing" id="pricing">批量调价</button>
+                    <!-- {if $user==1}
+                    <a href="/admin/basis_data/auxiliaryderive/?id={:input('fid')}"> <button class="layui-btn layui-btn-sm"  onclick="return confirm('确定要导出吗?');">导出</button></a>
+                    {/if} -->
+                    <!-- <a class="layui-btn layui-btn-sm" href="javascript:;" lay-event="apply_new">申请新辅材</a>  -->
+                </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"
+                   lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['print'],limit:20}">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead>
+                <tr>
+
+                    <th width="150" lay-data="{field:'id',width:50,hide:'true'}">id</th>
+                    <th class="taleft" lay-data="{field:'amcode',width:120}">编码</th>
+                    <th class="taleft" lay-data="{field:'warehouse_id',width:120}">仓库编码</th>
+                    {if($admininfo['roleid'] == 1)}
+                        <th class="taleft" lay-data="{field:'fid',width:100}">分公司</th>
+                    {/if}
+                    <th class="taleft" lay-data="{field:'type_of_work',width:100}">工种类别</th>
+                    <th class="taleft" lay-data="{field:'classify',width:100}">辅材细类</th>
+                    <th class="taleft" lay-data="{field:'fine',width:100}">分类</th>
+                    <th class="taleft" lay-data="{field:'name', width:180}">辅材名称</th>
+                    <th class="taleft" lay-data="{field:'brank',width:100}">品牌</th>
+                    <th class="taleft" lay-data="{field:'place',width:100}">产地</th>
+                    <th class="taleft" lay-data="{field:'in_price',width:100}">入库价</th>
+                    <th class="taleft" lay-data="{field:'price',width:100}">出库价</th>
+                    <th class="taleft" lay-data="{field:'pack',width:100}">包装数量</th>
+                    <th class="taleft" lay-data="{field:'unit',width:90}">计量单位</th>
+                    <th class="taleft" lay-data="{field:'phr',width:90}">出库单位</th>
+                    <th class="taleft" lay-data="{field:'source',width:100}">来源</th>
+                    <th width="150" lay-data="{field:'img',width:80}">图片</th>
+                    <th class="taleft" lay-data="{field:'time',width:110}">修改时间</th>
+                    <th width="150" lay-data="{field:'edit',width:160}">操作</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                {foreach name="data" item="vo"}
+                <tr>
+                    <td class="taleft">{$vo.id}</td>
+
+                    <td class="taleft">{$vo.amcode}</td>
+                    <td class="taleft">{$vo.warehouse_id}</td>
+                    {if($admininfo['roleid'] == 1)}
+                        <td class="taleft">{$frame[$vo['fid']]['name'] ?: '未知'}</td>
+                    {/if}
+                    <td class="taleft">{$basis_materials[$vo['p_amcode']]['type_of_work']}</td>
+                    <td class="taleft">{$basis_materials[$vo['p_amcode']]['classify']}</td>
+                    <td class="taleft">{$basis_materials[$vo['p_amcode']]['fine']}</td>
+                    <td class="taleft">
+                        {if($vo['auto_add'] ==1)}
+                            <span class="red">
+                        {/if}   
+                        {$basis_materials[$vo['p_amcode']]['name']}
+                        {if($vo['auto_add'] ==1)}
+                            </span>
+                        {/if}
+                    </td>
+                    <td class="taleft">{$vo.brank}</td>
+                    <td class="taleft">{$vo.place}</td>
+                    <td class="taleft">{$vo.in_price}</td>
+                    <td class="taleft">{$vo.price}</td>
+                    <td class="taleft">{$vo.pack}</td>
+                    <td class="taleft">{$basis_materials[$vo['p_amcode']]['unit']}</td>
+                    <td class="taleft">{$vo.phr}</td>
+                    <td class="taleft">{$vo.source}</td>
+                    <td class="" id="taleft">
+                        {if $vo.img!=""}
+                        <a href="javascript:;" style="color:#007498;text-align: center;display:block;" lay-event="bianda">
+                            <img src="/uploads/images/{$vo.img}" style="width:auto; height:28px">
+                        </a>
+                        {else /}
+                        <div style="font-size: 15px;text-align: center">暂无</div>
+                        {/if}
+                    </td>
+                    <td class="taleft"><?php echo date('Y-m-d',strtotime($vo['time']));?></td>
+                    <td class="taleft">
+                        <a href="javascript:;" style="color:#007498" lay-event="edit">编辑</a>
+                        <a href="javascript:;" style="color:#007498" lay-event="del">删除</a>
+                        <a href="javascript:;" style="color:#007498" lay-event="img">上传图片</a>
+
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {$data->render()|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function add_tr(o) {
+        html = '     <tr>'
+        html += '       <td><input class="layui-input" name="name[]" /></td>'
+        html += '       <td><input class="layui-input" name="brank[]" /></td>'
+        html += '       <td><input class="layui-input" name="place[]" /></td>'
+        html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+        html += '     </tr>'
+        $('#apply_new tbody').append(html);
+    }
+
+    function delete_tr(o) {
+        $(o).parent().parent().remove();
+    }
+
+    layui.use('table', function () {
+        var table = layui.table;
+        //工具栏事件
+        table.on('toolbar(test3)', function (obj) {
+            if (obj.event == 'apply_new') {
+                var html = '<form id="formdatas">'
+                html += '   <table class="layui-table" id="apply_new" >'
+                html += '     <colgroup>'
+                html += '         <col width="200">'
+                html += '         <col width="150">'
+                html += '         <col width="150">'
+                html += '         <col width="30">'
+                html += '         <col>'
+                html += '     </colgroup>'
+                html += '     <thead>'
+                html += '       <tr>'
+                html += '           <th>辅材名称</th>'
+                html += '           <th>品牌</th>'
+                html += '           <th>产地</th>'
+                html += '           <th><a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a></th>'
+                html += '       </tr> '
+                html += '     </thead>'
+                html += '     <tbody>'
+                html += '     <tr>'
+                html += '       <td><input class="layui-input" name="name[]" /></td>'
+                html += '       <td><input class="layui-input" name="brank[]" /></td>'
+                html += '       <td><input class="layui-input" name="place[]" /></td>'
+                html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+                html += '     </tr>'
+                html += '     </tbody>'
+                html += '   </table>'
+                html += ' </form>'
+                layer.open({
+                    content: html,
+                    title: '申请新辅材',
+                    area: ['680px', '580px'], //宽高
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        var addform = $('#formdatas').serializeArray();
+                        var datas = {};
+                        $.each(addform, function () {
+                            if (datas[this.name]) {
+                                if (!datas[this.name].push) {
+                                    datas[this.name] = [datas[this.name]];
+                                }
+                                datas[this.name].push(this.value || '');
+                            } else {
+                                datas[this.name] = this.value || '';
+                            }
+                        });
+                        $.post('/admin/basis_data/apply_new_material', datas, function (res) {
+                            if (res.code === 0) {
+                                alert(res.msg);
+                            } else {
+                                layer.msg(res.msg);
+                            }
+                        }, 'json')
+                    },
+                    btn2: function (index, layero) {
+                        layer.close(index);
+                    },
+                    cancel: function () {
+                        //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }
+            if (obj.event == 'excel'){
+                var html = 
+                     '<div class="layui-upload" id="upload_file" style="margin-bottom:15px;margin-top:15px;text-align:center">'
+                    + '     <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" id="test8">上传xls,xlsx</button>'
+                    + '<br />'
+                    + '<br />'
+                    + '     <span style="width:80%;display:block;margin:0 auto;text-align:left;color:red">1.使用此功能将会覆盖原有已新增的辅材数据，请谨慎使用</span>'
+                    + '     <span style="width:80%;display:block;margin:0 auto;text-align:left;color:red">2.新增定额数据后，此功能将会无法使用</span>'
+                    + '<br />'
+                    + '     <button type="button" style="margin-top:5px" class="layui-btn layui-btn-normal" id="test9">上传</button>'
+                    + '     <button type="button" style="margin-top:5px" class="layui-btn close">取消</button>'
+                    + '</div>'
+                layer.open({
+                  title: '导入辅材',
+                  area: ['400px', '250px'], //宽高
+                  type:1,
+                  content: html
+                });
+                layui.use('upload', function(){
+                    var upload = layui.upload;
+                    upload.render({
+                        elem: '#test8',
+                        url: '/admin/basis_data/excel_f_warehouse/',
+                        auto: false,
+                        accept:'file',
+                        size:10240,
+                        //,multiple: true
+                        bindAction: '#test9',
+                        data:{
+                            
+                        },
+                        done: function(res){
+                            if(res.code == 1){
+                                layer.closeAll();
+                                layer.msg(res.msg);
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 1000);
+                            }else{
+                                layer.msg(res.msg);
+                            }
+                            return false;
+                        }
+                    });
+                });
+            }
+            if(obj.event == 'pricing'){
+                var html = '';
+                html += '<div class="layui-form-item" style="margin:15px 10px">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">字段：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <select class="h38" style="width:70%" name="field">'
+                html += '       <option value="">请选择</option>'
+                html += '       <option value="in_price">入库价</option>'
+                html += '       <option value="price">出库价</option>'
+                html += '    </select>'
+                html += '  </div>'
+                html += '</div>'
+                html += '<div class="layui-form-item" style="margin:15px 10px">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">上升额度：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input class="layui-input" style="width:70%;float:left" name="num" value="" /><span  class="h38" style="display:block;float:left;margin-left:5px;">%</span>'
+                html += '  </div>'
+                html += '</div>'
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.open({
+                        content: html,
+                        area: ['320px', '300px'], //宽高
+                        title: '批量调价',
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var field = $('select[name="field"]').val();
+                            var num = $('input[name="num"]').val();
+                            $.post('/admin/basis_data/pricing_f_price', {field: field,num:num,type:1}, function (res) {
+                                if (res.code == 1) {
+                                    layer.msg(res.msg);
+                                    setTimeout(function () {
+                                        window.location.reload()
+                                    }, 1000);
+                                } else {
+                                    alert(res.msg);
+                                }
+                            }, 'json')
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        },
+                        cancel: function () {
+                            // return false //开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                });
+            }
+        })
+
+        table.on('tool(test3)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'del') {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.open({
+                        content: '确定删除选中项目吗',
+                        title: '删除项目?',
+                        btn: ['删除', '取消'],
+                        yes: function (index, layero) {
+                            $.post('/admin/basis_data/del_fwarehouse_operation', {amcode: data.amcode}, function (res) {
+                                if (res.code == 1) {
+                                    layer.msg(res.msg);
+                                    setTimeout(function () {
+                                        window.location.reload()
+                                    }, 1000);
+                                } else {
+                                    layer.msg(res.msg);
+                                }
+                            }, 'json')
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        },
+                        cancel: function () {
+                            // return false //开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                });
+
+            }
+            if (obj.event == 'edit') {
+                var html = '<form id="edit_html" class="layui-form">';
+
+                html += '<input type="hidden" name="amcode" value="' + data.amcode + '">'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">仓库编码：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="warehouse_id" value="' + data.warehouse_id + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">品牌：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="brank" value="' + data.brank + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">产地：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="place" value="' + data.place + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">入库价：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="in_price" value="' + data.in_price + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">出库价：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="price" value="' + data.price + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">包装数量：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="pack" value="' + data.pack + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">计量单位：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="" disabled value="' + data.unit + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">出库单位：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="phr" value="' + data.phr + '" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">来源：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                // html += '    <input type="text" name="source" value="' + data.source + '" autocomplete="off" class="layui-input">'
+                html += '    <select name="source" style="height:35px;display:block">'
+                html += '       <option value="公司仓库">公司仓库</option>'
+                html += '       <option value="监理自购">监理自购</option>'
+                html += '       <option value="公司定点">公司定点</option>'
+                html += '    </select>'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '</form>'
+
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.open({
+                        content: html,
+                        area: ['400px', '80%'],
+                        title: '修改辅材',
+                        btn: ['提交', '取消'],
+                        yes: function (index, layero) {
+                            var amcode = $('#edit_html input[name="amcode"]').val();
+                            var brank = $('#edit_html input[name="brank"]').val();
+                            var place = $('#edit_html input[name="place"]').val();
+                            var in_price = $('#edit_html input[name="in_price"]').val();
+                            var price = $('#edit_html input[name="price"]').val();
+                            var pack = $('#edit_html input[name="pack"]').val();
+                            var phr = $('#edit_html input[name="phr"]').val();
+                            var source = $('#edit_html select[name="source"]').val();
+                            var warehouse_id = $('#edit_html input[name="warehouse_id"]').val();
+                            if (!brank || !place || !in_price || !price || !pack || !phr || !source) {
+                                layer.msg('数据不能留空，无数据可添"无"');
+                                return false;
+                            }
+                            if (source != '公司仓库' && source != '监理自购' && source != '公司定点') {
+                                layer.msg('来源只能输入"公司仓库" 或 "监理自购" 或 "公司定点"');
+                                return false;
+                            }
+                            if (!(/(^[1-9]([0-9]+)?(\.[0-9]{1,})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9]{1,})?$)/.test(price))) {
+                                layer.msg('请输入正确的金额格式');
+                                return false;
+                            }
+                            if (!(/(^[1-9]([0-9]+)?(\.[0-9]{1,})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9]{1,})?$)/.test(in_price))) {
+                                layer.msg('请输入正确的金额格式');
+                                return false;
+                            }
+                            if (!(/(^[1-9]([0-9]+)?(\.[0-9]{1,})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9]{1,})?$)/.test(pack))) {
+                                layer.msg('请输入正确的出库单位');
+                                return false;
+                            }
+                            $.post('/admin/basis_data/edit_fwarehouse_operation', {
+                                amcode: amcode,
+                                brank: brank,
+                                place: place,
+                                in_price: in_price,
+                                price: price,
+                                pack: pack,
+                                phr: phr,
+                                source: source,
+                                warehouse_id: warehouse_id
+                            }, function (res) {
+                                if (res.code == 1) {
+                                    layer.msg(res.msg);
+                                    setTimeout(function () {
+                                        window.location.reload()
+                                    }, 1000);
+                                } else {
+                                    layer.msg(res.msg);
+                                }
+                            }, 'json')
+
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        },
+                        cancel: function () {
+                            //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                });
+            }
+
+
+            if (obj.event == 'img') {
+                // var html = '<form ">';
+                var html = '<form action="/admin/basis_data/img" enctype="multipart/form-data" id="myform" class="layui-form" method="post">\n' +
+                    '    <div class="layui-form-item">\n' +
+                    '<!--        <label class="layui-form-label">输入框</label>-->\n' +
+                    '        <div class="layui-input-block">\n' +
+                    '            <input type="hidden" value="' + data.id + '" name="id">\n' +
+                    '            <input type="file" name="image" class="layui-btn layui-btn-radius layui-btn-primary" style="margin-top: 10%"/ >\n' +
+                    '        </div>\n' +
+                    '    </div>\n' +
+                    '</form>\n' +
+                    '<div style="height: 40% "></div>' +
+                    '<button class="layui-btn" lay-submit lay-filter="formDemo"  id="pop"  style="display:block;margin:0 auto"  >立即提交</button>\n'
+                layer.open({
+                    title: '上传图片',
+                    area: ['450px', '200px'], //宽高
+                    type: 1,
+                    content: html,
+                });
+
+                $(function () {
+                    $("#pop").click(function () {
+                        var $file1 = $("input[name='image']").val();
+                        if ($file1 == "") {
+                            layer.msg("请选择上传的目标文件");
+                            return false;
+                        }
+                        var formData = new FormData(document.getElementById("myform"));
+                        $.ajax({
+                            url:"/admin/basis_data/img",
+                            type:"post",
+                            data:formData,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            success:function(data){
+                                layer.msg(data.msg);
+                                location.reload();
+                            },
+                            error:function(e){
+                                alert("网络错误，请重试！！");
+                            }
+                        });
+
+                    })
+
+
+                });
+            }
+
+            if (obj.event == 'bianda') {
+                // var html = '<form ">';
+                var html = '' + data.img + '';
+                html = html.replace('style="width:auto; height:28px"','style="max-width:590px;height:auto;margin:5px auto;"');
+
+
+
+                layer.open({
+                    title: '查看大图',
+                    area: ['600px'], //宽高
+                    type: 1,
+                    content: html,
+                });
+
+
+            }
+        });
+    });
+
+
+</script>
+<!--<script src="https://www.jq22.com/jquery/jquery-3.3.1.js"></script>-->
+<script>
+    var msg = $('#msg').text()
+    var msg1 = $('#msg1').text()
+    console.log(msg);
+    console.log(typeof (msg));
+    if (msg1 == 1) {
+        layer.msg(msg);
+        // return false;
+    }
+
+</script>
+
+{/block}

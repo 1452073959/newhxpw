@@ -1,0 +1,44 @@
+.logo{
+	background: #dd4b39;
+}
+.layui-layout-admin .layui-header {
+    background-color: #fff;
+    border-bottom: 2px solid #dd4b39;
+}
+.layui-nav .layui-nav-item a,.layui-nav .layui-nav-item a b {
+    color: #393D49;
+    font-weight: inherit;
+}
+.layui-nav .layui-nav-item a:hover{
+	color: #dd4b39;
+}
+.topLevelMenus .layui-nav-item.layui-this {
+     background-color: #fff;
+}
+.hideMenu{
+	background: #dd4b39;
+}
+.layui-tab-title .layui-this {
+    background-color: #fff;
+    color: #dd4b39;
+}
+.layui-side-scroll {
+    background: #fff;
+}
+.layui-nav {
+    background-color: #fff;
+    color: #dd4b39;
+    font-weight: inherit;
+}
+.layui-nav-tree .layui-this>a,.layui-nav-tree .layui-this>a:hover{
+    background-color: #fff;
+}
+.layui-nav-tree .layui-this>a b,.layui-nav-tree .layui-this>a b:hover{
+    color: #dd4b39;
+}
+.layui-nav-tree .layui-nav-item a:hover{
+	background-color: #fff;
+}
+.topLevelMenus .layui-nav-item.layui-this a{
+    color: #dd4b39;
+}

@@ -1,0 +1,274 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">.p_tex{line-height:38px;color:#666;}.layui-form-label{width: 120px}.layui-table tr th,td{text-align:center;}.layui-table tr th.topname{color:#4a4a4a;}</style>
+<div class="layui-card">
+    <div class="layui-card-header">合同详情<span style="color:green" onclick="preview()">打印</span></div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/Contract/edit')}" method="post">
+              <table class="layui-table">
+                <colgroup>
+                <!--     <col width="80">
+                    <col width="80">
+                    <col width="160"> -->
+                </colgroup>
+                <thead>
+                  <!--   <tr>
+                        <th class="taleft">ID</th>
+                        <th class="taleft" width="150">合同主题</th>
+                        <th class="taleft">合同编号</th>
+                        <th class="taleft">合同分类</th>                        
+                        <th class="taleft">合同总额</th>
+                        <th class="taleft">合同状态</th>
+ 
+                    </tr> -->
+                </thead>
+                <!-- <?php dump($data)?> -->
+                <tbody> 
+
+                   <tr>
+                      <td>关联客户</td>    
+                      <td>合同编号</td>    
+                      <td>合同主题</td>    
+                      <td>签订日期</td>    
+                      <td>开始日期</td>    
+                      <td>终止日期</td>  
+                    </tr>      
+                    <tr>
+                      <td>{$data.client}</td>    
+                      <td>{$data.number}</td>    
+                      <td>{$data.theme}</td>    
+                      <td>{$data.sign_time}</td>    
+                      <td>{$data.start_time}</td>    
+                      <td>{$data.end_time}</td>    
+                    </tr>  
+                    <tr>
+                      <td>我方代表</td>    
+                      <td>对方代表</td>    
+                      <td>销售人员</td>    
+                      <td>合同分类</td>    
+                      <td>合同状态</td>    
+                      <td>币　　种</td>    
+                    </tr> 
+                     <tr>
+                      <td>{$data.we_rep}</td>    
+                      <td>{$data.other_rep}</td>    
+                      <td>{$data.salesman}</td>    
+                      <td>{$data.rep_type}</td>    
+                      <td>{$data.rep_status}</td>    
+                      <td>{$data.currency}</td>    
+                    </tr> 
+                     <tr>
+                      <td>合同总额</td>    
+                      <td>优惠方式</td>    
+                      <td>优惠后总额</td>    
+                      <td>回款计划</td>    
+                      <td>收款类型</td>    
+                      <td>运杂费</td>    
+                    </tr> 
+                     <tr>
+                      <td>{$data.total}</td>    
+                      <td>{$data.discount}</td>    
+                      <td>{$data.last_money}</td>    
+                      <td>自动生成</td>    
+                      <td>{$data.get_type}</td>    
+                      <td>{$data.incidental}</td>    
+                    </tr> 
+                       <tr>
+                      <td>开票计划</td>    
+                      <td>开票类型</td>    
+                      <td></td>    
+                      <td></td>    
+                      <td></td>    
+                      <td>/td>    
+                    </tr> 
+                     <tr>
+                      <td>{$data.total}</td>    
+                      <td>{$data.discount}</td>    
+                      <td>{$data.last_money}</td>    
+                      <td></td>    
+                      <td>{$data.get_type}</td>    
+                      <td>{$data.incidental}</td>    
+                    </tr> 
+                 <!--    <tr>
+                      <td>贤心</td>
+                      <td>人生就像是一场修行</td>
+                      <td>2016-11-29</td>
+                      <td><a class="layui-btn layui-btn-xs" href=' . url("Menu/edit", array("id" => $r['id'])) . '>编辑</a><a class="layui-btn layui-btn-xs layui-btn-normal" href=' . url("Menu/add", array("parentid" => $r['id'])) . '>添加</a><a class="layui-btn layui-btn-xs ajax-get confirm layui-btn-danger" url=' . url("Menu/delete", array("id" => $r['id'])) . '>删除</a></td>
+                    </tr> -->
+                </tbody>
+            </table>
+             <!-- <div class="layui-form-item">
+                <label class="layui-form-label">关联客户</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="client" autocomplete="off" value="{$data.client}" class="layui-input">
+                </div>
+                 <label class="layui-form-label">合同编号</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="number" autocomplete="off" value="{$data.number}" class="layui-input">
+                </div>
+                <label class="layui-form-label">合同主题</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="theme" autocomplete="off" value="{$data.theme}" class="layui-input">
+                </div>
+                         </div>
+                         <div class="layui-form-item">
+                  <label class="layui-form-label">签订日期</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="sign_time" autocomplete="off" value="{$data.sign_time}" class="layui-input" id="test1">
+             
+                </div>
+                 <label class="layui-form-label">开始日期</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="start_time" autocomplete="off" value="{$data.start_time}" class="layui-input" id="test2">
+                </div>
+                <label class="layui-form-label">终止日期</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="end_time" autocomplete="off" value="{$data.end_time}" class="layui-input" id="test3">
+                </div>
+                         </div>
+             <div class="layui-form-item">
+                  <label class="layui-form-label">我方代表</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="we_rep" autocomplete="off" value="{$data.we_rep}" class="layui-input">
+                </div>
+                 <label class="layui-form-label">对方代表</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="other_rep" autocomplete="off" value="{$data.other_rep}" class="layui-input">
+                </div>
+                <label class="layui-form-label">销售人员</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="salesman" autocomplete="off" value="{$data.salesman}" class="layui-input">
+                </div>
+                         </div>
+             <div class="layui-form-item">
+                  <label class="layui-form-label">合同分类</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="rep_type" autocomplete="off" value="{$data.rep_type}" class="layui-input">
+                </div>
+                 <label class="layui-form-label">合同状态</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="rep_status" autocomplete="off" value="{$data.rep_status}" class="layui-input">
+                </div>
+                <label class="layui-form-label">币　　种</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="currency" autocomplete="off" value="{$data.currency}" class="layui-input">
+                </div>
+                         </div>
+             <div class="layui-form-item">
+                  <label class="layui-form-label">合同总额</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="total" autocomplete="off" value="{$data.total}" class="layui-input">
+                </div>
+                 <label class="layui-form-label">优惠方式</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="discount" autocomplete="off" value="{$data.discount}" class="layui-input">
+                </div>
+                <label class="layui-form-label">优惠后总额</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="last_money" autocomplete="off" value="{$data.last_money}" class="layui-input">
+                </div>
+                         </div>
+             <div class="layui-form-item">
+                  <label class="layui-form-label">回款计划</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name=""  disabled="disabled" autocomplete="off" value="自动生成" class="layui-input">
+             
+                </div>
+                 <label class="layui-form-label">收款类型</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="get_type" autocomplete="off" value="{$data.get_type}" class="layui-input">
+                </div>
+                <label class="layui-form-label">运杂费</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="incidental" autocomplete="off" value="{$data.incidental}" class="layui-input">
+                </div>
+                         </div>
+             <div class="layui-form-item">
+                  <label class="layui-form-label">开票计划</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name=""  disabled="disabled" autocomplete="off" value="自动生成" class="layui-input">
+             
+                </div>
+                 <label class="layui-form-label">开票类型</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="invoice" autocomplete="off" value="{$data.invoice}" class="layui-input">
+                </div>
+              </div>  
+             
+                         <div class="layui-form-item">
+              <label class="layui-form-label">产品明细</label>
+              <div class="layui-input-inline w300">
+                <input type="text" name="product" autocomplete="off" value="{$data.product}" class="layui-input">
+              </div>
+                         </div> -->
+ <!--            <div class="layui-form-item" id="comment">
+                <div class="layui-form-label">详细信息</div>
+                <div class="layui-input-block"> -->
+                    <!-- <script id="editor" type="text/plain"  name="other" style="width:1200px;height:400px;"></script> -->
+                      <!-- <textarea id="editor" name="other" style="display: block;" >{$data.other}</textarea> -->
+                    <!--<script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>-->
+                    <!--<textarea id="credit" name="content" style="display: none;"></textarea>-->
+           <!--      </div>
+            </div>
+ -->
+            <input type="hidden" name="id" value="{$data.id}" />
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <!-- <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button> -->
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Contract/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script>
+    function preview(oper){
+        if (oper < 10){
+            //get_page_info();
+            bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+            sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+            eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+            prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+             
+            prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+            window.document.body.innerHTML=prnhtml;
+            window.print();
+            //prnhtml.print();
+            window.document.body.innerHTML=bdhtml;
+        } else {
+            window.print();
+        }
+    }
+</script>
+<!-- <script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/ueditor.config.js"></script>
+ <script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/ueditor.all.min.js"> </script>
+ <script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+ <script type="text/javascript">
+      var editor = new baidu.editor.ui.Editor({
+                initialContent: ''
+              });
+              editor.render("editor");
+
+    //弹出时间
+    layui.use('laydate', function(){
+      var laydate = layui.laydate;
+      
+      //执行一个laydate实例
+      laydate.render({
+        elem: '#test1' //指定元素
+      });
+
+      laydate.render({
+        elem: '#test2' //指定元素
+      });
+
+      laydate.render({
+        elem: '#test3' //指定元素
+      });
+    });          
+ </script> -->
+{/block}

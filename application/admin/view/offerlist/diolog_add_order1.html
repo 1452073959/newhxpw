@@ -1,0 +1,447 @@
+<div id="layer"></div>
+<div class="text">
+    <!-- <a href="javascript:showlayer()">弹框</a> -->
+    <div class="pop diolog_new1">
+        <form class="layui-form" id="diolog_new1_form" action="">
+            <input type="hidden" name="t_uid" value="{$customer_info['id']}">
+            <div class="layui-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">设置费率</li>
+                    <li>添加设计费</li>
+                    <li>添加优惠</li>
+                </ul>
+                <div class="layui-tab-content diolog_new">
+                    <div class="layui-tab-item  layui-show">
+                        <div class="w250 mt10">
+                            <select lay-ignore id="check_tmp_diolog" style="font-size: 14px;padding: 3px" class="w250">
+                                <option value="">选择取费模板</option>
+                                {foreach $tmp_cost as $k=>$v}
+                                    <option value="{$v['tmp_id']}">{$v['tmp_name']}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        <div id="tmp_bj"></div>
+                        <table class="layui-table" id="tmp_table" >
+                            <colgroup>
+                                <col width="100">
+                                <col width="150">
+                                <col width="80">
+                                <col width="150">
+                                <col width="80">
+                                <col width="100">
+                                <col width="200">
+                            </colgroup>
+                            <thead>
+                                <tr class="dnone">
+                                    <th class="hide_td">排序</th>
+                                    <th>操作</th>
+                                    <th>字段名称</th>
+                                    <th>标识符</th>
+                                    <th>公式</th>
+                                    <th>费率(范围0-100)</th>
+                                    <th>金额</th>
+                                    <th>说明</th>
+                                </tr> 
+                            </thead>
+                            <tbody>
+                                <tr class="dnone">
+                                    <td class="hide_td"></td>
+                                    <td>
+                                    </td>
+                                    <td>材料直接费</td>
+                                    <td>A3</td>
+                                    <td>A3</td>
+                                    <td>100</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr class="dnone" style="display:none">
+                                    <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                    <td>
+                                    <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>
+                                    <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                                    <a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a>'
+                                    </td>
+                                    <td><input class="layui-input" value="1" name="t_name[]" /></td>
+                                    <td><input class="layui-input" value="1" name="t_sign[]" /></td>
+                                    <td><input class="layui-input" value="1" name="t_formula[]" /></td>
+                                    <td><input class="layui-input" value="1" name="t_rate[]" /></td>
+                                    <td></td>
+                                    <td><input class="layui-input" value="1" name="t_content[]" /></td>
+                                </tr>
+                                {if isset($soca['rate_datas'])}
+                                    {foreach $soca['rate_datas'] as $k=>$v}
+                                        {if $v['name'] == '工程报价' || $v['name'] == '直接费' || $v['name'] == '工程报价'}
+                                            <tr>
+                                                <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                                <td>
+                                                    <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"> </i></span>
+                                                    <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>
+                                                </td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['name']}" name="t_name[]" />{$v['name']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['sign']}" name="t_sign[]" />{$v['sign']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['formula']}" name="t_formula[]" />{$v['formula']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['rate']}" name="t_rate[]" />{$v['rate']}</td>
+                                                <td class="price">0</td>
+                                                <td><input class="layui-input" placeholder="(选填)" value="{$v['content']}" name="t_content[]" /></td>
+                                           </tr>
+                                        {elseif $v['name'] == '优惠' /}
+                                            <tr>
+                                                <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                                <td>
+                                                    <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"> </i></span>
+                                                    <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>
+                                                </td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['name']}" name="t_name[]" />{$v['name']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['sign']}" name="t_sign[]" />{$v['sign']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['formula']}" name="t_formula[]" />{$v['formula']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['rate']}" name="t_rate[]" />{$v['rate']}</td>
+                                                <td class="price">0</td>
+                                                <td><input class="" type="hidden" placeholder="(选填)" value="{$v['content']}" name="t_content[]" /></td>
+                                           </tr>
+                                        {elseif $v['name'] == '总计' /}
+                                            <tr class="stop">
+                                                <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                                <td>
+                                                    <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"> </i></span>
+                                                    <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>
+                                                </td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['name']}" name="t_name[]" />{$v['name']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['sign']}" name="t_sign[]" />{$v['sign']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['formula']}" name="t_formula[]" />{$v['formula']}</td>
+                                                <td><input type="hidden" class="layui-input" value="{$v['rate']}" name="t_rate[]" />{$v['rate']}</td>
+                                                <td class="price">0</td>
+                                                <td><input class="layui-input" placeholder="(选填)" value="{$v['content']}" name="t_content[]" /></td>
+                                           </tr>
+                                        {else /}
+                                            <tr>
+                                               <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                               <td>
+                                                  <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>
+                                                  <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>
+                                                  <a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a>
+                                               </td>
+                                               <td><input class="layui-input" value="{$v['name']}" name="t_name[]" /></td>
+                                               <td><input class="layui-input" value="{$v['sign']}" name="t_sign[]" /></td>
+                                               <td><input class="layui-input" value="{$v['formula']}" name="t_formula[]" /></td>
+                                               <td><input class="layui-input" value="{$v['rate']}" name="t_rate[]" /></td>
+                                               <td class="price">0</td>
+                                               <td><input class="layui-input" value="{$v['content']}" name="t_content[]" /></td>
+                                             </tr>
+                                        {/if}
+                                    {/foreach}
+                                {else /}
+                                    <tr>
+                                        <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                        <td>
+                                            <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>
+                                            <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>
+                                        </td>
+                                        <td><input type="hidden" class="layui-input" value="直接费" name="t_name[]" />直接费</td>
+                                        <td><input type="hidden" class="layui-input" value="A1" name="t_sign[]" />A1</td>
+                                        <td><input type="hidden" class="layui-input" value="A1" name="t_formula[]" />A1</td>
+                                        <td><input type="hidden" class="layui-input" value="100" name="t_rate[]" />100</td>
+                                        <td class="price"></td>
+                                        <td><input class="layui-input" placeholder="(选填)" value="" name="t_content[]" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                        <td>
+                                            <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>
+                                            <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>
+                                        </td>
+                                        <td><input type="hidden" class="layui-input" value="优惠" name="t_name[]" />优惠</td>
+                                        <td><input type="hidden" class="layui-input" value="A2" name="t_sign[]" />A2</td>
+                                        <td><input type="hidden" class="layui-input" value="A2" name="t_formula[]" />A2</td>
+                                        <td><input type="hidden" class="layui-input" value="100" name="t_rate[]" />100</td>
+                                        <td class="price"></td>
+                                        <td><input class="layui-input" type="hidden" placeholder="(选填)" value="" name="t_content[]" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                        <td>
+                                            <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>
+                                            <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>
+                                        </td>
+                                        <td><input type="hidden" class="layui-input" value="工程报价" name="t_name[]" />工程报价</td>
+                                        <td><input type="hidden" class="layui-input" value="S" name="t_sign[]" />S</td>
+                                        <td><input type="hidden" class="layui-input" value="S" name="t_formula[]" />S</td>
+                                        <td><input type="hidden" class="layui-input" value="100" name="t_rate[]" />100</td>
+                                        <td class="price"></td>
+                                        <td><input class="layui-input" placeholder="(选填)" value="" name="t_content[]" /></td>
+                                    </tr>
+                                    <tr class="stop">
+                                        <td class="hide_td"><input class="layui-input t_sort" name="t_sort[]" /></td>
+                                        <td></td>
+                                        <td><input type="hidden" class="layui-input" value="总计" name="t_name[]" />总计</td>
+                                        <td><input type="hidden" class="layui-input" value="T" name="t_sign[]" />T</td>
+                                        <td><input type="hidden" class="layui-input" value="T" name="t_formula[]" />T</td>
+                                        <td><input type="hidden" class="layui-input" value="100" name="t_rate[]" />100</td>
+                                        <td class="price"></td>
+                                        <td><input class="layui-input" placeholder="(选填)" value="" name="t_content[]" /></td>
+                                    </tr>
+                                {/if}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <span class="t1"><i>*</i>1.设计费设置</span>
+                        <span class="t2">请选择设计费收取方式</span>
+                        <input type="radio" lay-filter="design_type" value="1" name="design_type" title="按项收取"  {if isset($soca['design']['design_type'])}{if $soca['design']['design_type'] == 1}checked{/if}{else /}checked{/if} />
+                        <!-- <input type="radio" name="design_type" title="按平米收取" /> -->
+                        <input type="radio" lay-filter="design_type" value="2" name="design_type" title="按比例收取" {if isset($soca['design']['design_type']) && $soca['design']['design_type'] == 2}checked{/if}/>
+                        <table class="layui-table" id="design_table1" {if isset($soca['design']['design_type']) && $soca['design']['design_type'] == 2}style="display:none"{/if}>
+                            <colgroup>
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="200">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>项目名称</th>
+                                    <th>单位</th>
+                                    <th>数量</th>
+                                    <th>单价</th>
+                                    <th>设计费说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select name="design_project" lay-ignore id="design_select">
+                                            <option value="" data-unit="" data-price="" data-material="">请选择</option>
+                                            {foreach $discount_project as $k=>$v}
+                                                <option {if isset($soca['design']['project']) && $soca['design']['project']['item_number'] == $v['item_number']}selected<?php list($td_unit, $td_price, $td_material) = [$v['company'],$v['cost_value'],$v['material']];?>{/if} value="{$v['item_number']}" data-unit="{$v['company']}" data-price="{$v['cost_value']}" data-material="{$v['material']}">{$v['project']}</option>
+                                            {/foreach}
+                                        </select>
+                                    </td>
+                                    <td>{:isset($td_unit)?$td_unit:''}</td>
+                                    <td><input class="layui-input" name="design_num" value="{$soca['design']['project']['num'] ?: 0}" /></td>
+                                    <td>{:isset($td_price)?$td_price:''}</td>
+                                    <td>{:isset($td_material)?$td_material:''}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="layui-table" id="design_table2" {if !isset($soca['design']['design_type'])}style="display:none"{elseif $soca['design']['design_type']==1 /}style="display:none"{/if}>
+                            <colgroup>
+                                <col width="100">
+                                <col width="100">
+                                <col width="200">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>费率</th>
+                                    <th>比率%(0-100)</th>
+                                    <th>设计费说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="position">
+                                            <span class="select_span">
+                                                <select lay-ignore id="" name="rate_type" class="" style="height: 30px;line-height: 30px;width: 60%;">
+                                                    <option value="A1" {if isset($soca['design']['rate_type']) && $soca['design']['rate_type'] == 'A1'}selected{/if}>直接费</option>
+                                                    <option value="T" {if isset($soca['design']['rate_type']) && $soca['design']['rate_type'] == 'T'}selected{/if}>工程报价</option>
+                                                    <option value="S" {if isset($soca['design']['rate_type']) && $soca['design']['rate_type'] == 'S'}selected{/if}>总价</option>
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td><input class="layui-input" name="design_rate" value="{if isset($soca['design']['design_rate']) && $soca['design']['design_rate']}{$soca['design']['design_rate']}{/if}" /></td>
+                                    <td><input class="layui-input" name="design_content" value="{if isset($soca['design']['design_content']) && $soca['design']['design_content']}{$soca['design']['design_content']}{/if}" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span class="t2">设计费是否计入工程总报价内？</span>
+                        <input type="radio" name="design_in" value="1" title="是" {if isset($soca['design']['design_in'])}{if $soca['design']['design_in'] == 1}checked{/if}{else /}checked{/if}/>
+                        <input type="radio" name="design_in" value="2" title="否" {if isset($soca['design']['design_in']) && $soca['design']['design_in'] == 2}checked{/if} />
+                    </div>
+                    <div class="layui-tab-item">
+                        <span class="t1"><i>*</i>1.折扣设置</span>
+                        <!-- 初始化一个默认的 用于后端 -->
+                        <input type="hidden" name="discount_type[]" value='1' />
+                        <input type="hidden" name="discount_rate[]" value='1' />
+                        <input type="hidden" name="discount_content[]" value='1' />
+                        <!-- 初始化一个默认的 用于后端end -->
+                        {if isset($soca['discount_datas']) && $soca['discount_datas'] }
+                            {foreach $soca['discount_datas'] as $key=>$val}
+                                <div class="discount_div">
+                                    <span class="t2"><a href="javascript:;" class="add_discount"><i class="layui-icon layui-icon-add-1"></i></a></span>
+                                    <span class="t2">打折方式：</span>
+                                    <select lay-ignore class="discount_form" name="discount_type[]">
+                                        <option value="">请选择</option>
+                                        {foreach $discount as $k=>$v}
+                                            <option {if $v['id'] == $val['did']}selected{/if} data-content="{$v['content']}" value="{$v['id']}">{$v['name']}</option>
+                                        {/foreach}
+                                    </select>
+                                    <span class="t2">折扣比例：</span>
+                                    <input name="discount_rate[]" value="{$val['rate']}" class="discount_form w50" />
+                                    <span class="t2">优惠说明：</span>
+                                    <input name="discount_content[]" value="{$val['content']}" class="discount_form w250" />
+                                </div>
+                            {/foreach}
+                        {else /}
+                            <div class="discount_div">
+                                <span class="t2"><a href="javascript:;" class="add_discount"><i class="layui-icon layui-icon-add-1"></i></a></span>
+                                <span class="t2">打折方式：</span>
+                                <select lay-ignore class="discount_form" name="discount_type[]">
+                                    <option value="">请选择</option>
+                                    {foreach $discount as $k=>$v}
+                                        <option data-content="{$v['content']}" value="{$v['id']}">{$v['name']}</option>
+                                    {/foreach}
+                                </select>
+                                <span class="t2">折扣比例：</span>
+                                <input name="discount_rate[]" value="" class="discount_form w50" />
+                                <span class="t2">优惠说明：</span>
+                                <input name="discount_content[]" value="" class="discount_form w250" />
+                            </div>
+                        {/if}
+                        
+                        <div class="clean"></div>
+                        <!-- <span class="t2">折扣金额：<i>111</i></span> -->
+                        <span class="t2" style="margin-left: 80px;">(ps:折扣比率，例如打9折，则输入90；现金优惠直接输入优惠金额)</span>
+                        <div class="clean"></div>
+                        <span class="t2">增加项是否打折？</span>
+                        <input type="radio" name="append_discount" value="1" title="是" {if isset($soca['discount']['append_discount'])}{if $soca['discount']['append_discount'] == 1}checked{/if}{else /}checked{/if}/>
+                        <input type="radio" name="append_discount" value="2" title="否" {if isset($soca['discount']['append_discount']) && $soca['discount']['append_discount'] == 2}checked{/if} />
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <span class="t2">费用预览</span>
+                    <span class="t3">费率金额</span>
+                    <span class="t3" id="t_order_cost_all_price">0</span>
+                    <span class="t3">设计费金额</span>
+                    <span class="t3" id="design_price">0</span>
+                    <span class="t3">优惠金额</span>
+                    <span class="t3" id="discount_price" style="border-right: 1px solid #ccc">0</span>
+                </div>
+                <div class="diolog_new_btn">
+                    <!-- <a class="layui-btn"  href="javascript:;">确定</a> -->
+                    <a class="layui-btn" id="preview_diolog_new1"  href="javascript:;">保存/预览</a>
+                    <a class="layui-btn layui-btn-warm close_new_diolog"  href="javascript:;">关闭</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="text">
+    <!-- <a href="javascript:showlayer()">弹框</a> -->
+    <form class="layui-form" id="gift_form" action="">
+        <div class="pop diolog_new2">
+                <div class="gift">
+                    <span class="t1">1.选择礼品</span>
+                    <div class="gift_top">
+                        <div class="left">
+                            <div class="gift_show">
+                                <div class="gift_title">公司礼品库</div>
+                                <!-- <div class="select_gift"><input placeholder="请输入关键词搜索"  id="select_gift"/></div> -->
+                                <ul class="gift_list">
+                                    {foreach $gift as $k1=>$v1}
+                                        <li data-cate="{$k1}" class="gift_parent">{$k1}</li>
+                                        {foreach $v1 as $k2=>$v2}
+                                            <li data-cate="{$k1}" data-name="{$v2['name']}" data-id="{$v2['id']}" data-brand="{$v2['brand']}"  data-price="{$v2['price']}"  data-content="{$v2['content']}"  data-unit="{$v2['unit']}" class="gift_child">{$v2['name']}</li>
+                                        {/foreach}
+                                    {/foreach}
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="gift_show">
+                                <table class="layui-table gift_table" id="" >
+                                    <colgroup>
+                                        <col width="30">
+                                        <col width="60">
+                                        <col width="100">
+                                        <col width="70">
+                                        <col width="60">
+                                        <col width="100">
+                                        <col width="100">
+                                        <col width="100">
+                                        <col width="150">
+                                    </colgroup>
+                                    <thead>
+                                        <tr class="">
+                                            <th></th>
+                                            <th>操作</th>
+                                            <th>礼品名称</th>
+                                            <th>品牌</th>
+                                            <th>数量</th>
+                                            <th>单位</th>
+                                            <th>单价</th>
+                                            <th>总价</th>
+                                            <th>赠送说明</th>
+                                        </tr> 
+                                    </thead>
+                                    <tbody>
+                                        {if isset($soca['gift'])}
+                                            <?php $gi = 1;  $gift_total = 0; ?>
+                                            {foreach $soca['gift'] as $k=>$v}
+                                                <tr class="gid_{$v['id']}">
+                                                    <td class="count">{$gi}</td>
+                                                    <?php $gi++; ?>
+                                                    <td>
+                                                        <i class="layui-icon layui-icon-delete"></i>
+                                                    </td>
+                                                    <td>{$v['name']}</td>
+                                                    <td>{$v['brand']}</td>
+                                                    <td><input name="gift[{$v['id']}]" value="{$v['num']}" class="gift_input"/></td>
+                                                    <td>{$v['unit']}</td>
+                                                    <td class="gift_price">{$v['price']}</td>
+                                                    <td class="gift_total_one">{$v['price'] * $v['num']}</td>
+                                                    <?php $gift_total += ($v['price'] * $v['num']); ?>
+                                                    <td>{$v['content']}</td>
+                                                </tr>
+                                            {/foreach}
+                                        {/if}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3">总计：<span id="gift_total_price">{:isset($gift_total) ?$gift_total : 0}</span></td>
+                                            <td colspan="3"></td>
+                                            <td colspan="3"><input class="layui-input" name="gift_content" value="{:isset($soca['design']['gift_content'])?$soca['design']['gift_content']:''}" placeholder="此处输入赠送说明" /></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            <div class="diolog_new_btn">
+                <a class="layui-btn close_new_diolog"  href="javascript:;">确定</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="text">
+    <!-- <a href="javascript:showlayer()">弹框</a> -->
+    <div class="pop diolog_new3">
+        <div class="remark_div mt20">
+            <span>1.报价顶部备注</span>
+            <div class="input_div">
+                <input type="text" name="unit" placeholder="" value="{$order_info['unit'] ?: $f_name}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="remark_div">
+            <span>2.报价名称备注</span>
+            <div class="input_div">
+                <input type="text" name="remark" placeholder="" value="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="remark_div">
+            <span>3.报价底部备注</span>
+            <div class="input_div">
+                <textarea name="o_remark">{:isset($order_info['o_remark'])?$order_info['o_remark']:$cost_tmp['order_tfoot']}</textarea>
+            </div>
+        </div>
+        <div class="diolog_new_btn">
+            <a class="layui-btn close_new_diolog"  href="javascript:;">确定</a>
+        </div>
+    </div>
+</div>

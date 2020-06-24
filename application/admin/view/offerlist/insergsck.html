@@ -1,0 +1,120 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+<form class="layui-form" action="/admin/Offerlist/insergsck" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">编码</label>
+        <div class="layui-input-block">
+            <input type="text" name="item_number" required  lay-verify="required"  readonly  unselectable="on" value="{$p_item_number['item_number']}" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">工种类别</label>
+        <div class="layui-input-block">
+            <select name="type_of_work" lay-filter="type_of_work" lay-search  id="selectid" disabled="true">
+                <option value="">请选择</option>
+                {volist name="type_work" id="vo"}
+                <option {if $vo.name==$fb.type_of_work}selected{/if}   value="{$vo['name']}">{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <input type="hidden" name="order_project" value="{$fb['id']}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="project" required  lay-verify="required"   readonly  unselectable="on" value="{$p_item_number['name']}" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单位</label>
+        <div class="layui-input-block">
+            <input type="text" name="company" required  lay-verify="required" readonly  unselectable="on" value="{$p_item_number['unit']}" placeholder="请输入单位" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">辅材单价</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="id" value="{$fb['id']}">
+            <input type="number" name="quota" required  lay-verify="required" value="{$fb['quota']}" placeholder="请输入辅材单价" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">人工单价</label>
+        <div class="layui-input-block">
+            <input type="number" name="craft_show" required  lay-verify="required" value="{$fb['craft_show']}" placeholder="请输入人工单价" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">人工成本</label>
+        <div class="layui-input-block">
+            <input type="number" name="labor_cost" required  lay-verify="required" value="" placeholder="请输入人工成本" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">工艺说明</label>
+        <div class="layui-input-block">
+            <input type="text" name="material" required  lay-verify="required"  readonly  unselectable="on" value="{$fb['material']}" placeholder="请工艺说明" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    {foreach $p_item_number['fine'] as $k6=>$v6}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{$v6['fine']}</label>
+        <input type="hidden" name="fine[]" value="{$v6['fine']}">
+        <div class="layui-input-block">
+            <select name="content[]" lay-filter="type_word_id" lay-search required lay-verify="required">
+                {if empty($v6['fi'])}
+                <option  value="">公司暂无该类型辅材,请添加后再操作</option>
+                {else}
+                <option  value="">请选择辅材</option>
+                {/if}
+                {foreach $v6['fi'] as $k5=>$v5}
+                <option  value="{$v5.amcode}">{$v5.name}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+    {/foreach}
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            $("#selectid").attr("disabled",false);
+            $(".layui-form").submit();
+            return false;
+        });
+    });
+</script>
+{/block}

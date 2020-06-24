@@ -1,0 +1,259 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+td{
+    text-align: center;
+}
+.w160{
+    width: 160px;
+}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-btn-container">
+            <a class="layui-btn layui-btn-sm add_process" href="javascript:;">添加流程</a> 
+        </div>
+        <table class="layui-table">
+            <colgroup>
+                <col width="80">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead >
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                   
+                </tr>
+            </thead>
+            <tbody> 
+              {foreach name="data" item="v"}
+                <tr>
+                    <td class="" colspan="2">{$v.name}</td>
+                    <td>
+                        <a href="javascript:;" data-pid="{$v.id}" class="add_child">添加</a>
+                        <a href="javascript:;" data-id="{$v.id}" class="edit_parent">编辑</i></a>
+                        <a href="javascript:;" data-id="{$v.id}" class="del_parent">删除</i></a>
+                    </td>
+                </tr>
+                {foreach name="v['child']" item="child"}
+                    <tr>
+                        <td class=""></td>
+                        <td class="">{$child.b_name}</td>
+                        <td>
+                            <a href="javascript:;" data-id="{$child.id}" class="edit_child">编辑</i></a>
+                            <a href="javascript:;" class="del_child">删除</i></a>
+                        </td>
+                    </tr>
+                {/foreach}
+            {/foreach}
+            </tbody>
+        </table>
+        
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $('.add_process').click(function(){
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var html = '';
+            html += '<input id="process_name" class="layui-input" placeholder="请输入流程名称" value="" />';
+            layer.open({
+                content: html,
+                title:'添加流程',
+                area: ['400', '120'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    var process_name = $('#process_name').val();
+                    if(!process_name){
+                        alert('流程名称不能为空');
+                    }
+                    $.post('/admin/process/add_process',{process_name:process_name},function(res){
+                        if(res.code === 0){
+                            alert(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+    $('.edit_parent').click(function(){
+        var id = $(this).data('id');
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var html = '';
+            html += '<input id="process_name" class="layui-input" placeholder="请输入流程名称" value="" />';
+            layer.open({
+                content: html,
+                title:'添加流程',
+                area: ['400', '120'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    var process_name = $('#process_name').val();
+                    if(!process_name){
+                        alert('流程名称不能为空');
+                    }
+                    $.post('/admin/process/add_process',{id:id,process_name:process_name},function(res){
+                        if(res.code === 0){
+                            alert(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+    $('.del_parent').click(function(){
+        var id = $(this).data('id');
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                content: '是否确认删除选中流程？',
+                title:'删除流程',
+                area: ['400', '120'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    $.post('/admin/process/del_process',{id:id},function(res){
+                        if(res.code === 0){
+                            layer.msg(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+    $('.add_child').click(function(){
+        var pid = $(this).data('pid');
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var html = '';
+            html += '<input id="child_name" class="layui-input" placeholder="请输入子流程名称" value="" />';
+            html += '<textarea style="margin-top:10px;width:220px;height:100px;" id="child_content" placeholder="描述"></textarea>';
+            layer.open({
+                content: html,
+                title:'添加子流程',
+                area: ['400', '240'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    var child_name = $('#child_name').val();
+                    var child_content = $('#child_content').val();
+                    if(!child_name){
+                        alert('流程名称不能为空');
+                    }
+                    $.post('/admin/process/add_child',{pid:pid,child_name:child_name,child_content:child_content},function(res){
+                        if(res.code === 0){
+                            alert(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+              cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+              }
+            });
+        });        
+    })
+    $('.edit_child').click(function(){
+        var id = $(this).data('id');
+        $.post('/admin/process/get_child',{id:id},function(res){
+            if(res.code === 0){
+                layer.msg(res.msg);
+                setTimeout(function(){
+                　　window.location.reload()
+                },1000);
+            }
+            var html = '';
+            html += '<input id="child_name" class="layui-input" placeholder="请输入子流程名称" value="'+res.data.b_name+'" />';
+            html += '<textarea style="margin-top:10px;width:220px;height:100px;" id="child_content" placeholder="描述">'+res.data.content+'</textarea>';
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    content: html,
+                    title:'添加子流程',
+                    area: ['400', '240'], //宽高
+                    btn: ['提交'],
+                    yes: function(index, layero){
+                        var child_name = $('#child_name').val();
+                        var child_content = $('#child_content').val();
+                        if(!child_name){
+                            alert('流程名称不能为空');
+                        }
+                        $.post('/admin/process/edit_child',{id:id,child_name:child_name,child_content:child_content},function(res){
+                            if(res.code === 0){
+                                alert(res.msg);
+                            }else{
+                                layer.msg(res.msg);
+                                setTimeout(function(){
+                                　　window.location.reload()
+                                },1000);
+                            }
+                        },'json')
+                    },
+                  cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                  }
+                });
+            });        
+        },'json')
+    })
+    $('.del_child').click(function(){
+        var id = $(this).data('id');
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                content: '是否确认删除选中流程？',
+                title:'删除流程',
+                area: ['400', '120'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    $.post('/admin/process/del_child',{id:id},function(res){
+                        if(res.code === 0){
+                            layer.msg(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+</script>
+{/block}

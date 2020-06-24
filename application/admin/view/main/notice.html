@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="__STATIC__/12/admin/css/layui.css" media="all"/>
+    <script src="__STATIC__/layui/layui.js"></script>
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://www.layuicdn.com/layer/layer.js"></script>
+</head>
+<body>
+
+
+<div>
+
+<form class="layui-form" action="/admin/main/notice" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block" style="width: 650px;height: 50px;">
+            <script id="container" name="content" type="text/plain">
+
+            </script>
+            <!-- 配置文件 -->
+            <script type="text/javascript" src="/utf8-php/ueditor.config.js"></script>
+            <!-- 编辑器源码文件 -->
+            <script type="text/javascript" src="/utf8-php/ueditor.all.js"></script>
+            <!-- 实例化编辑器 -->
+            <script type="text/javascript">
+                // var ue = UE.getEditor('container',;
+                var ue = UE.getEditor('container');
+                // var ue = UE.getEditor('container',{toolbars: [['simpleupload','insertimage']]});
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style=" float: right;margin-right: 5%;">
+        <div class="layui-input-block">
+            <button class="layui-btn">立即发布</button>
+        </div>
+    </div>
+</form>
+</div>
+
+<!--<script>
+    $(function () {
+        $("#h").click(function () {
+            var formData = $("#myform").serialize();
+            console.log(formData);
+            $.ajax({
+                type:"post",
+                url:"/admin/main/notice",
+                data:formData,//这里data传递过去的是序列化以后的字符串
+                success:function(e){
+                    console.log(e);
+                    alert(e.msg);
+                    layer.closeAll('iframe');
+                }
+
+            });
+        return false;
+        })
+
+
+    });
+</script>-->
+</body>
+</html>

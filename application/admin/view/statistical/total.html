@@ -1,0 +1,89 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+</div>
+<button class="layui-btn layui-btn-sm" type="button" data-fun="print" id="btn_export">打印</button>
+<div id="export-table">
+    <p>
+        <img style="max-width:160px;" src="__STATIC__/imgs/logo.png">
+    </p>
+    <p style="text-align: center;font-weight: 900;font-size: 22px;margin-bottom:10px">
+       工程领料合计
+    </p>
+    <p style="width: 98%;padding:0 1%;">
+        <span style="text-align: left">工程名称：{$userinfo.address}</span>
+        <span style="float: right"><?php echo date('Y-m-d'); ?></span>
+    </p>
+    <table class="layui-table">
+        <tr style="text-align: center">
+            <td colspan="1">客户姓名:{$userinfo.customer_name}</td>
+            <td colspan="2">工程地址:{$userinfo.address}</td>
+            <td colspan="2">客户电话:{$userinfo.phone}</td>
+        </tr>
+        <tr>
+
+        </tr>
+        <tr>
+            <td>工程经理：{$userinfo.gcjl.name}</td>
+            <td>质检：{$userinfo.zj.name}</td>
+            <td>监理：{$userinfo.user.name}</td>
+            <td colspan="2">商务经理：{$userinfo.manager_name}</td>
+        </tr>
+        <tr>
+            <td>辅材名称</td>
+            <td>规格</td>
+            <td>领料数量</td>
+            <td>单价</td>
+            <td>合计</td>
+        </tr>
+        {foreach $reality as $k=>$v}
+        <tr>
+            <td>{$v.m_name}</td>
+            <td>{$v.phr}</td>
+            <td>{$v.actual_num}</td>
+            <td>{$v.price}</td>
+            <td>{$v.price*$v.actual_num}</td>
+        </tr>
+        {/foreach}
+        <tr>
+            <td colspan="4">
+                自购/订单领料
+            </td>
+            <td>
+                {$summation}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                总计
+            </td>
+            <td>
+                {$amount+$summation}
+            </td>
+        </tr>
+    </table>
+</div>
+{/block}
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="__STATIC__/bootstrap/js/table/printThis.min.js"></script>
+<script>
+    //打印
+    $(document).on('click', '[data-fun="print"]', function () {
+
+        $("#export-table").printThis({
+            debug: false,
+            importCSS: true,
+            importStyle: true,
+            printContainer: true,
+            loadCSS: "__STATIC__/bootstrap/css/printThis-p.css",
+            // pageTitle: '　',
+            removeInline: false,
+            printDelay: 333,
+            header: null,
+            formValues: false
+        });
+    })
+
+</script>
+{/block}

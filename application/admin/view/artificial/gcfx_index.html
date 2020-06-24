@@ -1,0 +1,1108 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+a{
+  cursor:pointer;
+  color:#666;
+}
+.ulall li{float:left;border: 1px solid #ccc;padding: 5px;margin-right: 20px;}
+.tishi{
+    float:right;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <span class="layui-btn layui-btn-radius layui-btn-primary tishi">公式说明</span>
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                   <ul class="ulall">
+                      <li>客户姓名：{$userinfo.customer_name}</li>
+                      <li>工程地址：{$userinfo.address}</li>
+                      <li>联系电话：{$userinfo.phone}</li>
+                      <li>报价师姓名：{$userinfo.quoter_name}</li>
+                      <li>设计师姓名：{$userinfo.designer_name}</li>
+                      <li>面积：{$userinfo.area}</li>
+                      <li>房屋类型：{$userinfo.room_type}</li>
+                       <li  style="display: none">{$userinfo.oid}</li>
+                      {eq name="$userinfo['is_new']" value="9"}<li>签单时间：{$userinfo.oldtime|date="Y-m-d"}</li>{/eq}
+                      <li class="click print" style="display: none" title="打印"><i class="layui-icon layui-icon-print"></i></li>
+                   </ul>
+                </div>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3',toolbar:'#toolbarDemo',defaultToolbar:['filter', 'print'],limit:20,page:true,height: 'full-160'}">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th class="taleft" lay-data="{field:'id',width:60}">ID</th>
+                        <!-- 用于计算 -->
+                        <th class="taleft" lay-data="{field:'discount',width:90,style:'background-color: #e4fcfd;color:#029687',hide:'true'}">金额优惠</th>
+                        <th class="taleft" lay-data="{field:'entrytime',width:145}">提交时间</th>
+                        <th class="taleft" lay-data="{field:'status', width:80,}">订单状态</th>
+                        <th class="taleft" lay-data="{field:'remark', width:80}">备注</th>
+                        <th lay-data="{field:'edit',width:270}">操作</th>
+                        <th class="taleft" lay-data="{field:'design_price',width:100,style:'background-color: #e4fcfd' }">设计费</th>
+                        <th class="taleft" lay-data="{field:'direct_cost',width:100,style:'background-color: #e4fcfd' }">工程直接费</th>
+                        <th class="taleft" lay-data="{field:'order_cost_all_price',event:'get_tmp_cost',width:90,style:'background-color: #e4fcfd ;color:#f36f20' }">管理费用</th>
+                        <th class="taleft" lay-data="{field:'proquant',width:100,style:'background-color: #e4fcfd'}" >工程报价(优惠前)</th>
+                        <th class="taleft" lay-data="{field:'discount_zk',width:160,style:'background-color: #e4fcfd;color:#029687' }">优惠</th>
+                        <th class="taleft" lay-data="{field:'discount_proquant',width:100,style:'background-color: #e4fcfd'}" >工程报价</th>
+                        <th class="taleft" lay-data="{field:'gift',width:100,event:'gift',style:'background-color: #e5f3c5;color:#f36f20'}" >赠送礼品</th>
+                        <th class="taleft" lay-data="{field:'artificial_cb',event:'artificial_cb',width:115,style:'background-color: #e5f3c5;color:#f36f20' }">测算人工成本</th>
+                        <th class="taleft" lay-data="{field:'material_cb',event:'material_cb',width:115,style:'background-color: #e5f3c5;color:#f36f20' }">测算辅料成本</th>
+                        <th class="taleft" lay-data="{field:'sundry',edit:'text',width:115,style:'background-color: #e5f3c5;color:#029687' }">预测运杂成本</th>
+                        <th class="taleft" lay-data="{field:'commission',event:'show_commission',width:115,style:'background-color: #e5f3c5;color:#f36f20' }">预计提成奖励</th>
+                        <th class="taleft" lay-data="{field:'gross_profit',event:'gross_profit',width:90,style:'background-color: #ffe1bb;color:#f36f20' }">工程毛利</th>
+                        <th class="taleft" lay-data="{field:'profit_rate',width:100,style:'background-color: #ffe1bb' }">工程毛利率</th>
+                        <th class="taleft" lay-data="{field:'gross_profit_total',width:100,style:'background-color: #ffe1bb' }">总毛利</th>
+                        <th class="taleft" lay-data="{field:'profit_rate_total',width:90,style:'background-color: #ffe1bb' }">总毛利率</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                  {foreach name="data" item="vo"}
+                    <tr>
+                      <td class="taleft">{$vo.id}</td>
+                      <td class="taleft">{$vo.order_info.discount}</td>
+                      <td class="taleft">{$vo.order_info.entrytime|date="Y-m-d H:i"}</td>
+                      <td>
+                        {switch name="$vo.order_info.status"}
+                            {case value="0"} <a class="layui-btn layui-btn-xs layui-btn-primary">预报单</a>{/case}
+                            {case value="1"} <a class="layui-btn layui-btn-xs">预报单</a>{/case}
+                            {case value="2"} <a class="layui-btn layui-btn-xs layui-btn-normal">无效单</a>{/case}
+                            {case value="3"} <a class="layui-btn layui-btn-xs layui-btn-warm">合同单(未审)</a>{/case}
+                            {case value="4"} <a class="layui-btn layui-btn-xs layui-btn-warm">合同单</a>{/case}
+                            {case value="5"} <a class="layui-btn layui-btn-xs">待结算</a>{/case}
+                            {case value="6"} <a class="layui-btn layui-btn-xs layui-btn-danger">结算单</a>{/case}
+                            {default /}
+                            <a class="layui-btn layui-btn-xs layui-btn-primary">预报单</a>
+                        {/switch}
+                      </td>
+                      <td class="taleft">{$vo.remark}</td>
+                      <td>
+                       <a class="layui-btn layui-btn-xs" href="{:url('admin/offerlist/history',['customerid'=>$vo.order_info.customerid,'report_id'=>$vo.id,'gcfx'=>1,'type'=>2])}">查看报价</a>
+                       <a class="layui-btn layui-btn-xs" href="{:url('admin/auxiliary/history',['id'=>$vo.id])}">查看领料清单</a>
+                          {if $vo.no!=0}
+                        <a class="layui-btn layui-btn-xs"  lay-event="kkk" key="{$vo.id}">查看增减项</a>
+                          {/if}
+                      </td>
+                      <td class="taleft">{$vo.order_info.design_price}</td>
+                      <td class="taleft">{$vo.order_info.direct_cost}</td>
+                      <td class="taleft">{$vo.order_info.order_cost_all_price}</td>
+                      <td class="taleft">{$vo.order_info.proquant}</td>
+                      <td class="taleft">
+                        {if($vo['order_info']['discount'] > 0)}
+                            <a lay-event="set_discount">{$vo.order_info.discount}</a>
+                        {else /}
+                            <a lay-event="set_discount">无优惠</a>{/if}
+                      </td>
+                      <td class="taleft">{$vo.order_info.discount_proquant}</td>
+                      <td class="taleft">{$vo['order_info']['gift_cost']}</td>
+                      <td class="taleft">{$vo.order_info.artificial_cb}</td>
+                      <td class="taleft">{$vo.order_info.material_cb}</td>
+                      <td class="taleft">{$vo.order_info.sundry ?: 0}</td>
+                      <td class="taleft">{$vo.order_info.supervisor_commission+$vo.order_info.design_commission+$vo.order_info.repeat_commission+$vo.order_info.business_commission}</td>   
+                      <td class="taleft">{$vo.order_info.gross_profit}</td>
+                      <td class="taleft">{$vo.order_info.profit_rate}%</td>
+                      <td class="taleft">{$vo.order_info.gross_profit_total}</td>
+                      <td class="taleft">{$vo.order_info.profit_rate_total}%</td>
+
+                    </tr>
+                 {/foreach}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+  //简单显示上传文件信息
+     $("#imgInput").change(function(e){
+       var fileMsg = e.currentTarget.files;
+       var fileName = fileMsg[0].name;
+       var fileSize = Math.floor(((fileMsg[0].size)/1024))+'kb';
+       var fileType = fileMsg[0].type;
+       var _html = '<p>文件名：'+fileName+'</p><p>文件大小：'+fileSize+'</p><p>文件类型：'+fileType+'</p>'
+         layer.tips(_html, '#imgs', {
+          tips: [1, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+       $("#imgs").html("<span style='color:green;position:absolute;top:-25px;right:-5px;font-size:20px'>✔</span>");
+    });
+    $("#tishi").click(function(){
+      var content = '<p>这是我定义的说明<br />只能导入excel文件。其他后缀名不识别<br />下载空模板可以使用添加数据导入</p>';
+      //自定页
+      layer.tips(content, '#tishi', {
+          tips: [4, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+
+       });
+</script>
+<script type="text/javascript">
+
+
+layui.use('table', function(){
+    var table = layui.table;
+  //工具栏事件
+  table.on('toolbar(test3)', function(obj){
+    var checkStatus = table.checkStatus(obj.config.id);
+    var data = checkStatus.data;
+    // var shujuzu = JSON.stringify(data);//json数据组
+    // layer.alert(JSON.stringify(data));return false;
+    if (obj.event == 'getCheckData'){
+      var data = checkStatus.data;
+        if(data.length != 2){alert('请选择两个进行对比');return false;}
+        var josnzu = JSON.parse(JSON.stringify(data));
+        var _ht = '';
+        for (var i = 0; i < 2; i++) {
+          _ht += josnzu[i]['id']+',';
+        }
+        _ht = _ht.substring(0,_ht.length-1);
+
+        // layer.alert(_ht);
+        //
+        window.open("{:url('admin/Bcontrast/singleone')}"+'?id='+_ht);
+    }
+
+  });
+
+
+
+
+
+
+  // 监听单元格编辑
+  table.on('edit(test3)', function(obj){
+    var value = obj.value //得到修改后的值
+    ,data = obj.data //得到所在行所有键值
+
+    ,field = obj.field; //得到字段
+    // layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+    // alert('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("offerlist/singlefield_edit")}',
+        dataType : 'json',
+        data : {id:data.id,field:field,value:value},
+        success : function(re){
+          if(re.status == 1){
+             layer.msg(re.msg);return false;
+          }
+          layer.msg(re.msg);
+
+        setTimeout(function () {
+             window.location.reload();
+         }, 1000);
+          // window.location.reload();
+        }
+    });
+  });
+
+  //监听行单击事件(（)单击事件为：rowDole)
+  // table.on('rowDouble(test3)', function(obj){
+  //   var data = obj.data;
+  //   var newdata = JSON.stringify(data);
+
+  //   layer.alert(newdata, {
+  //     title: '当前行数据：'
+  //   });
+
+  //   //标注选中样式
+  //   obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+  // });
+
+  //监听单元格事件
+  table.on('tool(test3)', function(obj){
+      if(obj.event === 'kkk'){
+          var Tresult=$(this).attr('key');
+          layer.open({
+              type: 2,
+              title: '增减项',
+              shadeClose: true,
+              shade: 0.8,
+              area: ['90%', '90%'],
+              maxmin: true,
+              tipsMore: true,
+              content: '/admin/artificial/regulation?id='+Tresult
+          });
+      }
+    var data = obj.data;
+    if(obj.event === 'gift'){
+        $.post('/admin/gift/get_gift_list',{oid:data.id},function(res){
+            if(res.code == 1){
+                var html = '<form id="addGift">';
+                html += '<table class="layui-table" id="show_gift">'
+                html += '    <thead>'
+                html += '        <tr>'
+                html += '            <th>名称</th>'
+                html += '            <th>品牌</th>'
+                html += '            <th>数量</th>'
+                html += '            <th>单价</th>'
+                html += '            <th>成本</th>'
+                html += '        </tr>'
+                html += '    </thead>'
+                html += '    <tbody>'
+                var checked = '';
+                $.each(res.data.data, function (k, v) {
+                    html += '        <tr>'
+                    html += '            <td class="g_name">'+v.name+'</td>'
+                    html += '            <td class="">'+v.brand+'</td>'
+                    html += '            <td class="g_num">'+v.num+'</td>'
+                    html += '            <td class="g_price">'+v.price+'</td>'
+                    html += '            <td class="g_price">'+v.cost+'</td>'
+                    html += '        </tr>'
+                })
+                html += '        <tr>'
+                html += '            <td></td>'
+                html += '            <td></td>'
+                html += '            <td>总价：￥'+res.data.money+'</td>'
+                html += '            <td colspan="2">总成本：￥'+res.data.cost+'</td>'
+                html += '        </tr>'
+                html += '    </tbody>'
+                html += '</table>'
+                html += '</form>'
+                layer.open({
+                    content: html,
+                    area:['50%', '60%'], //宽高
+                    title:'查看礼品',
+                    btn: ['确定'],
+                    success:function(layero, index){
+                    },
+                    yes: function(index, layero){
+                        layer.close(index);
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }else{
+                layer.msg(res.msg);
+            }
+        },'json')
+    
+    }else if(obj.event === 'detail'){
+      layer.prompt({
+        formType: 2
+        ,title: '修改 ID 为 ['+ data.id +'] 的条目'
+        ,value: data.type_of_work
+      }, function(value, index){
+        layer.close(index);
+
+        //这里一般是发送修改的Ajax请求
+
+        //同步更新表格和缓存对应的值
+        obj.update({
+          type_of_work: value
+        });
+      });
+    }else if(obj.event === 'supervisor_commission'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入监理提成比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'supervisor_commission',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        // obj.update({
+                        //   supervisor_commission: price
+                        // });
+                      }else{
+                        layer.msg(re.msg);return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }
+    else if(obj.event === 'design_commission'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入设计提成比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'design_commission',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          design_commission: price
+                        });
+                      }else{
+                        layer.msg('修改设计提成比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }
+    else if(obj.event === 'repeat_commission'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入回头客奖比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'repeat_commission',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          repeat_commission: price
+                        });
+                      }else{
+                        layer.msg('修改回头客奖比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'business_commission'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入业务提成比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'business_commission',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          business_commission: price
+                        });
+                      }else{
+                        layer.msg('修改业务提成比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'carry'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入搬运费比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'carry',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          carry: price
+                        });
+                      }else{
+                        layer.msg('修改搬运费比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'clean'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入清洁费比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'clean',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          clean: price
+                        });
+                      }else{
+                        layer.msg('修改清洁费比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'accident'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入工程意外险比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'accident',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          accident: price
+                        });
+                      }else{
+                        layer.msg('修改工程意外险比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'remote'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入远程费比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'remote',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          remote: price
+                        });
+                      }else{
+                        layer.msg('修改远程费比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'old_house'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入旧房局部改造费比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'old_house',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          old_house: price
+                        });
+                      }else{
+                        layer.msg('修改旧房局部改造费比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'tubemoney'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入管理费比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'tubemoney',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          tubemoney : price
+                        });
+                      }else{
+                        layer.msg('修改管理费比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'taxes'){ //计算运杂,监理提成,设计提成,回头客奖,业务提成
+        var data = obj.data;
+        var price = 0;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.prompt({title: '请输入税金比率'},function(value, index, elem){
+                if(!validate(value) || value > 100 || value < 0){
+                    layer.msg('请输入0-100有效数字');return false;
+                }
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("offerlist/singlefield_edit")}',
+                    dataType : 'json',
+                    data : {id:data.id,field:'taxes',value:value},
+                    success : function(re){
+                      if(re.status == 0){
+                        price = (value/100 * data.direct_cost).toFixed(2); //比率 乘 工程直接费
+                        obj.update({
+                          taxes : price
+                        });
+                      }else{
+                        layer.msg('修改税金比率失败');return false;
+                      }
+                    }
+                });
+
+                layer.close(index);
+                setTimeout(function () {
+                     window.location.reload();
+                 }, 1000);
+            });
+        });
+    }else if(obj.event === 'artificial_cb'){
+        var data = obj.data;
+        $.ajax({
+            type : 'post',
+            url  :  '{:url("artificial/ajax_get_artificial")}',
+            dataType : 'json',
+            data : {id:data.id},
+            success : function(re){
+              if(re.code === 0){
+                var html = '<table style="text-align:center" class="layui-table">'
+                html += '<thead>'
+                html += ' <tr>'
+                html += '   <th style="text-align:center">工种类型</th><th style="text-align:center">金额</th>'
+                html += '   <th style="text-align:center">人工成本占比</th>'
+                html += '   <th style="text-align:center">直接费占比</th>'
+                html += ' </tr>'
+                html += '</thead>'
+                html += '<tbody>';
+                $.each(re.datas, function (key, val) {
+                      html += '<tr><td style="background-color:#f36f20;color:#ffffff">'+key+'</td><td style="background-color:#f36f20;color:#ffffff">'+toDecimal2(val)+'</td><td>'+toDecimal2(val/re.total*100)+'%</td><td>'+toDecimal2(val/data.direct_cost*100)+'%</td></tr>'
+                 });
+                html += '<tr><td style="background-color:#f36f20;color:#ffffff">小计</td><td style="background-color:#f36f20;color:#ffffff">'+toDecimal2(re.total)+'</td><td></td><td></td></tr>'
+                html += '</tbody></table>'
+                //显示人工明细
+                layer.open({
+                    title: '按工种分类的人工成本金额、人工成本占比、直接费占比',
+                    area: ['600px', '90%'],
+                    content:html
+                });
+              }else{
+                layer.msg(re.msg);return false;
+              }
+            }
+        });
+    }else if(obj.event === 'material_cb'){
+        var data = obj.data;
+        $.ajax({
+            type : 'post',
+            url  :  '{:url("artificial/ajax_get_material")}',
+            dataType : 'json',
+            data : {id:data.id},
+            success : function(re){
+              if(re.code === 0){
+                var html = '<table style="text-align:center" class="layui-table">'
+                html += ' <thead>'
+                html += '   <tr>'
+                html += '     <th style="text-align:center">工种类型</th>'
+                html += '     <th style="text-align:center">金额</th>'
+                html += '     <th style="text-align:center">辅材成本占比</th>'
+                html += '     <th style="text-align:center">直接费占比</th>'
+                html += '   </tr>'
+                html += '   </thead>'
+                html += '<tbody>';
+                $.each(re.datas, function (key, val) {
+                      html += '<tr><td style="background-color:#f36f20;color:#ffffff">'+key+'</td><td style="background-color:#f36f20;color:#ffffff">'+toDecimal2(val)+'</td><td>'+toDecimal2(val/re.total*100)+'%</td><td>'+toDecimal2(val/data.direct_cost*100)+'%</td></tr>'
+                 });
+                html += '<tr><td style="background-color:#f36f20;color:#ffffff">小计</td><td style="background-color:#f36f20;color:#ffffff">'+toDecimal2(re.total)+'</td><td></td><td></td></tr>'
+                html += '</tbody></table>'
+                //显示人工明细
+                layer.open({
+                    title: '按工种分类的辅材成本金额、辅材成本占比、直接费占比',
+                    area: ['600px', '90%'],
+                    content:html
+                });
+              }else{
+                layer.msg(re.msg);return false;
+              }
+            }
+        });
+    }else if(obj.event === 'gross_profit'){
+        var data = obj.data;
+        $.ajax({
+            type : 'post',
+            url  :  '{:url("artificial/ajax_get_order_cb")}',
+            dataType : 'json',
+            data : {id:data.id},
+            success : function(re){
+              if(re.code === 0){
+                var html = '';
+                html += '<div style="width:100%;height:100%; overflow:auto;"><table style="text-align:center;width:1550px;" class="layui-table"><thead>'
+                html +=     '<tr>'
+                html +=         '<th style="text-align:center" colspan="1"></th>'
+                html +=         '<th style="text-align:center" colspan="4">折前工程报价</th>'
+                html +=         '<th style="text-align:center" colspan="3">折后工程报价</th>'
+                html +=         '<th style="text-align:center" colspan="2">优惠</th>'
+                html +=         '<th style="text-align:center" colspan="4">工程成本</th>'
+                html +=         '<th style="text-align:center" colspan="2">毛利</th>'
+                html +=     '</tr>'
+                html +=     '<tr>'
+                html +=         '<th style="text-align:center">工种类型</th>'
+                html +=         '<th style="text-align:center">总报价</th>'
+                html +=         '<th style="text-align:center">辅材报价</th>'
+                html +=         '<th style="text-align:center">人工报价</th>'
+                html +=         '<th style="text-align:center">其他费用</th>'
+                html +=         '<th style="text-align:center">总报价</th>'
+                html +=         '<th style="text-align:center">辅材报价</th>'
+                html +=         '<th style="text-align:center">人工报价</th>'
+                // html +=         '<th style="text-align:center">运杂</th>'
+                html +=         '<th style="text-align:center">折扣优惠</th>'
+                html +=         '<th style="text-align:center">金额优惠</th>'
+                html +=         '<th style="text-align:center">总成本</th>'
+                html +=         '<th style="text-align:center">辅材成本</th>'
+                html +=         '<th style="text-align:center">人工成本</th>'
+                html +=         '<th style="text-align:center">礼品</th>'
+                html +=         '<th style="text-align:center">毛利</th>'
+                html +=         '<th style="text-align:center">毛利率</th>'
+                html +=     '</tr>'
+                html += '</thead><tbody>';
+                html += '<tr style="background-color:#f36f20;color:#ffffff">'
+                html +=     '<td>整体工程</td>'
+                html +=     '<td>'+toDecimal2(Number(re.total.quota) + Number(re.total.craft_show)+Number(data.order_cost_all_price))+'</td>'
+                html +=     '<td>'+toDecimal2(re.total.quota)+'</td>'
+                html +=     '<td>'+toDecimal2(re.total.craft_show)+'</td>'
+                html +=     '<td>'+ data.order_cost_all_price +'</td>'
+                html +=     '<td>'+toDecimal2(Number(re.total.discount_total) + Number(data.order_cost_all_price)  - Number(data.discount))+'</td>'
+                html +=     '<td>'+ toDecimal2(re.total.discount_quota) +'</td>'
+                html +=     '<td>'+ toDecimal2(re.total.discount_craft_show) +'</td>'
+                // html +=     '<td>'+ data.sundry +'</td>'
+                html +=     '<td>'+ toDecimal2(Number(re.total.quota) + Number(re.total.craft_show) - Number(re.total.discount_total)) +'</td>'
+                html +=     '<td>'+ data.discount +'</td>'
+                html +=     '<td>'+ toDecimal2(Number(re.total.quota_cb)+Number(re.total.labor_cost)) +'</td>'
+                html +=     '<td>'+ toDecimal2(re.total.quota_cb) +'</td>'
+                html +=     '<td>'+ toDecimal2(re.total.labor_cost) +'</td>'
+                html +=     '<td>'+ toDecimal2(re.total.gift) +'</td>'
+                html +=     '<td>'+ toDecimal2(Number(re.total.discount_total) - Number(re.total.quota_cb) - Number(re.total.labor_cost) - Number(data.discount) + Number(data.order_cost_all_price) - toDecimal2(re.total.gift)) +'</td>'
+                html +=     '<td>'+ toDecimal2((Number(re.total.discount_total) - Number(re.total.quota_cb) - Number(re.total.labor_cost) - Number(data.discount) + Number(data.order_cost_all_price) - toDecimal2(re.total.gift)) / (Number(re.total.discount_total) + Number(data.order_cost_all_price) - Number(data.discount)) *100) +'%</td>'
+                html += '</tr>'
+
+                $.each(re.datas, function (key, val) {
+                    html += '<tr>'
+                    html +=   '<td>'+key+'</td>'
+                    html +=     '<td>'+toDecimal2(Number(val.quota)+Number(val.craft_show))+'</td>'
+                    html +=     '<td>'+toDecimal2(val.quota)+'</td>'
+                    html +=     '<td>'+toDecimal2(val.craft_show)+'</td>'
+                    html +=     '<td>'+ '-' +'</td>'
+                    html +=     '<td>'+toDecimal2(val.discount_total)+'</td>'
+                    html +=     '<td>'+ toDecimal2(val.discount_quota) +'</td>'
+                    html +=     '<td>'+ toDecimal2(val.discount_craft_show) +'</td>'
+                    // html +=     '<td>'+ '-' +'</td>'
+                    html +=     '<td>'+ toDecimal2(Number(val.quota)+Number(val.craft_show)-Number(val.discount_total)) +'</td>'
+                    html +=     '<td>'+ '-' +'</td>'
+                    html +=     '<td>'+ toDecimal2(Number(val.quota_cb)+Number(val.labor_cost)) +'</td>'
+                    html +=     '<td>'+ toDecimal2(val.quota_cb) +'</td>'
+                    html +=     '<td>'+ toDecimal2(val.labor_cost) +'</td>'
+                    html +=     '<td>'+ '-' +'</td>'
+                    html +=     '<td>'+ toDecimal2(Number(val.discount_total) - Number(val.quota_cb) - Number(val.labor_cost)) +'</td>'
+                    html +=     '<td>'+ toDecimal2((Number(val.discount_total) - Number(val.quota_cb) - Number(val.labor_cost)) / (Number(re.total.discount_total) + Number(data.order_cost_all_price) - Number(data.discount)) *100) +'%</td>'
+                    html += '</tr>'
+                 });
+                
+                html += '</tbody></table></div>'
+                //显示人工明细
+                layer.open({
+                    title: '工程毛利明细',
+                    area: ['95%', '90%'],
+                    content:html
+                });
+              }else{
+                layer.msg(re.msg);return false;
+              }
+            }
+        });
+    }else if(obj.event === 'get_tmp_cost'){
+        var data = obj.data;
+        $.ajax({
+            type : 'post',
+            url  :  '{:url("quote/get_order_tmp_cost")}',
+            dataType : 'json',
+            data : {id:data.id},
+            success : function(re){
+              if(re.code === 0){
+                layer.msg(re.msg);return false;
+              }else{
+
+                var html = '<table style="text-align:center" class="layui-table"><thead><tr><th style="text-align:center">收费项目</th><th style="text-align:center">金额</th><th style="text-align:center">标识符</th><th style="text-align:center">公式</th><th style="text-align:center">比率</th></tr></thead><tbody>';
+                // html += '<tr><td style="background-color:#f36f20;color:#ffffff">直接费</td><td style="background-color:#f36f20;color:#ffffff">'+ toDecimal2(data.direct_cost) +'</td><td>A1</td><td>A1</td><td>100%</td></tr>'
+                // html += '<tr><td style="background-color:#d48ed2;color:#ffffff">优惠</td><td style="background-color:#d48ed2;color:#ffffff">'+ toDecimal2(data.discount) +'</td><td>A2</td><td>A2</td><td>100%</td></tr>'
+                $.each(re.datas, function (key, val) {
+                      html += '<tr><td style="background-color:#f36f20;color:#ffffff">'+val.name+'</td><td style="background-color:#f36f20;color:#ffffff">'+ toDecimal2(val.price) +'</td><td>'+val.sign+'</td><td>'+val.formula+'</td><td>'+ val.rate +'%</td></tr>'
+                });
+                html += '</tbody></table>'
+                layer.open({
+                    title: '其他收费明细',
+                    area: ['95%', '90%'],
+                    content:html
+                });
+              }
+            }
+        });
+    }else if(obj.event === 'show_commission'){
+        var data = obj.data;
+        $.ajax({
+            type : 'post',
+            url  :  '{:url("offerlist/get_commission_info")}',
+            dataType : 'json',
+            data : {o_id:data.id},
+            success : function(re){
+              if(re.code === 0){
+                layer.msg(re.msg);return false;
+              }else{
+                var html = '<table style="text-align:center" class="layui-table"><thead><tr><th style="text-align:center">奖励项目</th><th style="text-align:center">金额</th><th style="text-align:center">比率</th></tr></thead><tbody>';
+
+                html += '<tr><td>监理提成</td><td>'+ toDecimal2(re.data.supervisor_commission*data.discount_proquant/100) +'</td><td><input data-id="'+data.id+'" name="supervisor_commission" class="layui-input" style="width:60px;display:inline-block" value="'+re.data.supervisor_commission+'" />%<a href="javascript:;" style="margin-left:20px; color:#f36e20;" onclick="edit_commission(this)">修改</a></td></tr>'
+                html += '<tr><td>设计师提成</td><td>'+ toDecimal2(re.data.design_commission*data.discount_proquant/100) +'</td><td><input data-id="'+data.id+'" name="design_commission" class="layui-input" style="width:60px;display:inline-block" value="'+re.data.design_commission+'" />%<a href="javascript:;" style="margin-left:20px; color:#f36e20;" onclick="edit_commission(this)">修改</a></td></tr>'
+                html += '<tr><td>回头客奖励</td><td>'+ toDecimal2(re.data.repeat_commission*data.discount_proquant/100) +'</td><td><input data-id="'+data.id+'" name="repeat_commission" class="layui-input" style="width:60px;display:inline-block" value="'+re.data.repeat_commission+'" />%<a href="javascript:;" style="margin-left:20px; color:#f36e20;" onclick="edit_commission(this)">修改</a></td></tr>'
+                html += '<tr><td>业务员提成</td><td>'+ toDecimal2(re.data.business_commission*data.discount_proquant/100) +'</td><td><input data-id="'+data.id+'" name="business_commission" class="layui-input" style="width:60px;display:inline-block" value="'+re.data.business_commission+'" />%<a href="javascript:;" style="margin-left:20px; color:#f36e20;" onclick="edit_commission(this)">修改</a></td></tr>'
+                html += '</tbody></table>'
+                layer.open({
+                    title: '提成奖励明细',
+                    area: ['500px', '80%'],
+                    content:html,
+                    cancel: function(){
+                      // window.location.reload();
+                    }
+                });
+              }
+            }
+        });
+    }else if(obj.event === 'fixed_point'){
+        var data = obj.data;
+        var cb = Number(data.artificial_cb)+Number(data.material_cb);
+        var id = data.id;
+        var html = '<input id="fixed_point"  data-discount_proquant="'+data.discount_proquant+'" data-cb="'+cb+'" class="layui-input" placeholder="请输入监理上交金额" value="'+ (data.fixed_point>0?data.fixed_point:'') +'" />';
+        if (data.fixed_point > 0) {
+            html += '监理预测工资：￥<span id="wage">'+(Number(data.discount_proquant)-Number(data.fixed_point)-cb).toFixed(2)+'</span>';
+        }else{
+            html += '监理预测工资：￥<span id="wage"></span>';
+        }
+        
+        layer.open({
+            content: html,
+            area:['300px', '200px'], //宽高
+            title:'设置监理定额金额',
+            btn: ['确定','取消'],
+            success:function(layero, index){
+
+            },
+            yes: function(index, layero){
+                $.post('/admin/artificial/set_fixed_point',{id:id,wage:$('#fixed_point').val()},function(res){
+                    if(res.code == 1){
+                        layer.msg(res.msg);
+                        setTimeout(function(){
+                        　　window.location.reload()
+                        },1000);
+                        return false;
+                    }else{
+                        alert(res.msg);
+                    }
+                })
+            },
+            cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+            }
+        });
+    }
+  });
+
+});
+$(document).on('change','#fixed_point',function(){
+    var discount_proquant = Number($(this).data('discount_proquant'));
+    var cb = Number($(this).data('cb'));
+    var value = Number($(this).val());
+    $('#wage').html((discount_proquant-value-cb).toFixed(2));
+})
+$(document).on('click','#fixed_point',function(){
+    $(this).select();
+})
+
+//鼠标经过表头显示文字
+$(document).on('mouseenter', '.layui-table th', function(){
+    var th = $(this).find('span').text();
+    var content = '';
+    switch(th) {
+        case '优惠前报价':
+            content = '工程直接费 + 其他费用';
+            break;
+        case '工程报价':
+            content = '工程直接费 + 其他费用 - 优惠';
+            break;
+        case '工程直接费':
+            content = '辅材报价 + 人工报价';
+            break;
+        case '其他费用':
+            content = '除工程直接费外收取的其他费用';
+            break;
+        case '优惠':
+            content = '手动填写优惠费用';
+            break;
+        case '提成奖励':
+            content = '监理提成 + 设计师提成 + 回头客奖励 + 业务员提成';
+            break;
+        case '工程毛利':
+            content = '工程报价 - 工程成本';
+            break;
+        case '工程毛利率':
+            content = '工程毛利 / 工程报价';
+            break;
+        case '总毛利':
+            content = '工程毛利 - 其他费用 - 运杂';
+            break;
+         case '总毛利率':
+            content = '总毛利 / 工程报价';
+            break;
+        default:
+            content = '';
+    }
+    if(content != ''){
+        tip_index = layer.tips(content, this, {time: 0,tips: [1, '#5BC0DE']});
+    }
+    // tip_index = layer.tips('项目情况', this, {time: 0,tips: [2, '#5BC0DE']});
+}).on('mouseleave', '.layui-table th', function(){
+    if(tip_index){
+        layer.close(tip_index);
+    }
+
+});
+
+//鼠标经过公式详情 显示文字
+
+$('.tishi').mouseover(function(){
+    var content = "工程直接费=材料总报价+人工总报价"
+    content +="<br />工程报价=直接费+服务费用{搬运费+清洁费+管理费+（硬楼费+远程费+旧房改造费···）}+税金+工程意外险-优惠";
+    content +="<br />工程毛利=工程报价-工程成本（辅材报价+人工报价";
+    content +="<br />工程毛利率=工程毛利/工程报价";
+    content +="<br />提成奖励=运杂+监理提成（工程报价*手动设置比率）+设计师提成（工程报价*手动设置比率）+业务员提成（工程报价*手动设置比率）+回头客奖励（工程报价*手动设置比率）";
+    content +="<br />总毛利=工程报价-工程成本-提成奖励";
+    content +="<br />总毛利率=总毛利/工程报价";
+    tishi = layer.tips(content, this, {time: 0,tips: [4, '#5BC0DE'],area: ['300px', 'auto'],});
+}).mouseout(function(){
+    layer.close(tishi);
+})
+
+function edit_commission(o){
+    var input = $(o).prev('input');
+    var field = input.attr('name')
+    var value = input.val();
+    var id = input.data('id');
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("offerlist/singlefield_edit")}',
+        dataType : 'json',
+        data : {id:id,field:field,value:value},
+        success : function(re){
+          if(re.status == 1){
+             layer.msg(re.msg);return false;
+          }
+          alert('修改成功，可手动刷新页面更新数据');
+        }
+    });
+}
+//判断是否正数
+function validate(num){
+  var reg = /^\d+(?=\.{0,1}\d+$|$)/
+  if(reg.test(num)) return true;
+  return false ;
+}
+
+//保留2位小数 不足补0
+function toDecimal2(x) {
+  var f = parseFloat(x);
+  if (isNaN(f)) {
+      return "0.00";
+  }
+  var f = Math.round(x*100)/100;
+  var s = f.toString();
+  var rs = s.indexOf('.');
+  if (rs < 0) {
+      rs = s.length;
+      s += '.';
+  }
+  while (s.length <= rs + 2) {
+      s += '0';
+  }
+  return s;
+}
+</script>
+
+<script>
+    $(function () {
+        $("#regulation").on('click', function(){
+            // alert(123123454);
+        })
+/*        var a= $("#ht").text();
+        alert(a);*/
+    })
+
+
+/*    $("#regulation").click(function () {
+        // var a= $("#ht").text();
+        alert(123123454);*/
+/*        layer.open({
+            type: 2,
+            title: '公告内容',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['80%', '80%'],
+            content: '/admin/main/show?id='+Tresult
+        });*/
+
+    // })
+</script>
+{/block}

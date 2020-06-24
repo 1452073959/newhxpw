@@ -1,0 +1,109 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.layui-form-select{float:left;margin-right:10px}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="add" id="add">添加</button> 
+                </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['print'],limit:100}">
+                <colgroup>
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th class="taleft" lay-data="{field:'id',width:180}">公司名称</th>
+                        <th class="taleft" lay-data="{field:'f_materials',width:180}">辅材录入</th>
+                        <th class="taleft" lay-data="{field:'apply_material1',width:180}">辅材未审</th>
+                        <th class="taleft" lay-data="{field:'apply_material2',width:180}">辅材已审</th>
+                        <th class="taleft" lay-data="{field:'f_project',width:180}">报价录入</th>
+                        <th class="taleft" lay-data="{field:'apply_project1',width:180}">报价未审</th>
+                        <th class="taleft" lay-data="{field:'apply_project2',width:180}">报价已审</th>
+                        <th class="taleft" lay-data="{field:'department',width:180}">部门已录</th>
+                        <th class="taleft" lay-data="{field:'personnel',width:180}">人员已录</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  {foreach name="data" item="vo" }
+                    <tr>
+                      <td class="taleft">{$key}</td>
+                      <td class="taleft">{$vo.f_materials ?: 0}</td>
+                      <td class="taleft">{$vo.apply_material1 ?: 0}</td>
+                      <td class="taleft">{$vo.apply_material2 ?: 0}</td>
+                      <td class="taleft">{$vo.f_project ?: 0}</td>
+                      <td class="taleft">{$vo.apply_project1 ?: 0}</td>
+                      <td class="taleft">{$vo.apply_project2 ?: 0}</td>
+                      <td class="taleft">{$vo.department ?: 0}</td>
+                      <td class="taleft">{$vo.personnel ?: 0}</td>
+                    </tr>       
+                 {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+        //工具栏事件
+        
+    });
+</script>
+{/block}

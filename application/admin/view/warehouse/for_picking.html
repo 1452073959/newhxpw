@@ -1,0 +1,146 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.layui-form-select{float:left;margin-right:10px}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote">
+                <form class="layui-form layui-inline" action="" method="post">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="uname" placeholder="" value="{:input('uname')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="uaddress" placeholder="" value="{:input('uaddress')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">监理</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="jname" placeholder="" value="{:input('jname')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-left:10px">
+                        <div class="layui-input-inline">
+                          <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                          <a href="/admin/warehouse/for_picking" class="layui-btn layui-btn-primary">重置</a>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['print'],limit:20}">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead >
+                    <tr>
+                        {if $admininfo['roleid'] == 1}
+                            <th class="" lay-data="{field:'fname',width:150}">分公司</th>
+                        {/if}
+                        <th class="" lay-data="{field:'username',width:200}">客户</th>
+                        <th class="" lay-data="{field:'address',}">地址</th>
+                        <th class="" lay-data="{field:'jname',width:200}">监理</th>
+                        <th class="" lay-data="{field:'total_money',width:200}">预计领料</th>
+                        <th class="" lay-data="{field:'addtime',width:200}">申请时间</th>
+                        <th class="" lay-data="{field:'status',width:200}">状态</th>
+                        <th class="" lay-data="{field:'operation',width:200}">操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  {foreach name="picking_material" item="v"}
+                    {if $v['admininfo']['name'] && $v['userinfo']['customer_name']}
+                        <tr>
+                            {if $admininfo['roleid'] == 1}
+                                <td>{$v['company']['name']}</td>
+                            {/if}
+                            <td>{$v['userinfo']['customer_name']}</td>
+                            <td>{$v['userinfo']['address']}</td>
+                            <td>{$v['admininfo']['name']}</td>
+                            <td>{$v['total_money']}</td>
+                            <td>{$v['addtime']}</td>
+                            <td>待领料</td>
+                            <td><a href="{:url('warehouse/pm_info',['id'=>$v['id']])}" target="_blank">查看详情</a></td>
+                        </tr> 
+                    {/if}      
+                 {/foreach}
+                </tbody>
+            </table>
+            {$picking_material->render()|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+        table.on('tool(test3)',function(obj){
+            var data = obj.data;
+            //禁用
+            if(obj.event == 'show'){
+                alert(1);
+            }
+        })
+    })
+</script>
+{/block}

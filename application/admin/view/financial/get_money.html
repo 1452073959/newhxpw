@@ -1,0 +1,291 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.form-control{display: inline-block;padding: 5px;}
+.select_tmp{
+    height:30px;
+}
+.layui-btn+.layui-btn{
+    margin-left: 3px;
+}
+.ulall li{float:left;border: 1px solid #ccc;padding: 5px;margin-right: 5px;}
+.layui-tab-title li {
+  padding: 0;
+}
+.layui-tab-title li a{
+  padding: 0 25px;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-tab layui-tab-brief">
+                  <ul class="layui-tab-title">
+                    <li class="layui-this"><a href="{:url('admin/financial/get_money',['customer_id'=>input('customer_id')])}">收款</a></li>
+                     <li class=""><a href="{:url('admin/financial/lend_money',['customer_id'=>input('customer_id'),'type'=>2])}">借支</a></li>
+                  </ul>
+                  <div class="layui-tab-content"></div>
+                </div>
+                <div class="layui-inline">
+                   <ul class="ulall">
+                      <li>客户姓名：{$userinfo.customer_name}</li>
+                      <li>工程地址：{$userinfo.address}</li>
+                      <li>联系电话：</li>
+                      <li>报价师姓名：{$userinfo.quoter_name}</li>
+                      <li>设计师姓名：{$userinfo.designer_name}</li>
+                      <li>面积：{$userinfo.area}</li>
+                      <li>房屋类型：{$userinfo.room_type}</li>
+                      {eq name="$userinfo['is_new']" value="9"}<li>签单时间：{$userinfo.oldtime|date="Y-m-d"}</li>{/eq}
+                      <li class="click print" style="display: none" title="打印"><i class="layui-icon layui-icon-print"></i></li>
+                   </ul>
+                </div> 
+                <input type="hidden" value="{$userinfo.id}" id="userid">
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+              <div class="layui-btn-container">
+              </div>
+            </script>
+     
+            <table class="layui-table">
+                <colgroup>
+                    <col>
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th></th>
+                        <th>收费内容</th>
+                        <th>总金额</th>
+                        <th>设计费</th>
+                        <th>其他</th>
+                        <th>一期款({$rate[1]}%)</th>
+                        <th>二期款({$rate[2]}%)</th>
+                        <th>三期款({$rate[3]}%)</th>
+                        <th>四期款({$rate[4]}%)</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    <tr>
+                        <td rowspan="{:count($append_list)+1}">应收</td>
+                        <td>合同单</td>
+                        <td>{$order_info['discount_proquant']}</td>
+                        <td></td>
+                        <td></td>
+                        <td>{:round($order_info['discount_proquant']*$rate[1]/100,2)}</td>
+                        <td>{:round($order_info['discount_proquant']*$rate[2]/100,2)}</td>
+                        <td>{:round($order_info['discount_proquant']*$rate[3]/100,2)}</td>
+                        <td>{$order_info['discount_proquant']-round($order_info['discount_proquant']*$rate[1]/100,2)-round($order_info['discount_proquant']*$rate[2]/100,2)-round($order_info['discount_proquant']*$rate[3]/100,2)}</td>
+                    </tr>
+                    <?php $should_get_total = $order_info['discount_proquant'];?>
+                    {foreach name="append_list" item="v" key="k"}
+                        {if(!empty($v))}
+                            <?php $should_get_total += $v['discount_proquant'];?>
+                            <tr>
+                                
+                                <td>增减项</td>
+                                <td>{$v['discount_proquant']}</td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <?php 
+                                        if($k > 1){
+                                            echo '-';
+                                            $get1 = 0;
+                                        }else{
+                                            $this_rate = $rate[1];
+                                            echo round($v['discount_proquant']*$this_rate/100,2);
+                                            $get1 = round($v['discount_proquant']*$this_rate/100,2);
+                                        }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php 
+                                        if($k > 2){
+                                            echo '-';
+                                            $get2 = 0;
+                                        }else{
+                                            if($k == 2){
+                                                $this_rate = $rate[1]+$rate[2];
+                                            }else{
+                                                $this_rate = $rate[2];
+                                            }
+                                            echo round($v['discount_proquant']*$this_rate/100,2);
+                                            $get2 = round($v['discount_proquant']*$this_rate/100,2);
+                                        }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php 
+                                        if($k > 3){
+                                            echo '-';
+                                            $get3 = 0;
+                                        }else{
+                                            if($k == 3){
+                                                $this_rate = $rate[1]+$rate[2]+$rate[3];
+                                            }else{
+                                                $this_rate = $rate[3];
+                                            }
+                                            echo round($v['discount_proquant']*$this_rate/100,2);
+                                            $get3 = round($v['discount_proquant']*$this_rate/100,2);
+                                        }
+                                    ?>
+                                </td>
+                                <td>{$v['discount_proquant']-$get1-$get2-$get3}</td>
+                            </tr>
+                        {/if}
+                    {/foreach}
+                    <tr>
+                        <td>实收</td>
+                        <?php $other_money = 0; if(isset($get_money[8]['money']) && $get_money[8]['money'] > 0){
+                            $other_money += $get_money[8]['money'];
+                        }?>
+                        <?php if(isset($get_money[9]['money']) &&$get_money[9]['money'] > 0){
+                            $other_money += $get_money[9]['money'];
+                        }?>
+                        <td>剩余：<?php  echo round($should_get_total-array_sum(array_column($get_money, 'money'))+$other_money,2); ?></td>
+                        <td>{:number_format(array_sum(array_column($get_money, 'money')),2)}</td>
+
+                        <td>{if(isset($get_money[8]['money']) &&$get_money[8]['money'] > 0)}<a href="javascript:;" class="get" data-type="8">{$get_money[8]['money']}</a><a href="javascript:;" data-type="8" class="info" style="color:#3f2bd6;margin-left: 5px;">明细</a>{else /}<a href="javascript:;" class="get" data-type="8">0</a>{/if}</td>
+                        <td>{if(isset($get_money[9]['money']) &&$get_money[9]['money'] > 0)}<a href="javascript:;" class="get" data-type="9">{$get_money[9]['money']}</a><a href="javascript:;" data-type="9" class="info" style="color:#3f2bd6;margin-left: 5px;">明细</a>{else /}<a href="javascript:;" class="get" data-type="9">0</a>{/if}</td>
+
+
+                        <td>{if(isset($get_money[1]['money']) && $get_money[1]['money'] > 0)}<a href="javascript:;" class="get" data-type="1">{$get_money[1]['money']}</a><a href="javascript:;" data-type="1" class="info" style="color:#3f2bd6;margin-left: 5px;">明细</a>{else /}<a href="javascript:;" class="get" data-type="1">0</a>{/if}</td>
+                        <td>{if(isset($get_money[2]['money']) &&$get_money[2]['money'] > 0)}<a href="javascript:;" class="get" data-type="2">{$get_money[2]['money']}</a><a href="javascript:;" data-type="2" class="info" style="color:#3f2bd6;margin-left: 5px;">明细</a>{else /}<a href="javascript:;" class="get" data-type="2">0</a>{/if}</td>
+                        <td>{if(isset($get_money[3]['money']) &&$get_money[3]['money'] > 0)}<a href="javascript:;" class="get" data-type="3">{$get_money[3]['money']}</a><a href="javascript:;" data-type="3" class="info" style="color:#3f2bd6;margin-left: 5px;">明细</a>{else /}<a href="javascript:;" class="get" data-type="3">0</a>{/if}</td>
+                        <td>{if(isset($get_money[4]['money']) &&$get_money[4]['money'] > 0)}<a href="javascript:;" class="get" data-type="4">{$get_money[4]['money']}</a><a href="javascript:;" data-type="4" class="info" style="color:#3f2bd6;margin-left: 5px;">明细</a>{else /}<a href="javascript:;" class="get" data-type="4">0</a>{/if}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $('.info').click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var userid = $('#userid').val();
+        var type = $(this).data('type');
+        $.post('/admin/financial/get_financial_info',{uid:userid,type:type},function(res){
+            if(res.code === 0){
+                layer.msg(res.msg);
+            }else{
+                var html = '';
+                html += '<table style="text-align:center" class="layui-table"><thead>'
+                html +=     '<tr>'
+                html +=         '<th style="text-align:center">收款金额</th>'
+                html +=         '<th style="text-align:center">备注</th>'
+                html +=         '<th style="text-align:center">时间</th>'
+                html +=     '</tr>'
+                html += '</thead><tbody>';
+
+                $.each(res.data, function (key, val) {
+                    html += '<tr>'
+                    html +=   '<td>'+val.money+'</td>'
+                    html +=   '<td>'+val.remark+'</td>'
+                    html +=   '<td>'+val.addtime+'</td>'
+                    html += '</tr>'
+                 });
+                
+                html += '</tbody></table>'
+                //显示人工明细
+                layer.open({
+                    title: '收款明细',
+                    area: ['400px', '400px'],
+                    content:html
+                });
+            }
+        },'json')
+    })
+    $('.get').click(function(){
+        if(1){
+            var type = $(this).data('type');
+            if($('.get[data-type="'+(type-1)+'"]').text() <= 0 && type > 1 && type <8){
+                return false;
+            }
+            if($('.get[data-type="'+(type+1)+'"]').text() > 0 && type <8){
+                return false;
+            }
+            //下一个收费弹框
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                content: '<input type="text" id="money" placeholder="请输入金额" class="layui-input"><input type="text" style="margin-top:10px" id="remark" placeholder="备注信息" class="layui-input">',
+                title:'第'+(type)+'期收费金额',
+                btn: ['提交', '取消'],
+                    yes: function(index, layero){
+                        var money = $('#money').val();
+                        var remark = $('#remark').val();
+                        var userid = $('#userid').val();
+                        if(isNaN(money)){
+                            layer.msg('金额格式错误，请重新输入');
+                            return false;
+                        }
+                        $.post('/admin/financial/take_money',{uid:userid,type:type,money:money,remark:remark},function(res){
+                            if(res.code === 0){
+                                layer.msg(res.msg);
+                            }else{
+                                layer.msg(res.msg);
+                                window.location.reload();
+                            }
+                        },'json')
+                    },
+                    btn2: function(index, layero){
+                        layer.close(index);
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }); 
+        }else{
+            return false;
+        }
+    })
+</script>
+{/block}

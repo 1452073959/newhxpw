@@ -1,0 +1,29 @@
+﻿.layui-side .layui-side-scroll .layui-nav li{
+	display: none;
+}
+.layui-nav .layui-nav-item {
+    /*line-height: 60px;*/
+    border-bottom: 4px solid transparent;
+}
+.layui-nav .layui-nav-item:hover{
+	border-bottom: 4px solid #009671;
+}
+.kit-layout-admin .layui-header {
+    /*height: 62px;*/
+}
+.update-btn{
+	width: 70px!important;
+	height: 35px!important;
+	line-height: 35px!important;
+	background: #DDDDDD!important;
+	border-radius: 5px!important;
+	float: right!important;
+	margin-top: 8px!important;
+	border: none!important;
+	color: #fff!important;
+	text-align: center!important;
+}
+.update-btn:hover{
+	background: #03C6B4!important;
+	cursor: pointer;
+}

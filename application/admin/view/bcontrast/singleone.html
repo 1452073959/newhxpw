@@ -1,0 +1,199 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.form-control{display: inline-block;padding: 5px;}
+.text-limit{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;max-width: 110px;}
+	.text-center{text-align: center !important;}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="">
+            <blockquote class="layui-elem-quote news_search">
+   
+            </blockquote>
+           <!--startprint-->
+
+			<div id="export-table">
+				
+				<table class="layui-table"  lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#',totalRow: true,limit:20}">
+					<thead>
+				      <tr>               
+                  <th class="taleft" rowspan="2" lay-data="{field:'item_number',width:100, totalRowText: '汇总'}">项目编码</th>
+                  <th class="taleft" rowspan="2" lay-data="{field:'project',width:100}">工程项目名称</th>
+                  <th class="taleft" rowspan="2" lay-data="{field:'type_of_work',width:100}">工种</th>
+                  <th class="taleft" rowspan="2" lay-data="{field:'kongjian',width:100}">空间类型</th>
+                  <th class="taleft" rowspan="2" lay-data="{field:'company',}">单位</th>
+                  <th class="taleft" colspan="5" lay-data="{field:'A',}" style="text-align:center;">A报表</th>
+                  <th class="taleft" colspan="5" lay-data="{field:'B',}" style="text-align:center;">B报表</th>
+                  <th class="taleft" colspan="5" lay-data="{field:'C',}" style="text-align:center;">差异</th>
+              </tr>
+              <tr>
+                  <th class="taleft" lay-data="{field:'gclA',width:60,totalRow: true}">工程量</th>
+                  <th class="taleft" lay-data="{field:'quotaA',totalRow: true }">辅材基价</th>
+                  <th class="taleft" lay-data="{field:'quotaallA',totalRow: true }">辅材合价</th>
+                  <th class="taleft" lay-data="{field:'craft_showA',totalRow: true }">人工基价</th>
+                  <th class="taleft" lay-data="{field:'craft_showallA',totalRow: true }">人工合价</th>   
+                  <th class="taleft" lay-data="{field:'gclB',width:60,totalRow: true}">工程量</th>
+                  <th class="taleft" lay-data="{field:'quotaB',totalRow: true }">辅材基价</th>
+                  <th class="taleft" lay-data="{field:'quotaallB',totalRow: true }">辅材合价</th>
+                  <th class="taleft" lay-data="{field:'craft_showB',totalRow: true }">人工基价</th>
+                  <th class="taleft" lay-data="{field:'craft_showallB',totalRow: true }">人工合价</th>   
+                  <th class="taleft" lay-data="{field:'gclC',width:60,totalRow: true}">工程量</th>
+                  <th class="taleft" lay-data="{field:'quotaC',totalRow: true }">辅材基价</th>
+                  <th class="taleft" lay-data="{field:'quotaallC',totalRow: true }">辅材合价</th>
+                  <th class="taleft" lay-data="{field:'craft_showC',totalRow: true }">人工基价</th>
+                  <th class="taleft" lay-data="{field:'craft_showallC',totalRow: true }">人工合价</th>   
+              </tr>
+   
+					</thead>
+					<tbody> 
+              {foreach name="newlist" item="vo" }
+                 <tr>
+                    <td>{$vo.item_number}</td>
+                    <td>{$vo.project}</td>
+                    <td>{$vo.type_of_work}</td>
+                    <td>{$vo.kongjian}</td>
+                    <td>{$vo.company}</td>
+                    <td>{$vo.gclA}</td>
+                    <td>{$vo.quotaA}</td>
+                    <td>{$vo.quotaallA}</td>
+                    <td>{$vo.craft_showA}</td>
+                    <td>{$vo.craft_showallA}</td>
+                    <td>{$vo.gclB}</td>
+                    <td>{$vo.quotaB}</td>
+                    <td>{$vo.quotaallB}</td>
+                    <td>{$vo.craft_showB}</td>
+                    <td>{$vo.craft_showallB}</td>
+                    <td>{$vo.gclC}</td>
+                    <td>{$vo.quotaC}</td>
+                    <td>{$vo.quotaallC}</td>
+                    <td>{$vo.craft_showC}</td>
+                    <td>{$vo.craft_showallC}</td>
+                  </tr>
+              {/foreach}
+                  <!-- <tr>
+                    <td>Djksa</td>
+                    <td>拆房子</td>
+                    <td>打拆工</td>
+                    <td>大厅</td>
+                    <td>m2</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>9</td>
+                    <td>8</td>
+                    <td>7</td>
+                    <td>6</td>
+                    <td>5</td>
+                    <td>4</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>-2</td>
+                    <td>-4</td>
+                  </tr> -->
+					</tbody>
+                   
+					
+			
+			</div>
+
+          <!--endprint-->
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script language=javascript>
+function doPrint() { 
+		bdhtml=window.document.body.innerHTML; 
+		sprnstr="<!--startprint-->"; 
+		eprnstr="<!--endprint-->"; 
+		prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17); 
+		prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr)); 
+		window.document.body.innerHTML=prnhtml; 
+		window.print(); 
+}
+</script>
+<script>
+  $(document).ready(function(){
+		//改变报表标签
+    $(document).on('change','#changestatus',function(){
+      var id= $(this).attr('data-id'),customerid = $(this).attr('data-customerid'),status = $(this).val();
+      // mystatus(id,customerid);
+      $.ajax({
+          type : 'post',
+          url  :  '{:url("offerlist/status")}',
+          dataType : 'json',
+          data : {id:id,customerid:customerid,status:status},
+          success : function(re){
+            console.log(re);
+            // if(re.status == 0){
+               alert(re.msg);
+               window.location.reload();
+            // }else{
+            //   alert(re.msg);return false;
+            // }
+          }
+        });
+    });
+		
+		// $('#export').click(function(){
+		// 	window.location.href = "{:url('admin/offerlist/excel_export',['customerid'=>input('customerid'),'report_id'=>input('report_id')])}";
+		// });
+    
+  });
+</script>
+<script type="text/javascript">
+  layui.use('table', function(){
+   var table = layui.table;
+ });
+</script>
+
+{/block}
+
+      

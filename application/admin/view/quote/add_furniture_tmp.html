@@ -1,0 +1,529 @@
+{extend name="index_layout"/}
+{block name="main"}
+</div>
+<!-- 弹窗 -->
+<style>
+    #diolog li{
+        line-height: 3;
+        cursor: pointer;
+        
+    }
+    #diolog li:hover{
+        border: 1px solid #ccc;
+    }
+    #diolog .left{
+        border-top: 1px solid #ccc;
+    }
+    #diolog .right{
+        border-top: 1px solid #ccc;
+    }
+    #diolog .left li{
+        text-align: center;
+    }
+    #diolog .right li{
+        padding-left: 5px;
+    }
+    .checkli{
+        color:#f36f20;
+    }
+    .add_project{
+       /* width: 100%;
+        height: 100%;*/
+        cursor: pointer;
+        /*display: block*/
+    }
+    .add_project:hover{
+        color:red;
+    }
+    .pad_0{
+        padding: 0 !important;
+    }
+    #project td,#project th{
+        padding:5px 3px;
+        text-align: center;
+    }
+    #seach_project th{
+        text-align: center;
+        padding:5px 3px;
+    }
+    .layui-card-body .layui-table{
+        margin:0 0 5px 0;
+    }
+    .height26{
+        height:26px;
+        line-height: 26px
+    }
+    i{
+        cursor: pointer;
+    }
+    .layui-table thead tr{
+        background-color: #ffffff
+    }
+    .word{
+        background-color: #eee
+    }
+    .select_tmp{
+        height:38px;
+        padding: 0 10px;
+    }
+    .space td:nth-child(1){
+        color:#f36e20;
+    }
+    .space td:nth-child(1) .layui-table-sort .layui-table-sort-asc{
+        border-bottom-color:#f36e20;
+    }
+    .space td:nth-child(1) .layui-table-sort .layui-table-sort-desc{
+        border-top-color: #f36e20
+    }
+    .space td:nth-child(3){
+        color:#f36e20;
+    }
+    .project td:nth-child(3){
+        text-align: left !important;
+    }
+    .add_project td:nth-child(3){
+        text-align: left !important;
+    }
+</style>
+    
+    <div class="layui-card" style="height:97%;width:100%;position:fixed;background-color:#fffff;border: 1px solid #cec9c9 " id="diolog">
+        <blockquote class="layui-elem-quote news_search" style="height :3%">
+            <div class="layui-inline" style="width: 95%">
+                <a class="layui-btn layui-btn-sm layui-btn-danger" href="javascript:;" id="submit_datas">保存模板</a>
+                <div class="layui-inline">
+                    <input type="text" name="tmp_name_input" value="{$tmp_name?$tmp_name: ''}" placeholder="模板名称" class="layui-input">
+                    <input type="hidden" name="tmp_id" value="{$tmp_id?$tmp_id: ''}">
+                </div>
+                
+            </div>     
+        </blockquote>
+        <div class="left" style="float: left;width: 7%;height: 92% ;overflow:auto;border-right: 1px solid #eee">
+            <ul id="space_ul">
+                <li class="checkli" data-val="<?php echo input('type'); ?>">{$type_name}</li>
+            </ul>
+        </div>
+        <div class="right" style="float: left;width: 8%;height: 92%;overflow:auto;border-right: 1px solid #eee">
+            
+            <ul style="height: 100%">
+                <!-- <li data-val="0">所有工种</li> -->
+                <!-- 工种 -->
+                <?php foreach($classify as $k=>$v){ ?>
+                    <li data-val="{$v['classify']}">{$v['classify']}</li>
+                <?php } ?>
+                
+            </ul>
+        </div>
+
+
+        <div class="layui-card-body" style="width: 22%;float: left;text-align: center;border-right: 1px solid #eee;padding:0;overflow:auto;height:92%">
+            <table class="layui-table" id="seach_project" >
+                <colgroup>
+                    <col width="40">
+                    <col width="80">
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="pad_0"></th>
+                        <th>编号</th>
+                        <th>项目名称</th>
+                    </tr> 
+                    <tr>
+                        <th class="pad_0"><a href="javascript:;" id="clear_search" title="清空筛选"><i class="layui-icon layui-icon-delete"></i></a></th>
+                        <th><input type="text" class="layui-input height26" id="select_item_number"></th>
+                        <th><input type="text" class="layui-input height26" id="select_project"></th>
+                    </tr> 
+                </thead>
+                <tbody id="seach_datas">
+
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="layui-card-body" style="width: 61%;float: left;text-align: center;border-right: 1px solid #eee;padding:0;overflow:auto;height:92%">
+            <form id="datasform" action="/admin/offerlist/add_order_operation" method="post">
+                <input type="hidden" name="framename" value="" >
+                <input type="hidden" name="remark" value="" >
+                <input type="hidden" name="type" value="<?php echo input('type'); ?>" >
+                <table class="layui-table" id="project">
+                    <colgroup>
+                        <col width="10">
+                        <col width="10">
+                        <col width="100">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="50">
+                        <col width="30">
+                        <col width="50">
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>编号</th>
+                            <th>项目名称</th>
+                            <th>数量</th>
+                            <th>单位</th>
+                            <th>单价</th>
+                            <th>合价</th>
+                        </tr> 
+                    </thead>
+                    <tbody id="project_datas">
+                        {notempty name="data"}
+                            <tr style="display:none" class="type_name" data-type_name="{$type_name}" data-intype="{$type_name}"><td><i class="layui-icon layui-icon-delete"></i><span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span></td><td colspan="4" style="text-align: left;padding-left:10px">{$type_name}</td><td colspan="1"></td><td class="type_name_material_total" colspan="1"></td></tr>
+                            {foreach name="data" item="v1" key="k1"}
+                                <tr class="classify" data-classify="{$type_name}-{$k1}" data-intype="{$type_name}" data-inclassify="{$k1}"><td><i class="layui-icon layui-icon-delete"></i><span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span></td><td></td><td colspan="3" style="text-align: left;padding-left:10px">{$k1}</td><td colspan="1"></td><td class="classify_material_total" colspan="1"></td></tr>
+                                {foreach name="v1" item="v2" key="k2"}
+                                    <tr class="project" data-intype="{$type_name}" data-inclassify="{$k1}">
+                                        <td><i class="layui-icon layui-icon-delete"></i><span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span></td>
+                                        <td>{$v2.item_number}</td>
+                                        <td>{$v2.name}</td>
+                                        <td><input type="text" value="{$v2.num}" class="layui-input height26" data-project="{$k1}-{$v2.item_number}" name="data[{$v2.item_number}][num]"></td>
+                                        <td>{$v2.unit}</td>
+                                        <td><input type="text" value="{$v2.price}" class="layui-input height26" data-project="{$k1}-{$v2.item_number}" name="data[{$v2.item_number}][price]"></td>
+                                        <td></td>
+                                    </tr>
+                                {/foreach}
+                            {/foreach}
+                        {/notempty}
+                        
+                        
+                        
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+<form style="display:inline-block;" id="addone"></form>
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    //=====================================上下移动
+    //删除报价单项目
+    $('#project_datas').on('click',".layui-edge",function(){
+        var type = $(this).parent().parent().parent().attr('class');
+        if(type == 'type_name'){
+            var tr = $(this).parent().parent().parent();
+            var data_tr=$('tr[data-intype="'+$(tr).attr('data-intype')+'"]');
+            if($(this).hasClass('layui-table-sort-asc')){
+                var prev_word = $(tr).prevAll('.word').eq(0);
+                if($(prev_word).length == 0){
+                    layui.use('layer', function(){
+                        layer.msg('已经是最低部了');
+                    }); 
+                    return false;
+                }else{
+                    $(data_tr).insertBefore($(prev_word)); //将本身插入到目标tr的前面 
+                }
+            }else{
+                var next_word = $(tr).nextAll('.word').eq(0);
+                if($(next_word).length == 0){
+                    layui.use('layer', function(){
+                        layer.msg('已经是最低部了');
+                    }); 
+                    return false;
+                }else{
+                    var next_project = $('.project[data-intype="'+$(next_word).attr('data-intype')+'"]').last();
+                    if(next_project.length){
+                        //工种内有项目 放在项目最后
+                        $(data_tr).insertAfter($(next_project)); //将本身插入到目标tr的前面 
+                    }else{
+                        //没有项目 放在工种后
+                        $(data_tr).insertAfter($(next_word)); //将本身插入到目标tr的前面 
+                    }
+                }
+            }
+        }else if(type == 'classify'){
+            var tr = $(this).parent().parent().parent();
+            var data_tr=$('tr[data-intype="'+$(tr).attr('data-intype')+'"][data-inclassify="'+$(tr).attr('data-inclassify')+'"]');
+            if($(this).hasClass('layui-table-sort-asc')){
+                var prev_classify = $(tr).prevAll('.classify[data-intype="'+$(tr).attr('data-intype')+'"]').eq(0);
+                if($(prev_classify).length == 0){
+                    layui.use('layer', function(){
+                        layer.msg('已经是最顶部了');
+                    }); 
+                    return false;
+                }else{
+                    $(data_tr).insertBefore($(prev_classify)); //将本身插入到目标tr的前面 
+                }
+            }else{
+                var next_classify = $(tr).nextAll('.classify[data-intype="'+$(tr).attr('data-intype')+'"]').eq(0);
+                if($(next_classify).length == 0){
+                    layui.use('layer', function(){
+                        layer.msg('已经是最低部了');
+                    }); 
+                    return false;
+                }else{
+                    var next_project = $('.project[data-intype="'+$(next_classify).attr('data-intype')+'"][data-inclassify="'+$(next_classify).attr('data-inclassify')+'"]').last();
+                    if(next_project.length){
+                        //空间内有项目 放在项目最后
+                        $(data_tr).insertAfter($(next_project)); //将本身插入到目标tr的前面 
+                    }else{
+                        //没有项目 放在空间后
+                        $(data_tr).insertAfter($(next_space)); //将本身插入到目标tr的前面 
+                    }
+                    
+                }
+            }
+            
+        }else if(type == 'project'){
+            var data_tr=$(this).parent().parent().parent();
+            if($(this).hasClass('layui-table-sort-asc')){
+                if($(data_tr).prev().html()==null || !$(data_tr).prev().hasClass('project')){
+                    layui.use('layer', function(){
+                        layer.msg('已经是最顶部了');
+                    }); 
+                    return false;
+                }else{
+                    $(data_tr).insertBefore($(data_tr).prev()); //将本身插入到目标tr的前面 
+                }
+            }else{
+                if($(data_tr).next().html()==null || !$(data_tr).next().hasClass('project')){
+                    layui.use('layer', function(){
+                        layer.msg('已经是最低部了');
+                    }); 
+                    return false;
+                }else{
+                    $(data_tr).insertAfter($(data_tr).next()); //将本身插入到目标tr的前面 
+                }
+            }
+        }else{
+            layui.use('layer', function(){
+                layer.msg('非法操作');
+            }); 
+            return false;
+        }
+    })
+
+
+
+    //======================提交订单
+    $('#submit_datas').click(function(){
+        var is_null = 0;
+        var remark = $('input[name="remark"]').val();
+        var type = $('input[name="type"]').val();
+        var tmp_name = $('input[name="tmp_name_input"]').val();
+        var tmp_id = $('input[name="tmp_id"]').val();
+        if(tmp_name == ''){
+            layui.use('layer', function(){
+                layer.msg('请填写模板名称');
+            }); 
+            return false;
+        }
+        if($('#project_datas input').length < 1){
+            layui.use('layer', function(){
+                layer.msg('请选择项目');
+            }); 
+            return false;
+        }
+        $('#project_datas input').each(function(k,v){
+            if($(v).val() == ''){
+                var project = $(v).attr('data-project');
+                layui.use('layer', function(){
+                    layer.msg(project+' 数量/单价不得为空');
+                }); 
+                is_null = 1;
+                return null;
+            }
+        })
+        if(is_null){
+            return false;
+        }
+        var project = $('#project .project input').serializeArray();
+        var datas = {};  
+        $.each(project, function() {  
+            if (datas[this.name]) {  
+                if (!datas[this.name].push) {  
+                    datas[this.name] = [ datas[this.name] ];  
+                }  
+                datas[this.name].push(this.value || '');  
+            } else {  
+                datas[this.name] = this.value || '';  
+            }  
+        });  
+        datas['type'] = type;
+        datas['tmp_name'] = tmp_name;
+        if(tmp_id != ''){
+            datas['tmp_id'] = tmp_id;
+        }
+        $.post('/admin/quote/add_ftmp_operation',datas,function(res){
+            if(res.code == 1){
+                layui.use('layer', function(){
+                    layer.msg(res.msg);
+                    setTimeout(function () { 
+                        window.location.href = res.url; 
+                    }, 2000); 
+                });
+
+            }else{
+                //失败 提醒
+                layui.use('layer', function(){
+                    layer.msg(res.msg);
+                }); 
+            }
+        })
+        // $('#datasform').submit();
+    })
+    //======================提交订单end
+
+
+
+    //点击空间换颜色
+    $('#diolog .left').on('click','li',function(){
+        $('#diolog .left li').removeClass('checkli');
+        $(this).addClass('checkli');
+    })
+
+    //==============根据编号 项目名称筛选项目-start
+    $('#select_item_number').on('input propertychange',function(){
+        var item_number = $('#select_item_number').val();
+        var project = $('#select_project').val();
+        if(project || item_number){
+            $('#seach_datas tr').each(function(k,v){
+                if($(v).find('td').eq(1).text().indexOf(item_number) != -1 && $(v).find('td').eq(2).text().indexOf(project) != -1){
+                    $(v).show();
+                }else{
+                    $(v).hide();
+                }
+            })
+        }else{
+            $('#seach_datas tr').show();
+        }
+    })
+
+    $('#select_project').on('input propertychange',function(){
+        var item_number = $('#select_item_number').val();
+        var project = $('#select_project').val();
+        if(project || item_number){
+            $('#seach_datas tr').each(function(k,v){
+                if($(v).find('td').eq(1).text().indexOf(item_number) != -1 && $(v).find('td').eq(2).text().indexOf(project) != -1){
+                    $(v).show();
+                }else{
+                    $(v).hide();
+                }
+            })
+        }else{
+            $('#seach_datas tr').show();
+        }
+    })
+    //清空筛选
+    $('#clear_search').click(function(){
+        $('#select_item_number').val('');
+        $('#select_project').val('');
+        $('#seach_datas tr').show();
+    })
+    //==============根据编号 项目名称筛选项目-end
+
+    //选择工种 获取数据
+    $('#diolog .right li').click(function(){
+        if($(this).hasClass('checkli')){
+            return false;
+        }
+        $('#diolog .right li').removeClass('checkli');
+        $(this).addClass('checkli');
+        var type = $('#diolog .left li[class="checkli"]').data('val');
+        var classify = $(this).data('val');
+        $('#seach_datas').html('');
+        $.post('/admin/furniture_orther/ajax_get_project',{type:type,classify:classify},function(res){
+            $(res.data).each(function(k,v){
+                var html = '';
+                html += '<tr data-serial_number="'+v.serial_number+'" data-name="'+v.name+'" data-unit="'+v.unit+'" data-loss="'+v.loss+'" data-price="'+v.price+'" data-classify="'+v.classify+'" data-type_name="'+v.type_name+'" class="add_project">'
+                html += '<td class="pad_0"><i class="layui-icon layui-icon-add-1"></i></td>'
+                html += '<td>'+v.serial_number+'</td>'
+                html += '<td>'+v.name+'</td>'
+                html += '</tr>'
+                $('#seach_datas').append(html);
+            })
+        },'json')
+    })
+
+    //点击+号  向右边报价表添加数据
+    $('#seach_datas').on('click',".add_project",function(){
+        var type_name = $('#diolog .left li[class="checkli"]').text();
+        var classify = $('#diolog .right li[class="checkli"]').text();
+        if(!type_name || !classify){
+            layui.use('layer', function(){
+                layer.msg('种类/分类有误 请重新选择');
+            }); 
+        }
+        var data = $(this).data();
+        //判断该项目在当前功空间和工种下 是否已经存在
+        if($('input[data-project="'+classify+'-'+data.serial_number+'"]').length > 0){
+            layui.use('layer', function(){
+                layer.msg('该工种下项目已存在，请勿重复添加');
+            }); 
+            return false;
+        }
+        //加入右边报价表
+        var project = '';
+        project += '<tr class="project" data-intype="'+type_name+'" data-inclassify="'+classify+'">';
+        project += '<td><i class="layui-icon layui-icon-delete"></i><span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span></td>';
+        project += '<td>'+data.serial_number+'</td>';
+        project += '<td>'+data.name+'</td>';
+        project += '<td><input type="text" class="layui-input height26" data-project="'+classify+'-'+data.serial_number+'" name="data['+data.serial_number+'][num]" /></td>';
+        project += '<td>'+data.unit+'</td>';
+        project += '<td><input type="text" value="'+data.price+'" class="layui-input height26" data-project="'+classify+'-'+data.serial_number+'" name="data['+data.serial_number+'][price]" /></td>';
+        project += '<td></td>';
+        project += '</tr>';
+        //选择添加的地方
+        //判断当前种类下 分类是否存在
+        if($('tr[data-classify="'+type_name+'-'+classify+'"]').length > 0){
+            $('tr[data-inclassify="'+classify+'"][data-intype="'+type_name+'"]').last().after(project);
+        }else{
+            //空间不存在 新建空间
+            var classify_html = '';
+            classify_html += '<tr class="classify" data-classify="'+type_name+'-'+classify+'" data-intype="'+type_name+'" data-inclassify="'+classify+'">';
+            classify_html += '<td><i class="layui-icon layui-icon-delete"></i><span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span></td>'
+            classify_html += '<td></td>'
+            classify_html += '<td colspan="3" style="text-align: left;padding-left:10px">'+classify+'</td>'
+            classify_html += '<td colspan="1"></td>';
+            classify_html += '<td class="classify_material_total" colspan="1"></td>';
+            classify_html += '</tr>'
+            //判断工种是否不存 
+            if($('tr[data-intype="'+type_name+'"]').length > 0){
+                $('tr[data-intype="'+type_name+'"]').last().after(classify_html);
+                $('tr[data-inclassify="'+classify+'"][data-intype="'+type_name+'"]').last().after(project);
+            }else{
+                //不存在 添加工种
+                var type_name_html = '';
+                type_name_html += '<tr style="display:none" class="type_name" data-type_name="'+type_name+'" data-intype="'+type_name+'">';
+                type_name_html += '<td><i class="layui-icon layui-icon-delete"></i><span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span></td>';
+                type_name_html += '<td colspan="4" style="text-align: left;padding-left:10px">'+type_name+'</td>';
+                type_name_html += '<td colspan="1"></td>';
+                type_name_html += '<td class="type_name_material_total" colspan="1"></td>';
+                type_name_html += '</tr>';
+                $('#project_datas').append(type_name_html);
+                $('tr[data-intype="'+type_name+'"]').after(classify_html);
+                $('tr[data-classify="'+type_name+'-'+classify+'"]').after(project);
+            }
+        }
+    })
+    $('#project_datas').on('change','input',function(){
+        initialize_datas();
+    })
+    function initialize_datas(){
+        //统计合计
+        //计算单项目
+        $('#project .project').each(function(k,v){
+            var num = Number($(v).find('input').eq(0).val());
+            var price = Number($(v).find('input').eq(1).val());
+            $(v).find('td').eq(6).text((num*price).toFixed(2));
+        })
+        //计算空间
+        $('#project .classify').each(function(k,v){
+            var intype = $(v).data('intype');
+            var inclassify = $(v).data('inclassify');
+            var total_quota = 0;
+            $('.project[data-intype="'+intype+'"][data-inclassify="'+inclassify+'"]').each(function(k1,v1){
+                total_quota += Number($(v1).find('td').eq(6).text());
+            })
+            $(v).find('td').eq(4).text(total_quota.toFixed(2));
+        })
+    }
+    
+</script>
+{/block}

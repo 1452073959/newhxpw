@@ -1,0 +1,137 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .daoru{position:absolute;top:1px;right:-50px;height:35px}
+
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <a class="layui-btn layui-btn-sm" href="{:url('admin/manager/add')}">添加管理员</a>
+                </div>
+                <div class="layui-input-inline" style="margin-left:30px;">
+                    <form method="get" action="{:url('Manager/index')}" class="form-signin" enctype="multipart/form-data">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">登录名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" placeholder="" value="{:input('name')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">分公司</label>
+                            <div class="layui-input-block">
+                                <select name="companyid" lay-filter="companyid" lay-search>
+                                    <option value="">请选择</option>
+                                    {volist name="company" id="vo"}
+                                        <option {if(input('companyid')==$vo['id'])}selected{/if}  value="{$vo['id']}">{$vo['name']}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">角色</label>
+                            <div class="layui-input-block">
+                                <select name="roleid" lay-filter="roleid" lay-search>
+                                    <option value="">请选择</option>
+                                    {volist name="roles" id="vo"}
+                                    <option {if(input('roleid')==$vo['id'])}selected{/if} value="{$vo['id']}">{$vo['title']}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left:10px">
+                            <div class="layui-input-inline">
+                              <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                              <a href="/admin/manager/index" class="layui-btn layui-btn-primary">重置</a>
+                            </div>
+                        </div>
+                    </form>
+                 </div>  
+            </blockquote>
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>操作</th>
+                        <th>登录名</th>
+                        <th>手机号</th>
+                        <th>所属角色</th>
+                        <th>所属公司</th>
+                        <!-- <th>最后登录地址</th> -->
+                        <!-- <th>最后登录时间</th> -->
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name="Userlist" id="vo"}
+                    <tr>
+                        <td>{$vo['userid']}</td>
+                        <td>
+                            <a class="" href="{:url('admin/manager/edit',['id'=>$vo.userid])}"><i class="layui-icon layui-icon-edit" title="编辑"></i></a>
+                            <a class="ajax-get confirm" url="{:url('admin/manager/del',['id'=>$vo.userid])}"><i class="layui-icon layui-icon-delete" title="删除"></i></a>
+
+                            <a class=" {php} echo ($vo['status']==1)?'':'layui-btn layui-btn-disabled layui-btn-xs'{/php}  ajax-get confirm" url="{:url('admin/manager/bankai',['id'=>$vo.userid,'status'=>$vo.status])}">{php} echo ($vo['status']==1)?'<i class="layui-icon layui-icon-close" title="禁用"></i>':'已禁用'{/php}</a>
+
+                        </td>
+                        <td>{$vo.username}</td>
+                        <td>{$vo.phone}</td>
+                        <td>{php} echo model('admin/AuthGroup')->getRoleIdName($vo['roleid']) {/php}</td>
+                        <td>{php} echo $vo['companyid'] ? getcid($vo['companyid']) : '总公司' {/php}</td>
+                        <!-- <td>{php} echo $vo['last_login_address'] ? ($vo['last_login_address']) : '--' {/php}</td> -->
+                        <!-- <td>{php} echo $vo['last_login_time'] ? time_format($vo['last_login_time']) : '--' {/php}</td> -->
+                        <td>{$vo.email}</td>
+
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block} {block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+ //下拉选择分公司（第二种方案）   
+ // layui.use('form', function(){   
+ //    var form = layui.form;
+ //    form.on('select(companyid)', function(data){
+ //      // alert(data.value); return false;
+ //      if(!data.value){layer.msg('选项为空');return false;}
+ //        $.ajax({
+ //            type : 'post',
+ //            url  : '{:url("Manager/myquery")}',
+ //            dataType : 'json',
+ //            data : {value:data.value},
+ //            success : function(re){
+ //                if(re.status != 0){
+ //                    layer.msg(re.msg);
+ //                }else{
+ //                    var _html = '';
+ //                    for (var i = 0; i < re.data.length; i++) {
+ //                      _html += '<tr>';
+ //                      _html += '<td>'+re.data[i]['userid']+'</td>';
+ //                      _html += '<td><a class="layui-btn layui-btn-xs" href="__AJAXURL__/manager/edit/id/'+re.data[i]['userid']+'">编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs ajax-get confirm" url="__AJAXURL__/manager/del/id/'+re.data[i]['userid']+'">删除</a></td>';
+ //                      _html += '<td>'+re.data[i]['username']+'</td>';
+ //                      _html += '<td>'+re.data[i]['phone']+'</td>';
+ //                      _html += '<td>'+re.data[i]['roleid']+'</td>'
+ //                      _html += '<td>'+re.data[i]['companyid']+'</td>'                
+ //                      _html += '<td>'+re.data[i]['email']+'</td>';
+ //                      _html += '</tr>'; 
+ //                    }
+ //                    $("tbody").html(_html);
+ //                }     
+ //            }
+ //        });
+ //    });
+ //  });  
+</script>
+{/block}

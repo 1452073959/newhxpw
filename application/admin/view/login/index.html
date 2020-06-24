@@ -1,0 +1,207 @@
+</html>
+<!DOCTYPE html>
+<html>
+<style>
+    .copyright a {
+        text-decoration: none;
+        color: #635a5a;
+    }
+
+    .copyright {
+        margin-top: 15px;
+        margin-bottom: 25px;
+        font-size: 14px;
+        color: #635a5a;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>登录</title>
+    <link rel="stylesheet" href="__STATIC__/admin/css/swiper.css">
+    <style type="text/css">
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide1 {
+            width: 100%;
+            overflow: hidden;
+            background: url("__STATIC__/admin/images/lb.png") no-repeat center top;
+            background-size: cover;
+        }
+
+        .slide2 {
+            width: 100%;
+            overflow: hidden;
+            background: url("__STATIC__/admin/images/l1.jpg") no-repeat center top;
+            background-size: cover;
+        }
+
+        .slide3 {
+            width: 100%;
+            overflow: hidden;
+            background: url("__STATIC__/admin/images/l2.jpg") no-repeat center top;
+            background-size: cover;
+        }
+
+        .slide4 {
+            width: 100%;
+            overflow: hidden;
+            background: url("__STATIC__/admin/images/l3.jpg") no-repeat center top;
+            background-size: cover;
+        }
+    </style>
+    <!-- 登录框 -->
+    <style>
+        #mydiv {
+            position: absolute;
+            top: 30%;
+            left: 33%;
+            display: block;
+            background: #ffffff;
+            width: 20%;
+            text-align: center;
+            padding: 0 5%;
+            z-index: 999;
+            border-radius: 10px;
+            box-shadow: 0 0 50px #000;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            padding-left: 10px;
+            height: 38px;
+            line-height: 1.3;
+            line-height: 38px \9;
+            border-width: 1px;
+            border-style: solid;
+            background-color: #fff;
+            border-radius: 2px;
+            border-color: #e6e6e6;
+            margin-bottom: 20px;
+        }
+
+        .login-btn {
+            display: block;
+            width: 100%;
+            padding-left: 10px;
+            height: 38px;
+            line-height: 1.3;
+            line-height: 38px \9;
+            border-width: 1px;
+            border-style: solid;
+            background-color: #383e3e;
+            color: #ffffff;
+            border-radius: 2px;
+            border-color: #e6e6e6;
+            /*margin-bottom: 50px;*/
+        }
+    </style>
+
+</head>
+<body>
+<div style="display: none">
+    <?php if(empty(session('name'))): ?>
+    <div id="msg"><?php echo Session::pull('msg'); ?></div>
+    <div id="msg1"> <?php echo Session::pull('msg1'); ?></div>
+    <?php endif?>
+</div>
+<div id="mydiv">
+    <div class="login-main">
+        <p class=""><img style="width:100%;margin-left: -8%" src="__STATIC__/admin/images/logo.png"></p>
+        <h3 class="tab-h" style="color: #f37020"> 账号登陆 </h3>
+
+        <form class="" action="{:url('admin/login/index')}" method="post">
+            <div class="">
+                <div class="">
+                    <label for="username"></label>
+                    <input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="账号"
+                           class="layui-input">
+                </div>
+                <div class="">
+                    <label for="password"></label>
+                    <input type="password" name="password" placeholder="密码" class="">
+                </div>
+
+                <div class="login">
+                    <button class="login-btn">登录</button>
+                </div>
+                <div class="">
+                    <div class="copyright">ICP备案号：<a target="_blank"
+                                                     href="http://www.beian.miit.gov.cn/">粤ICP备15089103号</a></div>
+                    <!-- <div class="copyright">ICP备案号：<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44010602004847">粤ICP备15089103号</a></div> -->
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide slide1"></div>
+        <div class="swiper-slide slide2"></div>
+        <div class="swiper-slide slide3"></div>
+        <div class="swiper-slide slide4"></div>
+    </div>
+    <!-- 如果需要分页器 -->
+    <div class="swiper-pagination"></div>
+
+    <!-- 如果需要导航按钮 -->
+    <!-- <div class="swiper-button-prev"></div> -->
+    <!-- <div class="swiper-button-next"></div> -->
+
+    <!-- 如果需要滚动条 -->
+    <div class="swiper-scrollbar"></div>
+</div>
+
+
+</body>
+<script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+<script src="__STATIC__/admin/js/swiper.js"></script>
+<script>
+    $(function () {
+        var mySwiper = new Swiper('.swiper-container', {
+            direction: 'horizontal', //切换模式 horizontal水平  vertical垂直
+            loop: true, // 循环模式选项
+            autoplay: true,//自动播放
+            speed: 1000,//切换速度
+
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // 如果需要滚动条
+            scrollbar: {
+                // el: '.swiper-scrollbar',
+            },
+        })
+    })
+
+</script>
+<script src="https://www.layuicdn.com/layer/layer.js"></script>
+<script>
+    var msg = $('#msg').text()
+    var msg1 = $('#msg1').text()
+    console.log(msg);
+    console.log(typeof (msg));
+    if (msg1 == 1) {
+        layer.msg(msg);
+    }
+
+</script>
+</html>

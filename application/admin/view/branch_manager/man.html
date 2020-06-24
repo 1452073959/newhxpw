@@ -1,0 +1,74 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-form layui-inline" action="">
+                    <div class="layui-inline" style="float: left;margin-right: 15px">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">查询日期</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="test1" lay-verify="required" placeholder="yyyy-MM-dd" name="date" value="<?php echo input('date') ?>">
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" value="<?php echo input('id') ?>">
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+            <table class="layui-table" style="text-align: center">
+                <thead >
+                <tr>
+                    <td>登记姓名</td>
+                    <td>登记工种</td>
+                    <td>登记备注</td>
+                    <td>登记时间</td>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $data as $key=>$vo }
+                <tr>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.type}</td>
+                    <td>{$vo.desc}</td>
+                    <td>{$vo.create_time}</td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+
+
+<script type="text/javascript">
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test1' //指定元素
+        });
+    });
+</script>
+{/block}

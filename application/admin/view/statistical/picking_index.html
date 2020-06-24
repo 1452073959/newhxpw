@@ -1,0 +1,122 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-form layui-inline" action="">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="username" value="{:input('username')}" placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                     <div class="layui-form-item">
+                        <label class="layui-form-label">监理姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="jlname" value="{:input('jlname')}" placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline" style="float: left;margin-right: 15px">
+                        <label class="layui-form-label">签单时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="begin_time" name="begin_time" autocomplete="off" value="{:input('begin_time')}" placeholder="开始时间">
+                        </div>
+                        <span> - </span>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="end_time" name="end_time" autocomplete="off" value="{:input('end_time')}" placeholder="结束时间">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                          <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                          <a href="/admin/statistical/picking_index" class="layui-btn layui-btn-primary">重置</a>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+     
+            <table class="layui-table">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="120">
+                    <col width="120">
+                    <col width="120">
+                    <col width="150">
+                    <col width="150">
+                    <col>
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th>客户姓名</th>
+                        <th>监理姓名</th>
+                        <th>预计领料金额</th>
+                        <th>定点领料金额</th>
+                        <th>自购领料金额</th>
+                        <th>已领辅材金额</th>
+                        <th>申请辅材金额</th>
+                        <th>待领辅材金额</th>
+                        <th>签单时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $datas as $k=>$v}
+                        <tr>
+                            <td>{$v['customer_name']}</td>
+                            <td>{$admins[$v['jid']]['name'] ?: 0}</td>
+                            <td>{$v['all_material_money']}</td>
+                            <td>{$v['type1']}</td>
+                            <td>{$v['type2']}</td>
+                            <td>{$v['status4']}</td>
+                            <td>{$v['status23'] + $v['status1']}</td>
+                            <td>{$v['status23']}</td>
+                            
+                            <td>{:date('Y-m-d',$v['sign_bill_time'])}</td>
+                            <td>
+                                <a href="/admin/auxiliary/history/id/{$v['oid']}" class="layui-btn layui-btn-primary">预计领料明细</a>
+                                <a href="/admin/statistical/actual_picking_ck/uid/{$v['id']}" class="layui-btn layui-btn-primary">实际仓库领料明细</a>
+                                <a href="/admin/statistical/actual_picking_dz/uid/{$v['id']}" class="layui-btn layui-btn-primary">实际定点/自购明细</a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+  
+  layui.use('laydate', function(){
+    var laydate = layui.laydate;
+    //常规用法
+    laydate.render({
+      elem: '#begin_time'
+    });
+    laydate.render({
+      elem: '#end_time'
+    });
+  })
+</script>
+{/block}

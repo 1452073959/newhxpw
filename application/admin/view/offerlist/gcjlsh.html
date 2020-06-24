@@ -1,0 +1,297 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+<style type="text/css">
+    /*分页样式*/
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .pagination li {
+        margin: 0px 10px;
+        border: 1px solid #e6e6e6;
+        padding: 3px 8px;
+        display: inline-block;
+    }
+
+    .pagination .active {
+        background-color: #dd1a20;
+        color: #fff;
+    }
+
+    .pagination .disabled {
+        color: #aaa;
+    }
+
+    .onfile {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+
+    .onfile input {
+        position: absolute;
+        font-size: 20px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .onfile:hover {
+        opacity: 0.8;
+        color: #1E88C7 /* background: #AADFFD;
+         border-color: #78C3F3;
+         color: #fff;
+         text-decoration: none;*/
+    }
+
+    .daoru {
+        position: absolute;
+        top: 1px;
+        right: -90px;
+    }
+
+    .daorus {
+        position: absolute;
+        top: 1px;
+        right: -50px;
+        height: 35px
+    }
+
+    .bigbox {
+        padding: 10px
+    }
+
+    .bigbox input {
+        margin-bottom: 10px
+    }
+
+    #imgs {
+        position: relative;
+    }
+
+    .batchs span {
+        cursor: pointer;
+    }
+
+    .form-control {
+        display: inline-block;
+        padding: 5px;
+    }
+
+    .select_tmp {
+        height: 30px;
+    }
+
+    .layui-btn + .layui-btn {
+        margin-left: 3px;
+    }
+
+    .ulall li {
+        float: left;
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin-right: 5px;
+    }
+
+    .layui-tab-title li {
+        padding: 0;
+    }
+
+    .layui-tab-title li a {
+        padding: 0 25px;
+    }
+</style>
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <table class="layui-table" style="text-align: center">
+                <thead >
+                <tr>
+                    <td>项目名称</td>
+                    <td>单位</td>
+                    <td>辅材单价</td>
+                    <td>人工单价</td>
+                    <td style="width: 500px">工艺说明</td>
+                    <td>提交人</td>
+                    <td>提交时间</td>
+                    <td style="width: 240px">操作</td>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $fb as $key=>$vo }
+                <tr>
+
+                    <td>{$vo.project}</td>
+                    <td>{$vo.company}</td>
+                    <td>{$vo.quota}</td>
+                    <td>{$vo.craft_show}</td>
+                    <td>{$vo.material}</td>
+                    <td>{$vo.uname}</td>
+                    <td>{$vo.add_time|date="Y-m-d H:i"}</td>
+                    <td>
+                        {if $vo.of_fb==1}
+                        <div>
+                            <button key="{$vo.id}" class="layui-btn layui-btn-primary fbsh" >修改非标</button>
+                            <button key="{$vo.id}" class="layui-btn layui-btn-primary bdsh" >绑定非标</button>
+                        </div>
+
+                        <div style="margin-top: 5px">
+                            <button key="{$vo.id}" class="layui-btn layui-btn-primary cjsh" >提交审核</button>
+                            <button key="{$vo.id}" class="layui-btn layui-btn-primary bhsh" >驳回审核</button>
+                        </div>
+
+                        {elseif $vo.of_fb == 2 /}已提交待审核
+                        {elseif $vo.of_fb == 5 /}新增完成
+                        {elseif $vo.of_fb == 6 /}审核已被驳回
+                        {elseif $vo.of_fb == 4 /}
+                       <span>审核完成</span>   <button key="{$vo.id}" class="layui-btn layui-btn-primary crsh">添加到公司报价库</button>
+                        {else $vo.of_fb == 3/}绑定成功
+                        {/if}
+                        <!--<button key="">驳回该非标</button>-->
+                    </td>
+                </tr>
+                {/foreach}
+
+                </tbody>
+            </table>
+
+        </div>
+        <?php
+echo htmlspecialchars_decode($fb->render());
+?>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+
+
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            $(document).on('click','.fbsh', function(){
+                var Tresult=$(this).attr('key');
+                layer.open({
+                    type: 2,
+                    title: '修改非标',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['500px', '50%'],
+                    content: '/admin/offerlist/gcjledit?id='+ Tresult
+                });
+            });
+
+        });
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            $(document).on('click','.bdsh', function(){
+                var Tresult=$(this).attr('key');
+                layer.open({
+                    type: 2,
+                    title: '绑定非标',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1000px', '50%'],
+                    content: '/admin/offerlist/cjbindedit?id='+ Tresult
+                });
+            });
+        });
+
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            $(document).on('click','.crsh', function(){
+                var Tresult=$(this).attr('key');
+                layer.open({
+                    type: 2,
+                    title: '添加到公司报价库',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1000px', '80%'],
+                    content: '/admin/offerlist/insergsck?id='+ Tresult
+                });
+            });
+        });
+
+    })
+</script>
+<script>
+    $(function () {
+        $(document).on('click','.cjsh', function(){
+            var a=$(this).attr('key');
+            $.ajax({
+                type: "get",
+                url: "/admin/Offerlist/cjsh",
+                data: {key:a,status:2},
+                success: function (e) {
+                    console.log(e);
+                    window.location.reload();
+                    if(e.code == 1){
+                        layer.msg('绑定成功');
+                    }
+                }
+            })
+        });
+    })
+
+    $(function () {
+        $(document).on('click','.bhsh', function(){
+            var a=$(this).attr('key');
+            $.ajax({
+                type: "get",
+                url: "/admin/Offerlist/cjsh",
+                data: {key:a,status:6},
+                success: function (e) {
+                    console.log(e);
+                    window.location.reload();
+                    if(e.code == 1){
+                        layer.msg('驳回成功');
+                    }
+                }
+            })
+        });
+    })
+</script>
+
+
+
+{/block}

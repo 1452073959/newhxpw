@@ -1,0 +1,2208 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.form-control{display: inline-block;padding: 5px;}
+.select_tmp{
+    height:30px;
+}
+.layui-btn+.layui-btn{
+    margin-left: 3px;
+}
+.ulall li{float:left;border: 1px solid #ccc;padding: 5px;margin-right: 5px;}
+.layui-tab-title li {
+  padding: 0;
+}
+.layui-tab-title li a{
+  padding: 0 25px;
+}
+.input30{
+    width: 50px;
+    height: 28px;
+    line-height: 28px;
+    padding:0 2px;
+}
+.sort{
+    padding: 3px;
+}
+.layui-table-sort{
+    margin-left:0;
+    width:20px;
+}
+.hide_td{
+    display: none;
+}
+.t1{
+    margin-top: 15px;
+    display: block;
+    height:30px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    height: 26px;
+    line-height: 26px;
+}
+.t1 i{
+    color: red;
+    margin:0 2px;
+}
+.t2{
+    margin: 10px 0;
+    margin-left: 15px;
+    font-size: 14px;
+    color:#666;
+    margin-right: 15px;
+    height: 28px;
+    line-height:28px;
+    display: block;
+    float: left;
+}
+.t2 i{
+    font-style:normal
+}
+.t3{
+    font-size: 14px;
+    color:#666;
+    height: 28px;
+    line-height:28px;
+    display: block;
+    float: left;
+    border-top:1px solid #ccc;
+    border-left:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+    padding: 3px 8px;
+    margin:7px 0;
+}
+.discount_div{
+    width: 100%;
+    height:50px;
+}
+.discount_form{
+    margin-top: 5px;
+    width: 100px;
+    height:30px;
+    line-height: 30px;
+    font-size: 14px;
+    margin-left: -10px;
+    float: left;
+}
+.w50{
+    width: 50px;
+}
+#design_select{
+    width: 160px;
+    height:30px;
+    line-height:30px;
+}
+.gift{
+    width: 96%;
+    height:90%;
+    text-align: left;
+}
+.gift_top{
+    width: 100%;
+    height: 95%;
+}
+.gift_top .left{
+    width: 20%;
+    height: 100%;
+    float: left;
+}
+.gift_top .right{
+    width: 78%;
+    height: 100%;
+    float: right;
+}
+.gift_top .gift_show{
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+}
+.gift_top .gift_title{
+    width: 100%;
+    height: 26px;
+    line-height: 26px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    background-color: #eee;
+}
+.gift_top .select_gift{
+    width: 100%;
+    height: 26px;
+    line-height: 26px;
+    border-bottom: 1px solid #ccc;
+}
+.gift_top .select_gift input{
+    width: 94%;
+    height: 24px;
+    line-height: 24px;
+    border:none;
+    padding: 0 3%;
+}
+.gift_list{
+    width: 96%;
+    height:80%;
+    padding: 0 2%;
+    overflow-y: auto;
+
+}
+.gift_list li{
+    width: 96%;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 2%;
+    cursor: pointer;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    white-space:nowrap;
+}
+.gift_list li:hover{
+    background-color: #eee;
+}
+.gift_list .gift_child{
+    margin-left: 10%;
+    width: 86%;
+}
+.gift_table{
+    padding: 0;
+    margin:0;
+}
+.gift_table th , .gift_table td{
+    padding: 5px 3px;
+    text-align: center;
+}
+.gift_table tfoot td{
+    text-align: left;
+}
+.gift_table_top{
+    height: 15%;
+}
+.gift_table_body{
+    height: 80%;
+    overflow-y: auto;
+}
+.gift_input{
+    width: 30px;
+    height:28px;
+    line-height: 28px;
+    padding:0 5px;
+    text-align: center;
+}
+</style>
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-tab layui-tab-brief">
+                  <ul class="layui-tab-title">
+                    <li class="layui-this"><a href="{:url('admin/offerlist/index',['customer_id'=>input('customer_id')])}">半包</a></li>
+                    <li class=""><a href="{:url('admin/furniture_orther/order_list',['customer_id'=>input('customer_id'),'type'=>2])}">主材</a></li>
+                    <li class=""><a href="{:url('admin/furniture_orther/order_list',['customer_id'=>input('customer_id'),'type'=>3])}">智能、家电</a></li>
+                    <li class=""><a href="{:url('admin/furniture_orther/order_list',['customer_id'=>input('customer_id'),'type'=>4])}">软装</a></li>
+                  </ul>
+                  <div class="layui-tab-content"></div>
+                </div>
+                <div class="layui-inline">
+                   <ul class="ulall">
+                      <li>客户姓名：{$userinfo.customer_name}</li>
+                      <li>工程地址：{$userinfo.address}</li>
+                      <li>联系电话：{$userinfo.phone}</li>
+                      <li>报价师姓名：{$userinfo.quoter_name}</li>
+                      <li>设计师姓名：{$userinfo.designer_name}</li>
+                      <li>面积：{$userinfo.area}</li>
+                      <li>房屋类型：{$userinfo.room_type}</li>
+                      {eq name="$userinfo['is_new']" value="9"}<li>签单时间：{$userinfo.oldtime|date="Y-m-d"}</li>{/eq}
+                      <li class="click print" style="display: none" title="打印"><i class="layui-icon layui-icon-print"></i></li>
+                   </ul>
+                </div>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+              <div class="layui-btn-container">
+              </div>
+            </script>
+
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3',toolbar:'#',limit:20,page:'true',height: 'full-160'}">
+                <thead >
+                    <tr>
+                        <th class="" lay-data="{field:'id', width:60,}">ID</th>
+                        <th class="" lay-data="{field:'history',width:285}">操作</th>
+                        <th class="" lay-data="{field:'manager_name',width:100}">非标</th>
+						<th class="" lay-data="{field:'status',width:110,event:'set_status'}">状态</th>
+                        <th class="" lay-data="{field:'remark',width:100,edit:'text'}">备注</th>
+                        <th class="" lay-data="{field:'total_money',width:120}">总计</th>
+                        <th class="" lay-data="{field:'proquant',width:120}">工程报价</th>
+                        <th class="" lay-data="{field:'direct_cost',width:120 }">工程直接费</th>
+                        <th class="" lay-data="{field:'matquant',width:100 }">辅材报价</th>
+                        <th class="" lay-data="{field:'manual_quota',width:100 }">人工报价</th>
+                        <th class="" lay-data="{field:'design_price',width:160 }">设计费</th>
+                        <th class="" lay-data="{field:'discount_zk',width:180}">折扣优惠</th>
+                        <th class="" lay-data="{field:'gift',width:180}">礼品</th>
+                        <!-- <th class="" lay-data="{field:'discount_content',edit:'text',width:180 }">金额优惠说明</th> -->
+                        <th class="" lay-data="{field:'tmp_id',width:100}">取费模板</th>
+                        <th class="" lay-data="{field:'o_remark',event:'o_remark',width:130}">报价单底部备注</th>
+                        <th class="" lay-data="{field:'entrytime',width:150}">录入时间</th>
+                        <th class="" lay-data="{field:'effect_img',width:150}">效果图</th>
+                        <th class="" lay-data="{field:'cad',width:100}">图纸</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                  {foreach name="data" item="vo"}
+                    <tr>
+                        <td class="">{$vo.id}</td>
+                        <td class="">
+    						{eq name=":input('type')" value="edit"}
+    						  <a class="layui-btn layui-btn-xs" href="{:url('admin/offerlist/zengjian',['id'=>$vo.id,'report_id'=>$vo.id])}">选择</a>
+    						{else/}
+                                <a class="layui-btn layui-btn-xs layui-btn-warm" href="{:url('admin/offerlist/history',['customerid'=>$vo.customerid,'report_id'=>$vo.id,'type'=>2])}">点击查看</a>
+                                {if($admininfo['roleid'] != 10 && $admininfo['roleid'] != 22 && $vo['status'] >= 3 && $vo['status'] < 5)}
+                                    <a class="layui-btn layui-btn-xs" href="{:url('admin/order_append/add_index',['customer_id'=>$vo.customerid,'order_id'=>$vo.id])}">新增增减项</a>
+                                {/if}
+                                {gt name="$vo['add_append_num']" value="0"}
+                                  <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="show_add_append" data-oid="{$vo.id}">申请的增减项</a>
+                                {/gt}
+                                {gt name="$vo['append_num']" value="0"}
+        						  <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="kkk" key="{$vo.id}">查看增减项</a>
+                                {/gt}
+                                {if($admininfo['roleid'] != 10 && $admininfo['roleid'] != 22 && $vo['status'] < 3 )}
+                                    <a class="layui-btn layui-btn-xs layui-btn-primary" href="{:url('admin/offerlist/add_order',['customer_id'=>$vo.customerid,'report_id'=>$vo.id])}">另存订单</a>
+                                {/if}
+    						{/eq}
+                            {if($vo['status'] < 3) && $admininfo['roleid'] == 1}
+                                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="del_order" key="{$vo.id}">删除</a>
+                            {/if}
+				        </td>
+                        <td>
+                            {if $vo.no_standard=="1"}
+                            <span  key="{$vo.id}" class="layui-btn layui-btn-xs  fbsh">提交审核</span>
+                            {elseif $vo.no_standard=="3" /}待审核
+                            {elseif $vo.no_standard=="4" /}待审核
+                            {elseif $vo.no_standard=="5" /}审核成功
+                            {elseif $vo.no_standard=="6" /}审核驳回
+                            {else/}无非标
+                            {/if}
+                        </td>
+
+
+						<td>
+							{switch name="$vo.status"}
+									{case value="0"} <a class="layui-btn layui-btn-xs layui-btn-primary">预报单</a>{/case}
+									{case value="1"} <a class="layui-btn layui-btn-xs">预报单</a>{/case}
+									{case value="2"} <a class="layui-btn layui-btn-xs layui-btn-normal">无效单</a>{/case}
+                                    {case value="3"} <a class="layui-btn layui-btn-xs layui-btn-warm">合同单(未审)</a>{/case}
+									{case value="4"} <a class="layui-btn layui-btn-xs layui-btn-warm">合同单</a>{/case}
+                                    {case value="5"} <a class="layui-btn layui-btn-xs">待结算</a>{/case}
+									{case value="6"} <a class="layui-btn layui-btn-xs layui-btn-danger">结算单</a>{/case}
+									{default /}
+									<a class="layui-btn layui-btn-xs layui-btn-primary">预报单</a>
+							{/switch}
+						</td>
+                      <td class="">{$vo.info.remark}</td>
+                      <td class="">{$vo.info.total_money}</td>
+                      <td class="">{$vo.info.discount_proquant}</td>
+                      <td class="">{$vo.info.direct_cost}</td>
+                      <td class="">{$vo.info.matquant}</td>
+                      <td class="">{$vo.info.manual_quota}</td>
+                      <td class="">
+                        {if($vo['info']['design_price'] > 0)}
+                            <a lay-event="set_design">￥{$vo.info.design_price}元</a>
+                        {else /}
+                            <a lay-event="set_design">添加设计费</a>
+                        {/if}
+                      </td>
+                      <td class="">
+                            {if($vo['info']['discount'] > 0)}
+                                <a lay-event="set_discount">优惠￥{$vo.info.discount}元</a>
+                            {else /}
+                                <a lay-event="add_discount">设置优惠</a>
+                            {/if}
+                        </td>
+                        <td class="">
+                            {if($vo['gift'] > 0)}
+                                <a lay-event="set_gift">总价值：￥{$vo['gift']}</a>
+                            {else /}
+                                <a lay-event="set_gift">设置礼品</a>
+                            {/if}
+                        </td>
+                      <!-- <td class="">{$vo.info.discount}</td> -->
+                      <!-- <td class="">{$vo.info.discount_content}</td> -->
+                      <td class=""><a class="" data-id="" lay-event="show_tmp">￥{$vo['info']['order_cost_all_price']}</a></td>
+                      <td class="">查看/设置</td>
+                      <td class="">{$vo.info.entrytime|date="Y-m-d H:i"}</td>
+                      <td class="">{$vo.effect_img ? '<a href="/admin/offerlist/down?id='.$vo["id"].'&type=2">下载</a>':'<a href="javascript:;" style="color:red" lay-event="effect_img">上传</a>'}</td>
+                         {if $vo.cad_file!=''}
+                         <td class=""><a href="/admin/offerlist/down?id={$vo.id} ">下载</a></td>
+                         {else /}
+                         {/if}
+
+                    </tr>
+                 {/foreach}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<!-- 打印 -->
+<script src="__STATIC__/bootstrap/js/table/printThis.min.js"></script>
+<script type="text/javascript">
+    $(document).on('click','.gift_parent',function(){
+        var cate = $(this).data('cate');
+        if($('.gift_child[data-cate="'+cate+'"]').eq(0).css('display') == 'none'){
+            $('.gift_child[data-cate="'+cate+'"]').show();
+        }else{
+            $('.gift_child[data-cate="'+cate+'"]').hide();
+        }
+    })
+    $(document).on('click','.gift_child',function(){
+        var id = $(this).data('id');
+        var name = $(this).data('name');
+        var brand = $(this).data('brand');
+        var price = $(this).data('price');
+        var content = $(this).data('content');
+        var unit = $(this).data('unit');
+        var html = '';
+
+        if($('.gid_'+id).length > 0){
+            // layui.use('layer', function(){
+            //     var layer = layui.layer;
+            //     layer.msg('礼品已添加');
+            // })
+            return false;
+        }
+        html += '<tr class="gid_'+id+'">'
+        html += '    <td class="count">'+ ($('.gift_table').find('tbody').find('tr').length+1) +'</td>'
+        html += '    <td>'
+        html += '        <i class="layui-icon layui-icon-delete"></i>'
+        html += '    </td>'
+        html += '    <td>'+name+'</td>'
+        html += '    <td>'+brand+'</td>'
+        html += '    <td><input name="gift['+id+']" value="1" class="gift_input"/></td>'
+        html += '    <td>'+unit+'</td>'
+        html += '    <td class="gift_price">'+price+'</td>'
+        html += '    <td class="gift_total_one">'+price+'</td>'
+        html += '    <td>'+content+'</td>'
+        html += '</tr>'
+        $('.gift_table').find('tbody').append(html);
+        giftSortPrice();
+    })
+    function giftSortPrice(){
+        $('.gift_table').find('tr').each(function(k,v){
+            $(v).find('.count').text(k);
+        })
+        var total = 0;
+        $('.gift_total_one').each(function(k,v){
+            total += Number($(v).text());
+        })
+        $('#gift_total_price').text(total.toFixed(2));
+    }
+    $(document).on('click','.gift_table .layui-icon-delete',function(){
+        $(this).parent().parent().remove();
+        giftSortPrice();
+    })
+    var old_g_num = '';
+    $(document).on('focus',".gift_input", function () {
+        old_g_num = $(this).val();
+    })
+    
+    $(document).on('change',".gift_input",function(){
+        var new_g_num = $(this).val();
+        var ex = /^\d+$/;
+        if(!ex.test(new_g_num) || new_g_num == 0){
+            layui.use('layer', function(){
+                layer.msg('数量必须为正整数');
+            }); 
+            $(this).val(old_g_num);
+            return false;
+        }
+        var price = $(this).parent().parent().find('.gift_price').text();
+        $(this).parent().parent().find('.gift_total_one').text((Number(new_g_num)*Number(price)).toFixed(2));
+        var total = 0;
+        $('.gift_total_one').each(function(k,v){
+            total += Number($(v).text());
+        })
+        $('#gift_total_price').text(total.toFixed(2));
+    })
+    //选择优惠
+    $(document).on('change','.discount_div select',function(){
+        var content = $(this).find('option:selected').attr('data-content');
+        $(this).parent().find('input[name="discount_content[]"]').val(content);
+        $(this).parent().find('input[name="discount_rate[]"]').val(0);
+    })
+    //优惠添加一行
+    $(document).on('click','.add_discount .layui-icon-add-1',function(){
+        var html = $(this).parent().parent().parent().prop("outerHTML");
+        html = html.replace('<i class="layui-icon layui-icon-add-1">','<i class="layui-icon layui-icon-delete"></i>')
+        $('.discount_div:last').after(html);
+    })
+    //优惠删除一行
+    $(document).on('click','.add_discount .layui-icon-delete',function(){
+        $(this).parent().parent().parent().remove();
+    })
+    //设计费
+    $(document).on('change','#design_select',function(){
+        var unit = $(this).find("option:selected").attr("data-unit")
+        var price = $(this).find("option:selected").attr('data-price');
+        var material = $(this).find("option:selected").attr('data-material');
+        $(this).parent().parent().find('td').eq(1).text(unit);
+        $(this).parent().parent().find('td').eq(3).text(price);
+        $(this).parent().parent().find('td').eq(4).text(material);
+    })
+    //=====取费模板相关
+    function add_tr(o){
+        var html = '';
+        html += '     <tr>'
+        html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+        html += '       <td>'
+        html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span>'
+        html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+        html += '          <a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a>'
+        html += '       </td>'
+        html += '       <td><input class="layui-input" name="name[]" /></td>'
+        html += '       <td><input class="layui-input" name="sign[]" /></td>'
+        html += '       <td><input class="layui-input" name="formula[]" /></td>'
+        html += '       <td><input class="layui-input" name="rate[]" /></td>'
+        html += '       <td class="price"></td>'
+        html += '       <td><input class="layui-input" name="content[]" /></td>'
+        html += '     </tr>'
+        $(o).parent().parent().after(html);
+        set_sort();
+    }
+    function delete_tr(o){
+        $(o).parent().parent().remove();
+        set_sort();
+    }
+    // set_sort();
+    //重新排序
+    function set_sort(){
+        var i = 1;
+        $('.sort').each(function(k,v){
+            $(v).attr('value',i);
+            $(v).attr('bj',i);
+            i++;
+        })
+    }
+    //插入排序
+    $(document).on('change','.sort',function(){
+        var num = $(this).val();
+        var old_num = $(this).attr('bj');//目标位置
+        var data_tr =  $(this).parent().parent();
+        var i = 0;
+        var is = false;
+        $('.sort').each(function(k,v){
+            if($(v).attr('bj') == num){
+                if(num > old_num){
+                    $(data_tr).insertAfter($(v).parent().parent()); //将本身插入到目标tr的前面 
+                }else{
+                    $(data_tr).insertBefore($(v).parent().parent()); //将本身插入到目标tr的前面 
+                }
+                is = true;
+            }
+        })
+        if(!is){
+            $(data_tr).insertAfter($('.sort:last').parent().parent());
+        }
+        set_sort();
+    })
+    $(document).on('click','.layui-table-sort-asc',function(){
+        var this_tr = $(this).parent().parent().parent();
+        if($(this_tr).prev().attr('class') != 'stop'){
+            var num = $(this_tr).find('td').eq(0).find('input').attr('bj');
+            $('.sort').each(function(k,v){
+                if((Number($(v).attr('bj'))+1) == num){
+                   $(this_tr).insertBefore($(v).parent().parent()); //将本身插入到目标tr的前面 
+                }
+            })
+        }
+        
+        set_sort();
+    })
+    $(document).on('click','.layui-table-sort-desc',function(){
+        var this_tr = $(this).parent().parent().parent();
+        if($(this_tr).next().attr('class') != 'stop'){
+            var num = $(this_tr).find('td').eq(0).find('input').attr('bj');
+            $('.sort').each(function(k,v){
+                if((Number($(v).attr('bj'))-1) == num){
+                    console.log((Number($(v).attr('bj'))-1));
+                   $(this_tr).insertAfter($(v).parent().parent()); //将本身插入到目标tr的前面 
+                }
+            })
+        }
+        
+        set_sort();
+    })
+    //=====取费模板相关
+
+    //打印礼品单
+    $(document).on('click','#gift_print',function(){
+      $("#show_gift").printThis({
+         debug: false,
+         importCSS: true,
+         importStyle: true,
+         printContainer: true,
+         loadCSS: "__STATIC__/bootstrap/css/printThis-p.css",
+         // pageTitle: '　',
+         removeInline: false,
+         printDelay: 333,
+         header: null,
+         formValues: false,
+         pageTitle: "礼品单", 
+       });
+  })
+    //确认处理增加项
+    function deal_append(id,o){
+        $.ajax({
+            type : 'post',
+            url  :  '{:url("order_append/deal_append_img")}',
+            dataType : 'json',
+            data : {id:id},
+            success : function(res){
+                if(res.code == 1){
+                    alert(res.msg);
+                    $(o).parent().parent().find('td').eq(2).text('已处理');
+                    $(o).remove();
+
+                }else{
+                    alert(res.msg);return false;
+                }
+            }
+        });
+    }
+
+    //简单显示上传文件信息
+     $("#imgInput").change(function(e){
+       var fileMsg = e.currentTarget.files;
+       var fileName = fileMsg[0].name;
+       var fileSize = Math.floor(((fileMsg[0].size)/1024))+'kb';
+       var fileType = fileMsg[0].type;
+       var _html = '<p>文件名：'+fileName+'</p><p>文件大小：'+fileSize+'</p><p>文件类型：'+fileType+'</p>'
+         layer.tips(_html, '#imgs', {
+          tips: [1, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+       $("#imgs").html("<span style='color:green;position:absolute;top:-25px;right:-5px;font-size:20px'>✔</span>");
+    });
+    $("#tishi").click(function(){
+      var content = '<p>这是我定义的说明<br />只能导入excel文件。其他后缀名不识别<br />下载空模板可以使用添加数据导入</p>';
+      //自定页
+      layer.tips(content, '#tishi', {
+          tips: [4, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+
+       });
+</script>
+<script type="text/javascript">
+layui.use('table', function(){
+  var table = layui.table;
+
+  //工具栏事件
+  table.on('toolbar(test3)', function(obj){
+    var checkStatus = table.checkStatus(obj.config.id);
+    var data = checkStatus.data;
+    // var shujuzu = JSON.stringify(data);//json数据组
+    // layer.alert(JSON.stringify(data));return false;
+    if (obj.event == 'getCheckData'){
+      if(data.length == 0){
+          layer.msg('请勾√选数据');
+       }else{
+         var jsonObj = JSON.parse(JSON.stringify(data));//转换为json对象
+         var hezi = "";
+         for (var i = 0; i < data.length; i++) {
+           hezi += jsonObj[i]['id']+',';
+         }
+         hezi = hezi.substring(0, hezi.length - 1);//移除最后一个逗号
+        // layer.alert(hezi);return false;
+          var box = '<div class="batchs"><span data-fieldval="type_of_work">工种</span><br /><span data-fieldval="project">工程项目</span><br /><span data-fieldval="company">单位</span><br /><span data-fieldval="cost_value">成本价值</span><br /><span data-fieldval="quota">报价定额</span><br /><span data-fieldval="craft_show">工艺说明</span><br /><span data-fieldval="material">工艺说明辅材明细</span></div>';
+
+        //自定页
+        layer.tips(box, '#batch', {
+            tips: [2, '#3595CC'],
+            area:["auto","auto"],
+            time: 5000
+          });
+
+        $('.batchs span').click(function(){
+            var fieldval = $(this).data('fieldval');
+            var fieldtext = $(this).text();
+            var newcon = '<div class="zidauns"><input type="text" style="text-align:center;margin:10px;width:96%" name="valname" autocomplete="off" value="" class="layui-input"><button id="edit_batch" style="margin-left:190px" class="layui-btn ajax-post">立即提交</button></div>';
+            //页面层
+            layer.open({
+              type: 1,
+              fixed: false,    //取消固定定位，因为固定定位是相对body的
+              offset: ['20%', '30%'],   //相对定位
+              skin: 'layui-layer-rim', //加上边框
+              area: ['500px', '150px'], //宽高
+              title: '输入修改<span style="color:green">'+fieldtext+'</span>字段内容',
+              content: newcon
+            });
+            $("#edit_batch").click(function(){
+                var xiugais = $(this).parents(".zidauns").find("input[name='valname']").val();
+                if (!xiugais){layer.msg('字段不能为空');return false}
+                // alert(fieldval+'--'+xiugais+'-----'+hezi);return false;
+                $.ajax({
+                  type : 'post',
+                  url  :  '{:url("offerlist/batchedit")}',
+                  dataType : 'json',
+                  data : {batchname:fieldval,value:xiugais,idarray:hezi},
+                  success : function(re){
+                    if(re.status == 0){
+                       layer.msg(re.msg);
+                       window.location.reload();
+
+                    }else{
+                      layer.msg(re.msg);return false;
+                    }
+                  }
+                 });
+            });
+
+        });
+
+       }
+    }
+
+  });
+
+
+
+
+
+
+  // 监听单元格编辑
+  table.on('edit(test3)', function(obj){
+    var value = obj.value //得到修改后的值
+    ,data = obj.data //得到所在行所有键值
+
+    ,field = obj.field; //得到字段
+    // layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+    // alert('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("offerlist/singlefield_edit")}',
+        dataType : 'json',
+        data : {id:data.id,field:field,value:value,pro_apartment_type:data.pro_apartment_type,area:data.area},
+        success : function(re){
+          if(re.status == 1){
+             layer.msg(re.msg);return false;
+          }
+          layer.msg(re.msg);
+          // window.location.reload();
+        }
+    });
+  });
+
+  //监听行单击事件（单击事件为：rowDouble）
+  // table.on('rowDouble(test3)', function(obj){
+  //   var data = obj.data;
+  //   var newdata = JSON.stringify(data);
+
+  //   layer.alert(newdata, {
+  //     title: '当前行数据：'
+  //   });
+
+  //   //标注选中样式
+  //   obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+  // });
+
+  //监听单元格事件
+    table.on('tool(test3)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'show_add_append'){
+            $.ajax({
+                type : 'post',
+                url  :  '{:url("order_append/get_append_img")}',
+                dataType : 'json',
+                data : {oid:data.id},
+                success : function(re){
+                    if(re.code === 1){
+                        var html = '<table style="text-align:center" class="layui-table"><thead><tr>'
+                        html += '<th style="text-align:center">备注</th>'
+                        html += '<th style="text-align:center">图片</th>'
+                        html += '<th style="text-align:center">状态</th>'
+                        html += '<th style="text-align:center">添加时间</th>'
+                        html += '<th style="text-align:center">操作</th>'
+                        html += '</tr></thead><tbody>';
+                        $.each(re.data, function (k, v) {
+                            html += '<tr>'
+                            html += '<td>'+v.remark+'</td>'
+                            html += '<td><a href="'+v.img+'" target="_blank"><img src="'+v.img+'" /></a></td>'
+                            html += '<td>'+v.status+'</td>'
+                            html += '<td>'+v.time+'</td>'
+                            if(v.status == '未处理'){
+                                html += '<td><a style="color:red" href="javascript:;" onclick="deal_append('+v.id+',this)">处理</a></td>'
+                            }else{
+                                html += '<td></td>'
+                            }
+                            html += '</tr>'
+                        });
+                        // html += '<tr><td>小计</td><td>'+toDecimal2(re.total)+'</td><td></td><td></td></tr>'
+                        html += '</tbody></table>'
+                        //显示人工明细
+                        layer.open({
+                            title: '申请的增减项',
+                            area: ['600px', '80%'],
+                            content:html
+                        });
+                    }else{
+                        layer.msg(re.msg);return false;
+                    }
+                }
+            });
+        }
+        if(obj.event === 'kkk'){
+            var Tresult=$(this).attr('key');
+            layer.open({
+                type: 2,
+                title: '增减项',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['90%', '90%'],
+                maxmin: true,
+                tipsMore: true,
+                content: '/admin/artificial/regulation?id='+Tresult
+            });
+        }
+
+        if(obj.event === 'show_append'){
+            $.ajax({
+                type : 'post',
+                url  :  '{:url("order_append/ajax_get_append_all")}',
+                dataType : 'json',
+                data : {o_id:data.id},
+                success : function(re){
+                if(re.code === 0){
+                    var html = '<table style="text-align:center" class="layui-table"><thead><tr><th style="text-align:center">工种</th><th style="text-align:center">空间</th><th style="text-align:center">项目编码</th><th style="text-align:center">项目名称</th><th style="text-align:center">数量</th></tr></thead><tbody>';
+                    $.each(re.datas, function (k1, v1) {
+                        $.each(v1, function (k2, v2) {
+                            $.each(v2, function (k3, v3) {
+                                html += '<tr><td>'+k1+'</td><td>'+k2+'</td><td>'+k3+'</td><td>'+v3.project+'</td><td>'+v3.num+'</td></tr>'
+                            });
+                        });
+                    });
+                    // html += '<tr><td>小计</td><td>'+toDecimal2(re.total)+'</td><td></td><td></td></tr>'
+                    html += '</tbody></table>'
+                    //显示人工明细
+                    layer.open({
+                        title: '增减项',
+                        area: ['600px', '500px'],
+                        content:html
+                    });
+                    }else{
+                        layer.msg(re.msg);return false;
+                    }
+                }
+            });
+        }else if(obj.event == 'show_tmp'){
+            var data = obj.data;
+            var tmp_id = $(data.tmp_id).data('id');
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                $.post('/admin/quote/get_order_tmp_cost',{id:data.id},function(res){
+                    if(res.code == 1){
+                        var html  = '<form id="editform">'
+                        html +=    ' <select lay-ignore id="check_tmp_diolog" style="font-size: 14px;padding: 3px" class="w250">'
+                        html +=    '     <option value="">选择取费模板</option>'
+                        $.each(res.tmp_cost,function(k,v){
+                            html +=    '  <option value="'+k+'">'+v+'</option>'
+                        })
+                        
+                        html +=    ' </select>'
+                        html += '   <table class="layui-table" id="add_word" >'
+                        html += '     <colgroup>'
+                        html += '         <col width="100">'
+                        html += '         <col width="100">'
+                        html += '         <col width="150">'
+                        html += '         <col width="100">'
+                        html += '         <col width="200">'
+                        html += '         <col width="150">'
+                        html += '         <col width="200">'
+                        html += '     </colgroup>'
+                        html += '     <thead>'
+                        html += '       <tr class="dnone">'
+                        html += '           <th class="hide_td">排序</th>'
+                        html += '           <th>操作</th>'
+                        html += '           <th>字段名称</th>'
+                        html += '           <th>标识符</th>'
+                        html += '           <th>公式</th>'
+                        html += '           <th>费率(范围0-100)</th>'
+                        html += '           <th>金额</th>'
+                        html += '           <th>说明</th>'
+                        html += '       </tr> '
+                        html += '     </thead>'
+                        html += '     <tbody>'
+                        html += '     <tr class="dnone">'
+                        html += '       <td class="hide_td"></td>'
+                        html += '       <td>'
+                        html += '       </td>'
+                        html += '       <td>材料直接费</td>'
+                        html += '       <td>A3</td>'
+                        html += '       <td>A3</td>'
+                        html += '       <td>100</td>'
+                        html += '       <td></td>'
+                        html += '       <td></td>'
+                        html += '     </tr>'
+                        // 要个初始值  不然第一个为空 后面就对不上了
+                        html += '     <tr class="dnone" style="display:none">'
+                        html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                        html += '       <td>'
+                        html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span>'
+                        html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                        html += '          <a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a>'
+                        html += '       </td>'
+                        html += '       <td><input class="layui-input" value="1" name="name[]" /></td>'
+                        html += '       <td><input class="layui-input" value="1" name="sign[]" /></td>'
+                        html += '       <td><input class="layui-input" value="1" name="formula[]" /></td>'
+                        html += '       <td><input class="layui-input" value="1" name="rate[]" /></td>'
+                        html += '       <td></td>'
+                        html += '       <td><input class="layui-input" value="1" name="content[]" /></td>'
+                        html += '     </tr>'
+                        // 要个初始值  不然第一个为空 后面就对不上了 end
+                        $(res.default_cost).each(function(k,v){
+                             //自己添加的
+                            if(v.name == '工程报价' || v.name == '直接费' || v.name == '优惠' || v.name == '工程报价'){
+                                html += '     <tr>'
+                                html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                                html += '       <td>'
+                                html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span>'
+                                html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                                html += '       </td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.name+'" name="name[]" />'+v.name+'</td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.sign+'" name="sign[]" />'+v.sign+'</td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.formula+'" name="formula[]" />'+v.formula+'</td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.rate+'" name="rate[]" />'+v.rate+'</td>'
+                                html += '       <td class="price">'+v.price+'</td>'
+                                html += '       <td><input class="layui-input" placeholder="(选填)" value="'+v.content+'" name="content[]" /></td>'
+                            }else if(v.name == '总计' && v.sign == 'T'){
+                                html += '     <tr class="stop">'
+                                html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                                html += '       <td>'
+                                html += '       </td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.name+'" name="name[]" />'+v.name+'</td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.sign+'" name="sign[]" />'+v.sign+'</td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.formula+'" name="formula[]" />'+v.formula+'</td>'
+                                html += '       <td><input type="hidden" class="layui-input" value="'+v.rate+'" name="rate[]" />'+v.rate+'</td>'
+                                html += '       <td class="price">'+v.price+'</td>'
+                                html += '       <td><input class="layui-input" placeholder="(选填)" value="'+v.content+'" name="content[]" /></td>'
+                            }else if(v.name == '优惠前报价'){
+                                
+                            }else{
+                                html += '     <tr>'
+                                html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                                html += '       <td>'
+                                html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc" title="向下移动"></i></span>'
+                                html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                                html += '          <a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a>'
+                                html += '       </td>'
+                                html += '       <td><input class="layui-input" value="'+v.name+'" name="name[]" /></td>'
+                                html += '       <td><input class="layui-input" value="'+v.sign+'" name="sign[]" /></td>'
+                                html += '       <td><input class="layui-input" value="'+v.formula+'" name="formula[]" /></td>'
+                                html += '       <td><input class="layui-input" value="'+v.rate+'" name="rate[]" /></td>'
+                                html += '       <td class="price">'+v.price+'</td>'
+                                html += '       <td><input class="layui-input" value="'+v.content+'" name="content[]" /></td>'
+                                html += '     </tr>'
+                            }
+                        })
+                        html += '     </tbody>'
+                        html += '   </table>'
+                        html += ' </form>'
+                        layer.open({
+                            content: html,
+                            title:'查看/修改模板',
+                            area: ['70%', '70%'], //宽高
+                            btn: ['提交', '预览'],
+                            yes: function(index, layero){
+                                var addform = $('#editform').serializeArray();
+                                var datas = {};
+                                $.each(addform, function() {
+                                    if (datas[this.name]) {
+                                        if (!datas[this.name].push) {
+                                            datas[this.name] = [ datas[this.name] ];
+                                        }
+                                        datas[this.name].push(this.value || '');
+                                    } else {
+                                        datas[this.name] = this.value || '';
+                                    }
+                                });
+                                datas['o_id'] = data.id;
+                                // datas['tmp_id'] = tmp_id;
+                                $.post('/admin/quote/apennd_tmp_cost',datas,function(res){
+                                    if(res.code === 0){
+                                        alert(res.msg);
+                                    }else{
+                                        layer.msg(res.msg);
+                                        window.location.reload();
+                                    }
+                                },'json')
+                            },
+                            btn2: function(index, layero){
+                                var addform = $('#editform').serializeArray();
+                                var datas = {};
+                                $.each(addform, function() {
+                                    if (datas[this.name]) {
+                                        if (!datas[this.name].push) {
+                                            datas[this.name] = [ datas[this.name] ];
+                                        }
+                                        datas[this.name].push(this.value || '');
+                                    } else {
+                                        datas[this.name] = this.value || '';
+                                    }
+                                });
+                                datas['o_id'] = data.id;
+                                // datas['tmp_id'] = tmp_id;
+                                $.post('/admin/quote/tmp_cost_preview',datas,function(res){
+                                    if(res.code === 0){
+                                        alert(res.msg);
+                                    }else{
+                                        $('#add_word').find('tr').not('.dnone').each(function(k,v){
+                                            $(v).find('.price').text(res.data[k].price);
+                                        })
+                                    }
+                                },'json')
+                                return false;
+                                // layer.close(index);
+                            },
+                            cancel: function(){
+                            //return false 开启该代码可禁止点击该按钮关闭
+                            },
+                            success:function(){
+                                set_sort();
+                            }
+                        });
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                },'json')
+            })
+        }else if(obj.event == 'check_tmp'){
+            var data = obj.data;
+            $.post('/admin/quote/get_tmp_cost_list',{tmp_id:tmp_id},function(res){
+                if(res.code == 1){
+                    var html = '';
+                    html += '<select id="check_tmp" class="select_tmp">';
+                    $(res.datas).each(function(k,v){
+                        html += '<option value="'+v.tmp_id+'">'+v.tmp_name+'</option>';
+                    })
+                    html += '</select>';
+                    layer.open({
+                    content: html,
+                    title:'选择模板',
+                    btn: ['确定'],
+                    yes: function(index, layero){
+                        var tmp_id = $('#check_tmp').val();
+                        $.post('/admin/offerlist/check_tmp_cost',{tmp_id:tmp_id,o_id:data.id},function(res){
+                            if(res.code == 1){
+                                layer.msg(res.msg)
+                                setTimeout(function () {
+                                    window.location.href = res.url;
+                                }, 1000);
+                            }else{
+                                layer.msg(res.msg)
+                            }
+                        })
+                    },
+                    cancel: function(){
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+                }else{
+                    layer.msg(res.msg);
+                }
+            },'json')
+
+        }else if(obj.event=== 'set_status'){
+            if(data.status.indexOf("合同单") >= 0){
+                layer.msg('合同单禁止修改标签');
+                return false;
+            }
+            if(data.status.indexOf("待结算") >= 0){
+                layer.msg('待结算状态禁止修改标签');
+                return false;
+            }
+            if(data.status.indexOf("结算单") >= 0){
+                layer.msg('结算状态禁止修改标签');
+                return false;
+            }
+            var html =
+                     '<div class="layui-form-item" style="margin-bottom:5px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">选择标签</label>'
+                    + '     <div class="layui-input-block">'
+                    + '          <select id="set_status" style="height:25px;margin:10px;">'
+                    + '               <option value="0">预报单</option>'
+                    + '               <option value="2">无效单</option>'
+                    + '               <option value="3">合同单</option>'
+                    + '          </select>'
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-upload" id="upload_file" style="margin-bottom:5px;text-align:center;display:none">'
+                    + '     <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" id="test8">上传CAD图</button>'
+                    + '<br />'
+                    + '     <button type="button" style="margin-top:5px" class="layui-btn layui-btn-normal" id="test9">修改标签</button>'
+                    + '     <button type="button" style="margin-top:5px" class="layui-btn close">取消</button>'
+                    + '</div>'
+                    + '<div style="text-align:center;" id="set_status_btn">'
+                    + '     <button type="button" class="layui-btn layui-btn-normal" data-id="'+data.id+'" id="set_status_submit">修改标签</button>'
+                    + '     <button type="button" class="layui-btn close">取消</button>'
+                    + '</div>';
+
+                layer.open({
+                    title: '设置标签',
+                    area: ['300px', '200px'], //宽高
+                    type:1,
+                    content: html
+                });
+
+            layui.use('upload', function(){
+                var upload = layui.upload;
+                upload.render({
+                    elem: '#test8',
+                    url: '/admin/offerlist/upload_cad/',
+                    auto: false,
+                    accept:'file',
+                    size:10240,
+                    //,multiple: true
+                    bindAction: '#test9',
+                    data:{
+                        o_id:data.id,
+                        status:3,
+                        customer_id:{:input('customer_id')}
+                    },
+                    done: function(res){
+                        if(res.code == 1){
+                            layer.closeAll();
+                            layer.msg(res.msg);
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 500);
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                        return false;
+                    }
+                });
+            });
+        }else if(obj.event == 'set_design'){
+            $.post('/admin/offerlist/get_order_design',{oid:data.id},function(res){
+                var html = '<form class="layui-form" style="padding:5px 15px" id="edit_design">';
+                html += '   <input type="hidden" name="oid" value="'+data.id+'" />'
+                html += '   <span class="t1"><i>*</i>1.设计费设置</span>'
+                html += '   <span class="t2">请选择设计费收取方式</span>'
+                if(res.data.other.design_type == 2){
+                    html += '   <input type="radio" lay-filter="design_type" value="1" name="design_type" title="按项收取" />'
+                    html += '   <input type="radio" lay-filter="design_type" value="2" name="design_type" title="按比例收取" checked />'
+                    html += '   <table class="layui-table" id="design_table1" style="display:none">'
+                }else{
+                    html += '   <input type="radio" lay-filter="design_type" value="1" name="design_type" title="按项收取" checked />'
+                    html += '   <input type="radio" lay-filter="design_type" value="2" name="design_type" title="按比例收取" />'
+                    html += '   <table class="layui-table" id="design_table1">'
+                }
+                html += '       <colgroup>'
+                html += '           <col width="100">'
+                html += '           <col width="100">'
+                html += '           <col width="100">'
+                html += '           <col width="100">'
+                html += '           <col width="200">'
+                html += '       </colgroup>'
+                html += '       <thead>'
+                html += '           <tr>'
+                html += '               <th>项目名称</th>'
+                html += '               <th>单位</th>'
+                html += '               <th>数量</th>'
+                html += '               <th>单价</th>'
+                html += '               <th>设计费说明</th>'
+                html += '           </tr>'
+                html += '       </thead>'
+                html += '       <tbody>'
+                html += '           <tr>'
+                html += '               <td>'
+                html += '                   <select name="design_project" lay-ignore id="design_select">'
+                html += '                       <option value="" data-unit="" data-price="" data-material="">请选择</option>'
+                var unit = '';
+                var price = '';
+                var material = '';
+                var num = 0;
+                $.each(res.data.order_project,function(k,v){
+                    if(res.data.design_project && v.item_number == res.data.design_project.item_number){
+                        unit = v.company;
+                        price = v.craft_show;
+                        material = v.material;
+                        num = res.data.design_project.num;
+                        html += '                       <option selected value="'+v.item_number+'" data-unit="'+v.company+'" data-price="'+v.craft_show+'" data-material="'+v.material+'">'+v.project+'</option>'
+                    }else{
+                        html += '                       <option value="'+v.item_number+'" data-unit="'+v.company+'" data-price="'+v.craft_show+'" data-material="'+v.material+'">'+v.project+'</option>'
+                    }
+                })
+                html += '                   </select>'
+                html += '               </td>'
+                html += '               <td>'+unit+'</td>'
+                html += '               <td><input class="layui-input" name="design_num" value="'+num+'" /></td>'
+                html += '               <td>'+price+'</td>'
+                html += '               <td>'+material+'</td>'
+                html += '           </tr>'
+                html += '       </tbody>'
+                html += '   </table>'
+                if(res.data.other.design_type == 2){
+                     html += '   <table class="layui-table" id="design_table2">'
+                }else{
+                     html += '   <table class="layui-table" id="design_table2" style="display:none">'
+                }
+                html += '       <colgroup>'
+                html += '           <col width="100">'
+                html += '           <col width="100">'
+                html += '           <col width="200">'
+                html += '       </colgroup>'
+                html += '       <thead>'
+                html += '           <tr>'
+                html += '               <th>费率</th>'
+                html += '               <th>比率%(0-100)</th>'
+                html += '               <th>设计费说明</th>'
+                html += '           </tr>'
+                html += '       </thead>'
+                html += '       <tbody>'
+                html += '           <tr>'
+                html += '               <td>'
+                html += '                   <div class="position">'
+                html += '                       <span class="select_span">'
+                html += '                           <select lay-ignore id="" name="rate_type" class="" style="height: 30px;line-height: 30px;width: 60%;">'
+                if(res.data.other.rate_type == 'A1'){
+                    html += '                               <option value="A1" selected>直接费</option>'
+                }else{
+                    html += '                               <option value="A1">直接费</option>'
+                }
+                if(res.data.other.rate_type == 'T'){
+                    html += '                               <option value="T" selected>工程报价</option>'
+                }else{
+                    html += '                               <option value="T">工程报价</option>'
+
+                }
+                if(res.data.other.rate_type == 'S'){
+                    html += '                               <option value="S" selected>总价</option>'
+                }else{
+                    html += '                               <option value="S">总价</option>'
+
+                }
+                html += '                           </select>'
+                html += '                       </span>'
+                html += '                   </div>'
+                html += '               </td>'
+                html += '               <td><input class="layui-input" name="design_rate" value="'+res.data.other.design_rate+'" /></td>'
+                html += '               <td><input class="layui-input" name="design_content" value="'+res.data.other.design_content+'" /></td>'
+                html += '           </tr>'
+                html += '       </tbody>'
+                html += '   </table>'
+                html += '   <span class="t2">设计费是否计入工程总报价内？</span>'
+                if(res.data.other.design_in == 1){
+                    html += '   <input type="radio" name="design_in" value="1" title="是" checked />'
+                    html += '   <input type="radio" name="design_in" value="2" title="否" />'
+                }else{
+                    html += '   <input type="radio" name="design_in" value="1" title="是" />'
+                    html += '   <input type="radio" name="design_in" value="2" title="否" checked />'
+                }
+                
+                // html += '   <span class="t1">2.显示设置</span>'
+                // html += '   <span class="t2">设计费是否显示在报价单内</span>'
+                // if(res.data.other.design_show == 1){
+                //     html += '   <input type="radio" name="design_show" value="1" title="是" checked />'
+                //     html += '   <input type="radio" name="design_show" value="2" title="否" />'               
+                // }else{
+                //     html += '   <input type="radio" name="design_show" value="1" title="是"  />'
+                //     html += '   <input type="radio" name="design_show" value="2" title="否" checked />'
+                // }
+                html += '</form>'
+                layer.open({
+                    title: '设置优惠',
+                    area: ['750px', '500px'], //宽高
+                    content: html,
+                    btn: ['修改','取消'],
+                    success:function(){
+                        layui.use('form', function(){
+                            var form = layui.form;
+                            form.render();
+                            form.on('radio(design_type)', function(data){
+                                if(data.value == 1){
+                                    $('#design_table1').show();
+                                    $('#design_table2').hide();
+                                }else{
+                                    $('#design_table1').hide();
+                                    $('#design_table2').show();
+                                }
+                            }); 
+                        });
+                    },
+                    yes:function(){
+                        $.post('/admin/offerlist/set_order_design',$('#edit_design').serializeArray(),function(res){
+                            if(res.code == 1){
+                                layer.msg(res.msg);
+                                setTimeout(function(){
+                                 　　window.location.reload()
+                                },1000);
+                                return false;
+                            }else{
+                                alert(res.msg);
+                            }
+                        })
+                    }
+                });
+            },'json')
+        }else if(obj.event == 'add_discount'){
+            $.post('/admin/offerlist/get_order_discount',{oid:data.id,type:'edit'},function(res){
+                var html = '';
+                html += '<form class="layui-form" style="padding:5px 15px" id="edit_discount">'
+                html += '   <span class="t1"><i>*</i>1.折扣设置</span>'
+                html += '   <!-- 初始化一个默认的 用于后端 -->'
+                html += '   <input type="hidden" name="discount_type[]" value="1" />'
+                html += '   <input type="hidden" name="discount_rate[]" value="1" />'
+                html += '   <input type="hidden" name="discount_content[]" value="1" />'
+                html += '   <input type="hidden" name="oid" value="'+data.id+'" />'
+                html += '   <!-- 初始化一个默认的 用于后端end -->'
+                var option = '';
+
+                if(res.data.order_discount.length > 0){
+                    $.each(res.data.order_discount,function(key,val){
+                        html += '   <div class="discount_div">'
+                        html += '       <span class="t2"><a href="javascript:;" class="add_discount">'
+                        if(key == 0){
+                             html += '           <i class="layui-icon layui-icon-add-1"></i>'
+                        }else{
+                             html += '           <i class="layui-icon layui-icon-delete"></i>'
+                        }
+                        html += '       </a></span>'
+                        html += '       <span class="t2">打折方式：</span>'
+                        html += '       <select lay-ignore class="discount_form" name="discount_type[]">'
+                        html += '           <option value="">请选择</option>'
+                        $.each(res.data.discount_list,function(k,v){
+                            var select = '';
+                            if(v.id == val.did){
+                                select = 'selected';
+                            }
+                            html += '       <option '+select+' data-content="'+v.content+'" value="'+v.id+'">'+v.name+'</option>'
+                        })
+                        html += '       </select>'
+                        html += '       <span class="t2">折扣比例：</span>'
+                        html += '       <input name="discount_rate[]" value="'+val.rate+'" class="discount_form w50" />'
+                        html += '       <span class="t2">优惠说明：</span>'
+                        html += '       <input name="discount_content[]" value="'+val.content+'" class="discount_form w250" />'
+                        html += '   </div>'
+                    })
+                }else{
+                    html += '   <div class="discount_div">'
+                    html += '       <span class="t2"><a href="javascript:;" class="add_discount"><i class="layui-icon layui-icon-add-1"></i></a></span>'
+                    html += '       <span class="t2">打折方式：</span>'
+                    html += '       <select lay-ignore class="discount_form" name="discount_type[]">'
+                    html += '           <option value="">请选择</option>'
+                    $.each(res.data.discount_list,function(k,v){
+                        html += '       <option value="'+v.id+'">'+v.name+'</option>'
+                    })
+                    html += '       </select>'
+                    html += '       <span class="t2">折扣比例：</span>'
+                    html += '       <input name="discount_rate[]" value="" class="discount_form w50" />'
+                    html += '       <span class="t2">优惠说明：</span>'
+                    html += '       <input name="discount_content[]" value="" class="discount_form w250" />'
+                    html += '   </div>'
+                }
+                html += '   <div class="clean"></div>'
+                html += '   <span class="t2">增加项是否打折？</span>'
+                if(res.data.other.append_discount == 2){
+                    html += '   <input type="radio" name="append_discount" value="1" title="是" />'
+                    html += '   <input type="radio" name="append_discount" value="2" title="否"  checked/>'
+                }else{
+                    html += '   <input type="radio" name="append_discount" value="1" title="是" checked />'
+                    html += '   <input type="radio" name="append_discount" value="2" title="否" />'
+                }
+                html += '   <div style="clear: both"></div>'
+                html += '</form>'
+                layer.open({
+                    title: '设置优惠',
+                    area: ['700px', '400px'], //宽高
+                    content: html,
+                    btn: ['确认修改','取消'],
+                    success:function(){
+                        layui.use('form', function(){
+                            var form = layui.form;
+                            form.render();
+                        });
+                    },
+                    yes:function(){
+                        
+                        $.post('/admin/offerlist/set_order_discount',$('#edit_discount').serializeArray(),function(res){
+                            if(res.code == 1){
+                                layer.msg(res.msg);
+                                setTimeout(function(){
+                                 　　window.location.reload()
+                                },1000);
+                                return false;
+                            }else{
+                                alert(res.msg);
+                            }
+                        })
+                    }
+                });
+            },'json')
+        }else if(obj.event == 'set_discount'){
+            $.post('/admin/offerlist/get_order_discount',{oid:data.id},function(res){
+                var html = '';
+                html += '<form class="layui-form" style="padding:5px 15px" id="edit_discount">'
+                html += '   <span class="t1"><i>*</i>1.折扣设置</span>'
+                html += '   <!-- 初始化一个默认的 用于后端 -->'
+                html += '   <input type="hidden" name="discount_type[]" value="1" />'
+                html += '   <input type="hidden" name="discount_rate[]" value="1" />'
+                html += '   <input type="hidden" name="discount_content[]" value="1" />'
+                html += '   <input type="hidden" name="oid" value="'+data.id+'" />'
+                html += '   <!-- 初始化一个默认的 用于后端end -->'
+                var option = '';
+
+                if(res.data.order_discount.length > 0){
+                    $.each(res.data.order_discount,function(key,val){
+                        html += '   <div class="discount_div">'
+                        html += '       <span class="t2"><a href="javascript:;" class="add_discount">'
+                        if(key == 0){
+                             html += '           <i class="layui-icon layui-icon-add-1"></i>'
+                        }else{
+                             html += '           <i class="layui-icon layui-icon-delete"></i>'
+                        }
+                        html += '       </a></span>'
+                        html += '       <span class="t2">打折方式：</span>'
+                        html += '       <select disabled lay-ignore class="discount_form" name="discount_type[]">'
+                        html += '           <option value="">请选择</option>'
+                        $.each(res.data.discount_list,function(k,v){
+                            var select = '';
+                            if(v.id == val.did){
+                                select = 'selected';
+                            }
+                            html += '       <option '+select+' data-content="'+v.content+'" value="'+v.id+'">'+v.name+'</option>'
+                        })
+                        html += '       </select>'
+                        html += '       <span class="t2">折扣比例：</span>'
+                        html += '       <input disabled name="discount_rate[]" value="'+val.rate+'" class="discount_form w50" />'
+                        html += '       <span class="t2">优惠说明：</span>'
+                        html += '       <input disabled name="discount_content[]" value="'+val.content+'" class="discount_form w250" />'
+                        html += '   </div>'
+                    })
+                }else{
+                    html += '   <div class="discount_div">'
+                    html += '       <span class="t2"><a href="javascript:;" class="add_discount"><i class="layui-icon layui-icon-add-1"></i></a></span>'
+                    html += '       <span class="t2">打折方式：</span>'
+                    html += '       <select lay-ignore class="discount_form" name="discount_type[]">'
+                    html += '           <option value="">请选择</option>'
+                    $.each(res.data.discount_list,function(k,v){
+                        html += '       <option value="'+v.id+'">'+v.name+'</option>'
+                    })
+                    html += '       </select>'
+                    html += '       <span class="t2">折扣比例：</span>'
+                    html += '       <input name="discount_rate[]" value="" class="discount_form w50" />'
+                    html += '       <span class="t2">优惠说明：</span>'
+                    html += '       <input name="discount_content[]" value="" class="discount_form w250" />'
+                    html += '   </div>'
+                }
+                html += '   <div class="clean"></div>'
+                html += '   <span class="t2">增加项是否打折？</span>'
+                if(res.data.other.append_discount == 2){
+                    html += '   <input type="radio" name="append_discount" value="1" title="是" />'
+                    html += '   <input type="radio" name="append_discount" value="2" title="否"  checked/>'
+                }else{
+                    html += '   <input type="radio" name="append_discount" value="1" title="是" checked />'
+                    html += '   <input type="radio" name="append_discount" value="2" title="否" />'
+                }
+                html += '   <div style="clear: both"></div>'
+                html += '</form>'
+                layer.open({
+                    title: '设置优惠',
+                    area: ['700px', '400px'], //宽高
+                    content: html,
+                    btn: ['修改','取消'],
+                    success:function(){
+                        layui.use('form', function(){
+                            var form = layui.form;
+                            form.render();
+                        });
+                    },
+                    yes:function(){
+
+                        $.post('/admin/offerlist/get_order_discount',{oid:data.id,type:'edit'},function(res){
+                            var html = '';
+                            html += '<form class="layui-form" style="padding:5px 15px" id="edit_discount">'
+                            html += '   <span class="t1"><i>*</i>1.折扣设置</span>'
+                            html += '   <!-- 初始化一个默认的 用于后端 -->'
+                            html += '   <input type="hidden" name="discount_type[]" value="1" />'
+                            html += '   <input type="hidden" name="discount_rate[]" value="1" />'
+                            html += '   <input type="hidden" name="discount_content[]" value="1" />'
+                            html += '   <input type="hidden" name="oid" value="'+data.id+'" />'
+                            html += '   <!-- 初始化一个默认的 用于后端end -->'
+                            var option = '';
+
+                            if(res.data.order_discount.length > 0){
+                                $.each(res.data.order_discount,function(key,val){
+                                    html += '   <div class="discount_div">'
+                                    html += '       <span class="t2"><a href="javascript:;" class="add_discount">'
+                                    if(key == 0){
+                                         html += '           <i class="layui-icon layui-icon-add-1"></i>'
+                                    }else{
+                                         html += '           <i class="layui-icon layui-icon-delete"></i>'
+                                    }
+                                    html += '       </a></span>'
+                                    html += '       <span class="t2">打折方式：</span>'
+                                    html += '       <select lay-ignore class="discount_form" name="discount_type[]">'
+                                    html += '           <option value="">请选择</option>'
+                                    $.each(res.data.discount_list,function(k,v){
+                                        var select = '';
+                                        if(v.id == val.did){
+                                            select = 'selected';
+                                        }
+                                        html += '       <option '+select+' data-content="'+v.content+'" value="'+v.id+'">'+v.name+'</option>'
+                                    })
+                                    html += '       </select>'
+                                    html += '       <span class="t2">折扣比例：</span>'
+                                    html += '       <input name="discount_rate[]" value="'+val.rate+'" class="discount_form w50" />'
+                                    html += '       <span class="t2">优惠说明：</span>'
+                                    html += '       <input name="discount_content[]" value="'+val.content+'" class="discount_form w250" />'
+                                    html += '   </div>'
+                                })
+                            }else{
+                                html += '   <div class="discount_div">'
+                                html += '       <span class="t2"><a href="javascript:;" class="add_discount"><i class="layui-icon layui-icon-add-1"></i></a></span>'
+                                html += '       <span class="t2">打折方式：</span>'
+                                html += '       <select lay-ignore class="discount_form" name="discount_type[]">'
+                                html += '           <option value="">请选择</option>'
+                                $.each(res.data.discount_list,function(k,v){
+                                    html += '       <option value="'+v.id+'">'+v.name+'</option>'
+                                })
+                                html += '       </select>'
+                                html += '       <span class="t2">折扣比例：</span>'
+                                html += '       <input name="discount_rate[]" value="" class="discount_form w50" />'
+                                html += '       <span class="t2">优惠说明：</span>'
+                                html += '       <input name="discount_content[]" value="" class="discount_form w250" />'
+                                html += '   </div>'
+                            }
+                            html += '   <div class="clean"></div>'
+                            html += '   <span class="t2">增加项是否打折？</span>'
+                            if(res.data.other.append_discount == 2){
+                                html += '   <input type="radio" name="append_discount" value="1" title="是" />'
+                                html += '   <input type="radio" name="append_discount" value="2" title="否"  checked/>'
+                            }else{
+                                html += '   <input type="radio" name="append_discount" value="1" title="是" checked />'
+                                html += '   <input type="radio" name="append_discount" value="2" title="否" />'
+                            }
+                            html += '   <div style="clear: both"></div>'
+                            html += '</form>'
+                            layer.open({
+                                title: '设置优惠',
+                                area: ['700px', '400px'], //宽高
+                                content: html,
+                                btn: ['确认修改','取消'],
+                                success:function(){
+                                    layui.use('form', function(){
+                                        var form = layui.form;
+                                        form.render();
+                                    });
+                                },
+                                yes:function(){
+                                    
+                                    $.post('/admin/offerlist/set_order_discount',$('#edit_discount').serializeArray(),function(res){
+                                        if(res.code == 1){
+                                            layer.msg(res.msg);
+                                            setTimeout(function(){
+                                             　　window.location.reload()
+                                            },1000);
+                                            return false;
+                                        }else{
+                                            alert(res.msg);
+                                        }
+                                    })
+                                }
+                            });
+                        },'json')
+                    }
+                });
+            },'json')
+        }else if(obj.event == 'o_remark'){
+
+            $.post('/admin/offerlist/set_o_remark',{oid:data.id},function(res){
+                if(res.code == 1){
+                    var html = '';
+                    html += '<textarea id="o_remark" style="margin:5px;padding:5px;width:95%;height:86%">'
+                    html += res.data
+                    html += '</textarea>'
+                    // layer.open({
+                    //     title: '设置优惠',
+                    //     area: ['350px', '300px'], //宽高
+                    //     type:1,
+                    //     content: html
+                    // });
+                    layer.open({
+                        content: html,
+                        area:['80%', '50%'], //宽高
+                        title:'设置报价单底部备注',
+                        btn: ['修改','取消'],
+                        success:function(layero, index){
+                            
+                        },
+                        yes: function(index, layero){
+                            $.post('/admin/offerlist/set_o_remark',{oid:data.id,o_remark:$('#o_remark').val()},function(res){
+                                if(res.code == 1){
+                                    layer.msg('修改成功');
+                                    return false;
+                                }else{
+                                    alert('修改失败');
+                                }
+                            })
+                            
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }else{
+                    layer.msg(res.msg);
+                }
+            },'json');
+        }else if(obj.event == 'effect_img'){
+            var html = '<div class="layui-upload" style="margin:15px 0px;text-align:center;">'
+                html += '     <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" id="test10">上传效果图</button>'
+                html += '<br />'
+                html += '     <button type="button" style="margin-top:5px" class="layui-btn layui-btn-normal" id="test11">上传</button>'
+                html += '     <button type="button" style="margin-top:5px" class="layui-btn close">取消</button>'
+                html += '</div>'
+
+                layer.open({
+                    title: '设置标签',
+                    area: ['300px', '200px'], //宽高
+                    type:1,
+                    content: html
+                });
+
+            layui.use('upload', function(){
+                var upload = layui.upload;
+                upload.render({
+                    elem: '#test10',
+                    url: '/admin/offerlist/upload_effect_img/',
+                    auto: false,
+                    accept:'file',
+                    size:10240,
+                    //,multiple: true
+                    bindAction: '#test11',
+                    data:{
+                        o_id:data.id,
+                    },
+                    done: function(res){
+                        if(res.code == 1){
+                            layer.closeAll();
+                            layer.msg(res.msg);
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 500);
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                        return false;
+                    }
+                });
+            });
+        }else if(obj.event == 'set_gift'){
+            $.post('/admin/gift/get_gift_by_order',{oid:data.id},function(res){
+                if(res.code == 1){
+                    var html = '';
+                    html += '<div class="gift">'
+                    html += '    <span class="t1">1.选择礼品</span>'
+                    html += '    <div class="gift_top">'
+                    html += '        <div class="left">'
+                    html += '            <div class="gift_show">'
+                    html += '                <div class="gift_title">公司礼品库</div>'
+                    // html += '                <div class="select_gift"><input placeholder="请输入关键词搜索"  id="select_gift"/></div>'
+                    html += '                <ul class="gift_list">'
+                    $.each(res.data.gift_list,function(k,v){
+                        html += '               <li data-cate="'+k+'" class="gift_parent">'+k+'</li>'
+
+                        $.each(v,function(k1,v1){
+
+                            html += '               <li data-cate="'+k+'" data-name="'+v1.name+'" data-id="'+v1.id+'" data-brand="'+v1.brand+'"  data-price="'+v1.price+'"  data-content="'+v1.content+'" data-unit="'+v1.unit+'" class="gift_child">'+v1.name+'</li>'
+                        })
+                    })
+                    html += '                    '
+                    html += '                </ul>'
+                    html += '            </div>'
+                    html += '        </div>'
+                    html += '        <div class="right">'
+                    html += '            <div class="gift_show">'
+                    html += '            <form class="layui-form" action="" id="edit_gift">'
+                    html += '               <input type="hidden" name="oid" value="'+data.id+'" />'
+                    html += '                <table class="layui-table gift_table">'
+                    html += '                    <colgroup>'
+                    html += '                        <col width="30">'
+                    html += '                        <col width="60">'
+                    html += '                        <col width="100">'
+                    html += '                        <col width="70">'
+                    html += '                        <col width="60">'
+                    html += '                        <col width="100">'
+                    html += '                        <col width="100">'
+                    html += '                        <col width="100">'
+                    html += '                        <col width="150">'
+                    html += '                    </colgroup>'
+                    html += '                    <thead>'
+                    html += '                        <tr class="">'
+                    html += '                            <th></th>'
+                    html += '                            <th>操作</th>'
+                    html += '                            <th>礼品名称</th>'
+                    html += '                            <th>品牌</th>'
+                    html += '                            <th>数量</th>'
+                    html += '                            <th>单位</th>'
+                    html += '                            <th>单价</th>'
+                    html += '                            <th>总价</th>'
+                    html += '                            <th>赠送说明</th>'
+                    html += '                        </tr> '
+                    html += '                    </thead>'
+                    html += '                    <tbody>'
+                    var total = 0;
+                    $.each(res.data.gift,function(k,v){
+                        html += '<tr class="gid_'+v.id+'">'
+                        html += '    <td class="count">'+(Number(k)+1)+'</td>'
+                        html += '    <td>'
+                        html += '        <i class="layui-icon layui-icon-delete"></i>'
+                        html += '    </td>'
+                        html += '    <td>'+v.name+'</td>'
+                        html += '    <td>'+v.brand+'</td>'
+                        html += '    <td><input name="gift['+v.id+']" value="'+v.num+'" class="gift_input"/></td>'
+                        html += '    <td>'+v.unit+'</td>'
+                        html += '    <td class="gift_price">'+v.price+'</td>'
+                        html += '    <td class="gift_total_one">'+ (Number(v.price) * Number(v.num)) +'</td>'
+                        total += Number(v.price) * Number(v.num)
+                        html += '    <td>'+v.content+'</td>'
+                        html += '</tr>'
+                    })
+                    html += '                    </tbody>'
+                    html += '                    <tfoot>'
+                    html += '                        <tr>'
+                    html += '                            <td colspan="3">总计：<span id="gift_total_price">'+total+'</span></td>'
+                    html += '                            <td colspan="3"></td>'
+                    html += '                            <td colspan="3"><input class="layui-input" name="gift_content" value="'+ res.data.other.gift_content +'" placeholder="此处输入赠送说明" /></td>'
+                    html += '                        </tr>'
+                    html += '                    </tfoot>'
+                    html += '                </table></form>'
+                    html += '                </form>'
+                    html += '            </div>'
+                    html += '        </div>'
+                    html += '    </div>'
+                    // html += '    <div class="gift_bottom">'
+                    // html += '        <form class="layui-form" action="" id="gift_other">'
+                    // html += '            <input name="oid" type="hidden" value="'+data.id+'">'
+                    // html += '            <span class="t1">2.显示设置</span>'
+                    // html += '            <span class="t2">赠送礼品是否显示在报价单内</span>'
+                    // if(res.data.other.gift_show == 1){
+                    //     html += '            <input type="radio" name="gift_show" value="1" title="是" checked/>'
+                    //     html += '            <input type="radio" name="gift_show" value="2" title="否，生成独立的礼品赠送清单" />'
+                    // }else{
+                    //     html += '            <input type="radio" name="gift_show" value="1" title="是" />'
+                    //     html += '            <input type="radio" name="gift_show" value="2" title="否，生成独立的礼品赠送清单" checked />'
+                    // }
+                    // html += '        </form>'
+                    // html += '    </div>'
+                    html += '</div>'
+                    layer.open({
+                        content: html,
+                        area:['80%', '70%'], //宽高
+                        title:'修改礼品',
+                        btn: ['修改','取消'],
+                        success:function(layero, index){
+                            layui.use('form', function(){
+                                var form = layui.form;
+                                form.render();
+                            });
+                        },
+                        yes: function(index, layero){
+                            console.log($('#edit_gift,#gift_other').serializeArray());
+                            $.post('/admin/gift/order_add_gift',$('#edit_gift,#gift_other').serializeArray(),function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    setTimeout(function(){
+                                    　　window.location.reload()
+                                    },1000);
+                                    return false;
+                                }else{
+                                    alert('添加失败');
+                                }
+                            })
+                        },
+                        cancel: function(){ 
+                            //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }else{
+                    layer.msg(res.msg);
+                }
+            },'json')
+        }else if(obj.event == 'show_gift'){
+            $.post('/admin/gift/get_gift_list',{oid:data.id},function(res){
+                if(res.code == 1){
+                    var html = '<form id="addGift">';
+                    html += '<table class="layui-table" id="show_gift">'
+                    html += '    <thead>'
+                    html += '        <tr>'
+                    // html += '            <th></th>'
+                    html += '            <th>名称</th>'
+                    html += '            <th>品牌</th>'
+                    html += '            <th>数量</th>'
+                    html += '            <th>价格</th>'
+                    html += '        </tr>'
+                    html += '    </thead>'
+                    html += '    <tbody>'
+                    var checked = '';
+                    $.each(res.data.data, function (k, v) {
+                        html += '        <tr>'
+                        // html += '            <td><input class="g_checkbox" name="gift[]" type="checkbox" value="'+v.id+'" /></td>'
+                        html += '            <td class="g_name">'+v.name+'</td>'
+                        html += '            <td class="">'+v.brand+'</td>'
+                        html += '            <td class="g_num">'+v.num+'</td>'
+                        html += '            <td class="g_price">'+v.price+'</td>'
+                        html += '        </tr>'
+                    })
+                    html += '        <tr>'
+                    html += '            <td></td>'
+                    html += '            <td></td>'
+                    html += '            <td></td>'
+                    html += '            <td>总价：￥'+res.data.money+'</td>'
+                    html += '        </tr>'
+                    html += '    </tbody>'
+                    html += '</table>'
+                    html += '</form>'
+                    html += '<button style="float:right" class="layui-btn layui-btn-sm" type="button" id="gift_print">打印</button>'
+
+                    // html += '<div style="float:right">总价：￥'+res.data.money+'</div>'
+                    layer.open({
+                        content: html,
+                        area:['50%', '60%'], //宽高
+                        title:'查看礼品',
+                        btn: ['点击修改','取消'],
+                        success:function(layero, index){
+                            // set_gift_total();
+                        },
+                        yes: function(index, layero){
+                            $.post('/admin/gift/get_gift_byf',{},function(res){
+                                if(res.code == 1){
+                                    var html = '<form id="addGift">';
+                                    html += '<table class="layui-table" id="test4">'
+                                    html += '    <thead>'
+                                    html += '        <tr>'
+                                    html += '            <th></th>'
+                                    html += '            <th>名称</th>'
+                                    html += '            <th>品牌</th>'
+                                    html += '            <th>数量</th>'
+                                    html += '            <th>价格</th>'
+                                    html += '        </tr>'
+                                    html += '    </thead>'
+                                    html += '    <tbody>'
+                                    var checked = '';
+                                    $.each(res.data, function (k, v) {
+                                        html += '        <tr>'
+                                        html += '            <td><input class="g_checkbox" name="gift[]" type="checkbox" value="'+v.id+'" /></td>'
+                                        html += '            <td class="g_name"><input type="hidden" name="g_name['+v.id+']" value="'+v.name+'" />'+v.name+'</td>'
+                                        html += '            <td class="">'+v.brand+'</td>'
+                                        html += '            <td class="g_num"><input class="input30" name="g_num['+v.id+']" value="1" /></td>'
+                                        html += '            <td class="g_price">'+v.price+'</td>'
+                                        html += '        </tr>'
+                                    })
+                                    html += '        <tr>'
+                                    html += '            <td></td>'
+                                    html += '            <td></td>'
+                                    html += '            <td></td>'
+                                    html += '            <td></td>'
+                                    html += '            <td>总价：￥<span id="gift_total">0</span></td>'
+                                    html += '        </tr>'
+                                    html += '    </tbody>'
+                                    html += '</table>'
+                                    html += '<input type="hidden" name="id" value="'+data.id+'" />'
+                                    html += '</form>'
+                                    // html += '<div style="float:right">总价：￥<span id="gift_total">0</span></div>'
+                                    layer.open({
+                                        content: html,
+                                        area:['50%', '60%'], //宽高
+                                        title:'修改礼品',
+                                        btn: ['修改','取消'],
+                                        success:function(layero, index){
+                                            // set_gift_total();
+                                        },
+                                        yes: function(index, layero){
+                                            $.post('/admin/gift/order_add_gift',$('#addGift').serializeArray(),function(res){
+                                                if(res.code == 1){
+                                                    layer.msg(res.msg);
+                                                    setTimeout(function(){
+                                                    　　window.location.reload()
+                                                    },1000);
+                                                    return false;
+                                                }else{
+                                                    alert('添加失败');
+                                                }
+                                            })
+                                        },
+                                        cancel: function(){ 
+                                        //return false 开启该代码可禁止点击该按钮关闭
+                                        }
+                                    });
+                                }else{
+                                    layer.msg(res.msg);
+                                }
+                            },'json')
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }else{
+                    layer.msg(res.msg);
+                }
+            },'json')
+        }else if(obj.event == 'del_order'){
+            layer.open({
+                content: '确定删除选中报价单吗?',
+                // area:['100px', '300px'], //宽高
+                title:'删除报价单',
+                btn: ['删除','取消'],
+                yes: function(index, layero){
+                    $.post('/admin/offerlist/del_order',{oid:data.id},function(res){
+                        if(res.code == 1){
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                            return false;
+                        }else{
+                            layer.msg('删除失败');
+                        }
+                    })
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        }
+    });
+});
+
+//计算礼品合计
+//选中触发
+$(document).on('click','.g_checkbox',function(){
+    set_gift_total();
+})
+//修改数量触发
+$(document).on('change','.g_num input',function(){
+    set_gift_total();
+})
+function set_gift_total(){
+    var total = 0;
+    $('#test4').find('tbody').find('tr').each(function(k,v){
+        if($(v).find('.g_checkbox').is(':checked')== true){
+            total += (Number($(v).find('.g_price').text()) * Number($(v).find('.g_num input').val()));
+        }
+    })
+    $('#gift_total').text(total);
+}
+
+//选择打折类型后 修改提示信息
+$(document).on('change','#discount_type',function(){
+    var type = $(this).val();
+    if(type == 1){
+        $('#discount_show').hide();
+        $('#is_append').hide();
+    }else{
+        $('#discount_show').show();
+        $('#is_append').show();
+    }
+    if(type == 4){
+        $('#percent').text('元');
+        $('#discount_msg').text('');
+    }else{
+        $('#percent').text('%');
+        $('#discount_msg').text('（若打9折，应输入90，打拆不优惠）');
+    }
+})
+$(document).on('click','.close',function(){
+    layer.closeAll();
+})
+$(document).on('change','#set_status',function(){
+    var status = $(this).val();
+    if(status == 3){
+        $('#upload_file').show();
+        $('#set_status_btn').hide();
+    }else{
+        $('#upload_file').hide();
+        $('#set_status_btn').show();
+    }
+})
+$(document).on('click','#set_status_submit',function(){
+    // layer.closeAll();
+    var status = $('#set_status').val();
+    var id = $(this).data('id');
+    if(status == 3){
+        layer.msg('非法操作');
+        return false;
+    }
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("offerlist/status")}',
+        dataType : 'json',
+        data : {id:id,status:status},
+        success : function(res){
+            if(res.code == 1){
+                layer.closeAll();
+                layer.msg(res.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 500);
+                return false;
+            }else{
+                layer.msg(res.msg);
+                return false;
+            }
+        }
+    });
+})
+$(document).on('click','#set_discount_submit',function(){
+    // layer.closeAll();
+    var discount_type = $('#discount_type').val();
+    var discount_num = $('#discount_num').val();
+    var discount_append = $(':radio[name="discount_append"]:checked').val();
+    var id = $(this).data('id');
+    var ex = /^\d+$/;
+    if ((!ex.test(discount_num) || discount_num <= 0 || discount_num >100) && discount_type > 1 && discount_type != 4) {
+        alert('折扣输入有误');
+        return false;
+    }
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("offerlist/set_discount")}',
+        dataType : 'json',
+        data : {id:id,discount_type:discount_type,discount_num:discount_num,discount_append:discount_append},
+        success : function(res){
+            if(res.code == 1){
+                layer.closeAll();
+                layer.msg(res.msg);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
+                return false;
+            }else{
+                alert(res.msg);
+                return false;
+            }
+        }
+    });
+})
+//选择取费模板
+    $(document).on('change','#check_tmp_diolog',function(){
+        var tmp_id = $(this).val();
+        $.post('/admin/quote/get_tmp_cost_info',{tmp_id:tmp_id},function(res){
+            var html  = ''
+            html += '     <tr class="dnone">'
+            html += '       <td class="hide_td"></td>'
+            html += '       <td>'
+            html += '       </td>'
+            html += '       <td>材料直接费</td>'
+            html += '       <td>A3</td>'
+            html += '       <td>A3</td>'
+            html += '       <td>100</td>'
+            html += '       <td></td>'
+            html += '       <td></td>'
+            html += '     </tr>'
+            // 要个初始值  不然第一个为空 后面就对不上了
+            html += '     <tr class="dnone" style="display:none">'
+            html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+            html += '       <td>'
+            html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>'
+            html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+            html += '          <a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a>'
+            html += '       </td>'
+            html += '       <td><input class="layui-input" value="1" name="name[]" /></td>'
+            html += '       <td><input class="layui-input" value="1" name="sign[]" /></td>'
+            html += '       <td><input class="layui-input" value="1" name="formula[]" /></td>'
+            html += '       <td><input class="layui-input" value="1" name="rate[]" /></td>'
+            html += '       <td></td>'
+            html += '       <td><input class="layui-input" value="1" name="content[]" /></td>'
+            html += '     </tr>'
+            // 要个初始值  不然第一个为空 后面就对不上了 end
+            if(res.code == 1 && res.datas.length > 0){
+                $(res.datas).each(function(k,v){
+                     //自己添加的
+                    if(v.name == '工程报价' || v.name== '直接费' || v.name== '工程报价'){
+                        html += '     <tr>'
+                        html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                        html += '       <td>'
+                        html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>'
+                        html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                        html += '       </td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.name+'" name="name[]" />'+v.name+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.sign+'" name="sign[]" />'+v.sign+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.formula+'" name="formula[]" />'+v.formula+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.rate+'" name="rate[]" />'+v.rate+'</td>'
+                        html += '       <td class="price">0</td>'
+                        html += '       <td><input class="layui-input" placeholder="(选填)" value="'+v.content+'" name="content[]" /></td>'
+                        html += '     </tr>'
+                    }else if(v.name== '优惠'){
+                        html += '     <tr>'
+                        html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                        html += '       <td>'
+                        html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>'
+                        html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                        html += '       </td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.name+'" name="name[]" />'+v.name+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.sign+'" name="sign[]" />'+v.sign+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.formula+'" name="formula[]" />'+v.formula+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.rate+'" name="rate[]" />'+v.rate+'</td>'
+                        html += '       <td class="price">0</td>'
+                        html += '       <td><input class="layui-input" type="hidden" placeholder="(选填)" value="'+v.content+'" name="content[]" /></td>'
+                        html += '     </tr>'
+                    }else if(v.name== '总计'){
+                        html += '     <tr class="stop">'
+                        html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                        html += '       <td>'
+                        html += '       </td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.name+'" name="name[]" />'+v.name+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.sign+'" name="sign[]" />'+v.sign+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.formula+'" name="formula[]" />'+v.formula+'</td>'
+                        html += '       <td><input type="hidden" class="layui-input" value="'+v.rate+'" name="rate[]" />'+v.rate+'</td>'
+                        html += '       <td class="price">0</td>'
+                        html += '       <td><input class="layui-input" placeholder="(选填)" value="'+v.content+'" name="content[]" /></td>'
+                        html += '     </tr>'
+                    }else if(v.name== '优惠前报价'){
+                        
+                    }else{
+                        html += '     <tr>'
+                        html += '       <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                        html += '       <td>'
+                        html += '          <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>'
+                        html += '          <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                        html += '          <a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a>'
+                        html += '       </td>'
+                        html += '       <td><input class="layui-input" value="'+v.name+'" name="name[]" /></td>'
+                        html += '       <td><input class="layui-input" value="'+v.sign+'" name="sign[]" /></td>'
+                        html += '       <td><input class="layui-input" value="'+v.formula+'" name="formula[]" /></td>'
+                        html += '       <td><input class="layui-input" value="'+v.rate+'" name="rate[]" /></td>'
+                        html += '       <td class="price">0</td>'
+                        html += '       <td><input class="layui-input" value="'+v.content+'" name="content[]" /></td>'
+                        html += '     </tr>'
+                    }
+                })
+            }else{
+                html+= '<tr>'
+                html+= '    <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                html+= '    <td>'
+                html+= '        <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>'
+                html+= '        <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                html+= '    </td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="直接费" name="name[]" />直接费</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="A1" name="sign[]" />A1</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="A1" name="formula[]" />A1</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="100" name="rate[]" />100</td>'
+                html+= '    <td class="price"></td>'
+                html+= '    <td><input class="layui-input" placeholder="(选填)" value="" name="content[]" /></td>'
+                html+= '</tr>'
+                html+= '<tr>'
+                html+= '    <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                html+= '    <td>'
+                html+= '        <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>'
+                html+= '        <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                html+= '    </td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="优惠" name="name[]" />优惠</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="A2" name="sign[]" />A2</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="A2" name="formula[]" />A2</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="100" name="rate[]" />100</td>'
+                html+= '    <td class="price"></td>'
+                html+= '    <td><input class="layui-input" type="hidden" placeholder="(选填)" value="" name="content[]" /></td>'
+                html+= '</tr>'
+                html+= '<tr>'
+                html+= '    <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                html+= '    <td>'
+                html+= '        <span class="layui-table-sort layui-inline"><i class="layui-edge layui-table-sort-asc t_asc" title="向上移动"></i><i class="layui-edge layui-table-sort-desc t_desc" title="向下移动"></i></span>'
+                html+= '        <a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a>'
+                html+= '    </td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="工程报价" name="name[]" />工程报价</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="S" name="sign[]" />S</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="S" name="formula[]" />S</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="100" name="rate[]" />100</td>'
+                html+= '    <td class="price"></td>'
+                html+= '    <td><input class="layui-input" placeholder="(选填)" value="" name="content[]" /></td>'
+                html+= '</tr>'
+                html+= '<tr class="stop">'
+                html+= '    <td class="hide_td"><input class="layui-input sort" name="sort[]" /></td>'
+                html+= '    <td></td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="总计" name="name[]" />总计</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="T" name="sign[]" />T</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="T" name="formula[]" />T</td>'
+                html+= '    <td><input type="hidden" class="layui-input" value="100" name="rate[]" />100</td>'
+                html+= '    <td class="price"></td>'
+                html+= '    <td><input class="layui-input" placeholder="(选填)" value="" name="content[]" /></td>'
+                html+= '</tr>'
+            }
+            $('#add_word tbody').html();
+            $('#add_word tbody').html(html);
+            set_sort();
+        },'json')
+    })
+</script>
+
+<script>
+$(function () {
+    $(document).on('click','.fbsh', function(){
+      var a=$(this).attr('key');
+        $.ajax({
+            type: "get",
+            url: "/admin/Offerlist/fbsh",
+            data: {key:a,status:3},
+            success: function (e) {
+                if(e.code == '0'){
+                    layer.msg('权限不足');
+                }
+                console.log(e);
+                window.location.reload();
+            },
+
+        })
+    });
+})
+</script>
+{/block}

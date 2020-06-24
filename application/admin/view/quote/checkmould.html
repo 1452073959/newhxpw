@@ -1,0 +1,155 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.p_tex{line-height:38px;color:#666;}
+.layui-form-label{width: 120px}
+.layui-table-view .layui-table{width:100%}
+.layui-form-label{width:40px}
+.layui-form-item{margin:20px 0}
+#frameid{    width: 250px;
+    padding: 10px;}
+.text-center{text-align: center !important;}
+.text-large{font-size:24px!important;font-weight:900!important;}
+.form-control{display: inline-block;padding: 5px;}
+input[type="checkbox"]{
+  display: inline-block!important;
+}
+.myinput{border:none;display: inline-block;background-color: #eeeeee;padding:5px;}
+.text-limit{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;max-width: 110px;}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        {notempty name="data"}
+                <!-- <table class="layui-table" style="word-break:break-all"> -->
+                <p>
+                    <img style="max-width:160px;" src="__STATIC__/imgs/logo.png">
+                </p>
+                <p style="text-align: center;font-weight: 900;font-size: 22px;margin-bottom:10px">
+                    住宅装饰工程造价预算书
+                </p>
+                <p style="width: 98%;padding:0 1%;">
+                    <span style="text-align: left">工程名称：</span>
+                    <span style="float: right"><?php echo date('Y-m-d'); ?></span>
+                </p>
+                <table class="layui-table" style="margin-top: 0px">
+                    <colgroup>
+                        <col width="30">
+                        <col width="50">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="250">
+                      </colgroup>
+                    <thead>
+                        
+                    </thead>
+                    <tbody> 
+                        
+                        <tr>
+                            <th style="text-align:center;" colspan="9">公司名称：</th>                
+                        </tr>
+                        <tr>
+                            <th style="text-align:center;" colspan="9">
+                                <span style="width: 30% ;display: inline-block;text-align:left;height: 20px">客户：</span>
+                                <span style="width: 30% ;display: inline-block;text-align:center;height: 20px">设计师：</span>
+                                <span style="width: 30% ;display: inline-block;text-align:right;height: 20px">报价师：</span>
+                            </th>        
+                        </tr>
+                        <tr>      
+                            <th class="text-center" rowspan="2" colspan="1">序号</th>
+                            <th class="text-center" rowspan="2">工程项目名称</th>         
+                            <th class="text-center" rowspan="2">数量</th>       
+                            <th class="text-center" rowspan="2">单位</th>
+                            <th class="text-center" colspan="2">辅材费</th> 
+                            <th class="text-center" colspan="2">人工费</th>    
+                            <th class="text-center" rowspan="2">施工工艺及材料说明</th> 
+                        </tr>
+                        <tr>   
+                            <th class="text-center" colspan="1">单价</th>       
+                            <th class="text-center">合计</th>       
+                            <th class="text-center">单价</th>       
+                            <th class="text-center">合计</th> 
+                        </tr>
+                        {notempty name="data"}
+                        <?php 
+                            $num1 = 65;
+                            $total_quota = 0;
+                            $total_craft_show = 0;
+                        ?>
+                        {foreach name="data" item="v1" key="k1"}
+                            <td><?php echo chr($num1); ?></td>
+                            <td class="" colspan="9">{$k1}</td>
+                            <?php $num2=1; $num1++;?>
+                            <?php 
+                                $space_quota = 0;
+                                $space_craft_show = 0;
+                            ?>
+                            {foreach name="$v1" key="k2" item="v2"}
+                                <tr class="">
+                                    <td>{$num2}</td>
+                                    <td>{$offerquota[$k2]['project']}</td>
+                                    <td>{$v2}</td>
+                                    <td>{$offerquota[$k2]['company']}</td>
+                                    <td>{$offerquota[$k2]['quota']}</td>
+                                    <td>{$v2?$v2*$offerquota[$k2]['quota']:''}</td>
+                                    <td>{$offerquota[$k2]['craft_show']}</td>
+                                    <td>{$v2?$v2*$offerquota[$k2]['craft_show']:''}</td>
+                                    <td class="text-limit">{$offerquota[$k2]['material']}</td>
+                                </tr>
+                                <?php 
+                                    $num2 ++;
+                                    $space_quota += $v2?$v2*$offerquota[$k2]['quota']:0;
+                                    $space_craft_show += $v2?$v2*$offerquota[$k2]['craft_show']:0;
+                                    $total_quota += $v2?$v2*$offerquota[$k2]['quota']:0;
+                                    $total_craft_show += $v2?$v2*$offerquota[$k2]['craft_show']:0;
+                                 ?>
+                            {/foreach}
+                            <tr class="">
+                                <td class="" colspan="2">小计</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{$space_quota}</td>
+                                <td></td>
+                                <td>{$space_craft_show}</td>
+                                <td></td>
+                            </tr>
+                        {/foreach}
+                        <tr class="">
+                            <td class="text-center" colspan="2">合计</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{$total_quota}</td>
+                            <td></td>
+                            <td>{$total_craft_show}</td>
+                            <td></td>
+                        </tr>
+                    {/notempty}
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+                <div style="padding: 20px;color: #484646">
+                    <span style="width: 24% ;display: inline-block;text-align:left;">业主：</span>
+                    <span style="width: 24% ;display: inline-block;text-align:left;">设计师：</span>
+                    <span style="width: 24% ;display: inline-block;text-align:left;">商务经理：</span>
+                    <span style="width: 24% ;display: inline-block;text-align:left;">报价师：</span>
+                </div>
+                {/notempty}
+</div>
+
+<div>
+
+</div>
+
+<form style="display:inline-block;" id="addone"></form>
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+
+{/block}

@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+	<title>系统公告</title>
+	<style type="text/css">
+	.wrap {
+		width: 98%;
+		margin-left: 1%;
+		padding-top: 20px;
+	}
+	.onLine-list .layui-col-md3 {
+		margin-top: 20px;
+	}
+	.onLine-list {
+		margin-top: 20px;
+	}
+	.cxBtn{
+		text-align: right;
+	}
+	.layui-breadcrumb a:last-child cite{
+		color: #5FB878;
+	}
+	.layui-table-cell{
+		padding: 0 5px!important;
+	}
+	.scroll-wrapper {  
+	    /*-webkit-overflow-scrolling: touch;*/  
+	    /*overflow-y: scroll;*/  
+	} 
+		.layui-layer-setwin .layui-layer-maxmin{
+		display: inline-block!important;		
+	}
+		
+	</style>
+<link rel="stylesheet" href="__STATIC__/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="/__STATIC__/12/admin/css/font-awesome.min.css" media="all"/>
+<script src="__STATIC__/12/admin/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+
+<link rel="stylesheet" href="__STATIC__/12/admin/css/online.css"/>
+<script type="text/javascript" src="__STATIC__/12/admin/js/areadata_min.js"></script>
+<script type="text/javascript" src="__STATIC__/12/admin/js/area.js"></script>
+
+
+	<style type="text/css">
+		.index-p {
+			line-height: 25px;
+		}
+		.index-title {
+			font-weight: 800;
+		}
+		.highcharts-credits {
+			display: none;
+		}
+		.layui-breadcrumb {
+			display: block;
+			width: 100%;
+			padding: 0 1%;
+			background: #fff;
+			height: 60px;
+			line-height: 60px;
+			box-sizing: border-box;
+		}
+		.layui-breadcrumb a:last-child cite {
+			color: #5FB878;
+		}
+		.kit-tab .layui-tab-content iframe {
+			background: #F2F3F9 !important;
+		}
+		.main {
+			background: #F2F3F9;
+			margin-top: 0px;
+		}
+		.information-box {
+			background: #fff;
+			border-radius: 5px;
+		}
+		.information-box .index-title {
+			background: #009688;
+			padding: 0 20px;
+			height: 40px;
+			line-height: 40px;
+			color: #fff;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+		}
+		.information-box .info-list {
+			width: 100%;
+			height: 190px;
+			overflow: hidden;
+			padding: 40px 0;
+			box-sizing: border-box;
+		}
+		.information-box .info-list li {
+			width: 33%;
+			float: left;
+			text-align: center;
+			border-right: 1px solid #E6E6E6;
+			box-sizing: border-box;
+		}
+		.information-box .info-list li:last-child {
+			border-right: none;
+		}
+		.info-list .figure {
+			font-size: 20px;
+			color: #464646;
+		}
+		.info-list li p:last-child {
+			font-size: 14px;
+			color: #999;
+		}
+		.notice-box {
+			background: #fff;
+			border-radius: 5px;
+		}
+		.notice-box .index-title {
+			background: #fff;
+			padding: 0 20px;
+			height: 40px;
+			line-height: 40px;
+			/*color: #fff;*/
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			font-size: 14px;
+			color: #666;
+		}
+		.notice-box ul {
+			width: 100%;
+			height: 100%;
+			padding: 0 15px;
+			box-sizing: border-box;
+			color: #666;
+		}
+		.background {
+			height: 15px;
+			width: 100%;
+			background: #f3f4f8;
+		}
+		.countInfo {
+			height: 190px;
+			/*padding: 20px 10px;*/
+		}
+		.countInfo .infoleft {
+			width: 75%;
+			float: left;
+			border-right: 1px solid #e6e6e6;
+			box-sizing: border-box;
+			padding: 20px 15px;
+		}
+		.countInfo .infoleft .tu {
+			width: 150px;
+			height: 150px;
+			background: #2D3438;
+			border-radius: 12px;
+			float: left;
+			margin-right: 20px;
+		}
+		.countInfo .infoleft .mess {
+			float: left;
+		}
+		.mess .index-p:before {
+			content: "●";
+			color: #009688;
+			clear: both;
+			font-size: 10px;
+			padding-right: 6px;
+		}
+		.countInfo .inforight {
+			width: 25%;
+			height: 100%;
+			float: left;
+			text-align: center;
+		}
+		.countInfo .inforight .top {
+			width: 100%;
+			height: 50%;
+			border-bottom: 1px solid #e6e6e6;
+			padding: 25px 0;
+			box-sizing: border-box;
+		}
+		.countInfo .inforight .bot {
+			padding: 25px 0;
+			box-sizing: border-box;
+		}
+		.inf-box {
+			background: #fff;
+		}
+		.inf-box .index-title {
+			height: 40px;
+			line-height: 40px;
+			padding: 0 20px;
+		}
+		.notice-box .layui-btn {
+			width: 100% !important;
+			background: none !important;
+			color: #666 !important;
+			padding: 0 !important;
+			text-align: left !important;
+		}
+		.modal-body {
+			position: relative;
+			padding: 15px;
+			border-bottom: 1px solid #e5e5e5;
+		}
+		#notice_list li span:last-child{
+			width: 135px!important;
+		}
+		#typeInfo{
+        display: none;
+        padding: 20px 40px;
+    }
+	</style>
+</head>
+<body>
+	<span class="layui-breadcrumb" lay-separator=">" style="visibility: visible;">
+		<span>您当前所在位置：</span>
+		<!--<a href="">首页</a>-->
+		<a href="javascript:;">系统</a>
+		<a><cite>系统公告</cite></a>
+	</span>
+<div class="layui-fluid main">
+
+	<div class="layui-row">
+	
+	</div>
+	<div class="layui-row">
+		<div class="layui-col-xs12 layui-col-sm12 notice-box site-demo-button" id="layerDemo" style="margin-bottom: 0; margin-top: 20px;">
+			<p class="index-title">系统公告</span>
+				{if condition="$Think.session.admin_user_auth.pyid eq 0"}
+				<input style="margin-left: 5px;padding: 3px;background: #1E9FFF;color: white;border: 1px solid;border-radius: 3px;cursor: pointer;" type="button" value="添加公告" onclick="add_notice()" />
+				{/if}
+			</p>
+
+			<hr style="margin-top: 0;">
+			<ul class="" id="notice_list">
+			
+			</ul>
+		</div>
+		<div id="pagedemo"></div>
+	</div>
+	<div id="myModal" style="display: none;">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<form class="form-inline" name="amountForm" method="post">
+					<div class="modal-body">
+						<div class="" style="margin-bottom: 9px">
+							<!--<span id="ctitle"></span>--><span class="ctime"></span>
+						</div>
+
+						<div id="ccontent" style="text-indent: 2em;font-size:20px;"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="" id="typeInfo">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label must">公告标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" placeholder="请输入公告标题" lay-verify="required"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公告内容</label>
+                <div class="layui-input-block">
+                    <textarea type="text" name="content" placeholder="请输入公告内容" autocomplete="off" class="layui-textarea"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!--<script src="/admin/skin/build/js/jquery.min.js"></script>-->
+<script type="text/javascript">
+	function arrayToJson(formArray){
+		var dataArray = {};
+		$.each(formArray,function(){
+			if(dataArray[this.name]){
+				if(!dataArray[this.name].push){
+					dataArray[this.name] = [dataArray[this.name]];
+				}
+				dataArray[this.name].push(this.value || '');
+			}else{
+				dataArray[this.name] = this.value || '';
+			}
+		});
+		return JSON.stringify(dataArray);
+	}
+	function aa(e){
+		if(e.keyCode==116){
+			location.reload();
+			return false;
+		}
+	}
+	document.onkeydown = aa;
+	
+	//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+
+	//ipad端禁止缩放屏幕
+	window.onload=function () {  
+        document.addEventListener('touchstart',function (event) {  
+            if(event.touches.length>1){  
+                event.preventDefault();  
+            }  
+        })  
+        var lastTouchEnd=0;  
+        document.addEventListener('touchend',function (event) {  
+            var now=(new Date()).getTime();  
+            if(now-lastTouchEnd<=300){  
+                event.preventDefault();  
+            }  
+            lastTouchEnd=now;  
+        },false)  
+    }
+</script>
+
+<script type="text/javascript">
+	function render(sdata){
+	    var result = '';
+		$.post("/admin/index/notice.html", sdata, function (data) {
+			if(data.status == 1){
+                result = data.info;
+                document.getElementById('notice_list').innerHTML = result;
+			}
+        } );
+
+	}
+	layui.use(['table', 'element','laypage'], function () {
+		var laypage=layui.laypage
+			,$ = layui.jquery;
+		$.post("/admin/index/notice.html", function (data) {
+            laypage.render({
+                elem : 'pagedemo'
+                ,count : data.count //数据总数
+                ,curr: location.hash.replace('#!fenye=', '') //获取起始页
+                ,hash: 'fenye' //自定义hash值
+                ,jump : function(obj, first){
+                    //obj包含了当前分页的所有参数，比如：
+                    //首次不执行
+                    render({'page' : obj.curr, 'limit' : obj.limit});
+                }
+            });
+        });
+	});
+	$(document).on('click', '.news', function () {
+		var lindex = layer.load();
+		var id     = $(this).attr('data-id');
+		$.post('/admin/index/get_news.html', {id : id}, function (data) {
+			$('#ctitle').html(data.info.title);
+			$('#ccontent').html(data.info.content);
+			$('.ctime').html(data.info.time);
+			layer.close(lindex);
+			layer.open({
+				type         : 1,
+				title        : data.info.title,
+				id           : 'layerDemoes'  //防止重复弹出
+				, btnAlign   : 'c' //按钮居中
+				, shade      : 0.8
+				, shadeClose : true
+				, area       : '600px'
+				, btn        : '关闭'
+				, content    : $('#myModal')
+				, yes : function () {
+					window.location.reload();
+                }
+                , cancel : function () {
+                    window.location.reload();
+                }
+			});
+		}, 'json')
+	});
+	function del_notice(id)
+	{
+		layer.confirm('确认要删除该公告吗？', {icon : 3, title : '警告'}, function () {
+            var lindex = layer.load(2);
+            $.post("/admin/index/del_notice.html",{id:id},function(data){
+            	layer.close(lindex);
+	            if (data.status == 1){
+	                layer.msg(data.info,'',function(){
+	                	window.location.reload();
+	                });
+	            }else{
+	                layer.msg(data.info);
+	            }
+	        });
+        });
+	}
+	function add_notice()
+	{
+		$("#typeInfo input").val("");
+    	$("#typeInfo .layui-textarea").val("");
+        //动态加载规则表
+        var lindex=layer.open({
+            type       : 1,
+            title      : '添加规则',//不显示标题栏
+            area       : ['500px'],
+            offset: '100px',
+            shade      : 0.5,
+            btnAlgin    : 'r',
+            shadeClose : true,
+            btn        : ['确定', '取消'],
+//              maxmin     : true,
+            content    : $('#typeInfo'),
+            yes        : function (index,data1) {
+                putform(lindex);
+                return false;
+            }
+        });
+	}
+	function putform(lindex,id) {
+        var title   = $('[name=title]').val();
+        var content = $('[name=content]').val();
+        if (!title){
+            layer.msg('公告标题不能为空！');
+            return false;
+        }
+        if (!content){
+            layer.msg('公告内容不能为空！');
+            return false;
+        }
+        $.post("/admin/index/add_notice.html",{title:title,content:content},function(data){
+            	layer.close(lindex);
+            if (data.status == 1){
+                layer.msg(data.info,'',function(){
+                	window.location.reload();
+                });
+            }else{
+                layer.msg(data.info);
+            }
+        });
+        return false;
+    }
+</script>
+</body>
+</html>

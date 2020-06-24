@@ -1,0 +1,376 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-input-inline" style="margin-left: 100px;">
+                    <form class="layui-form layui-inline" action="" id="registerform">
+                        <div class="layui-form-item" >
+                            <label class="layui-form-label">客户名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="customer_name" placeholder="" value="{:input('customer_name')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">客户地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="address" placeholder="" value="{:input('address')}" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">监理</label>
+                            <div class="layui-input-block">
+                                <select name="jid">
+                                    <option value=""></option>
+                                    {foreach $admins as $k=>$v}
+                                        {if($v['roleid'] == 13)}
+                                            <option value="{$v['userid']}" {:input('jid')==$v['userid'] ?'selected':'' }>{$v['name']}</option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">质检</label>
+                            <div class="layui-input-block">
+                                <select name="check_id">
+                                    <option value=""></option>
+                                    {foreach $admins as $k=>$v}
+                                        {if($v['roleid'] == 15)}
+                                            <option value="{$v['userid']}" {:input('check_id')==$v['userid'] ?'selected':'' }>{$v['name']}</option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">工程经理</label>
+                            <div class="layui-input-block">
+                                <select name="gcmanager_id">
+                                    <option value=""></option>
+                                    {foreach $admins as $k=>$v}
+                                        {if($v['roleid'] == 16)}
+                                            <option value="{$v['userid']}" {:input('gcmanager_id')==$v['userid'] ?'selected':'' }>{$v['name']}</option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left:30px;">
+                            <div class="layui-input-inline">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                                <a href="/admin/settlement/audit_settlement_by_cw" class="layui-btn layui-btn-primary">重置</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <a id="tishi" title="点我查看" style="float:right;" > <i class="layui-icon">&#xe702;</i></a>
+            </blockquote>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3',toolbar:'#',limit:20}">
+                <thead >
+                    <tr>
+                        <th class="" lay-data="{field:'id', width:80,hide:'true'}">ID</th>
+                        <th class="" lay-data="{field:'oid', width:80,hide:'true'}">OID</th>
+                        <th class="" lay-data="{field:'order_cost_all_price', width:80,hide:'true'}">其他费用</th>
+                        <th class="" lay-data="{field:'discount', width:80,hide:'true'}">金额优惠</th>
+
+                        <th class="" lay-data="{field:'customer_name',width:100}">客户名称</th>
+                        <th class="" lay-data="{field:'address',}">客户地址</th>
+                        <th class="" lay-data="{field:'jianli',width:100}">监理</th>
+                        <th class="" lay-data="{field:'check',width:100}">质检</th>
+                        <th class="" lay-data="{field:'gcmanager',width:100}">工程经理</th>
+                        <th class="" lay-data="{field:'discount_proquant',width:130}">工程报价</th>
+                        <th class="" lay-data="{field:'commission',event:'show_commission',width:100}">提成奖励</th>
+                        <th class="" lay-data="{field:'sundry',width:100}">运杂</th>
+                        <th class="" lay-data="{field:'settlement',width:100,event:'settlement',style:'color:#f36f20'}">额外成本</th>
+                        <th class="" lay-data="{field:'show_info',width:100,event:'show_info'}">工程详情</th>
+                        <th class="" lay-data="{field:'operation',width:100}">操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {foreach name="settlement" item="vo"}
+                        <tr>
+                            <td class="">{$vo['id']}</td>
+                            <td class="">{$vo['order_info']['id']}</td>
+                            <td class="">{$vo['order_info']['order_cost_all_price']}</td>
+                            <td class="">{$vo['order_info']['discount']}</td>
+
+                            <td class="">{$userlist[$vo['uid']]['customer_name']}</td>
+                            <td class="">{$userlist[$vo['uid']]['address']}</td>
+                            <td class="">{$adminlist[$userlist[$vo['uid']]['jid']]['name']}</td>
+                            <td class="">{$adminlist[$userlist[$vo['uid']]['check_id']]['name']}</td>
+                            <td class="">{$adminlist[$userlist[$vo['uid']]['gcmanager_id']]['name']}</td>
+                            <td class="">{$vo['order_info']['discount_proquant']}</td>
+                            <td class="">
+                                {$vo['order_info']['supervisor_commission']+$vo['order_info']['design_commission']+$vo['order_info']['repeat_commission']+$vo['order_info']['business_commission']}
+                            </td>
+                            <td class="">{$vo['order_info']['sundry']}</td>
+                            <td class="">{$vo['settlement_money']}</td>
+                            <td class="">
+                                <a class="layui-btn layui-btn-xs layui-btn-warm" href="javascript:;">点击查看</a>
+                            </td>
+                            <td class="">
+                                <a class="layui-btn layui-btn-xs layui-btn-normal" style="padding: 0 15px;" href="javascript:;" lay-event="audit">审核</a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+              
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+        //工具栏事件
+        table.on('tool(test3)', function(obj){
+            var data = obj.data;
+            if(obj.event == 'audit'){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        content: '该结算单是否审核通过?',
+                        title:'审核结算',
+                        btn: ['通过', '不通过'],
+                        yes: function(index, layero){
+                            layer.close(index);
+                            $.ajax({
+                                type : 'post',
+                                url  :  '{:url("settlement/checkSettlement")}',
+                                dataType : 'json',
+                                data : {id:data.id,status:4},
+                                success : function(re){
+                                    if(re.code == 1){
+                                        layer.msg(re.msg)
+                                    }else{
+                                        layer.msg(re.msg)
+                                    }
+                                    setTimeout(function () {
+                                       window.location.reload();
+                                    }, 1000);
+                                }
+                            })
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                            $.ajax({
+                                type : 'post',
+                                url  :  '{:url("settlement/checkSettlement")}',
+                                dataType : 'json',
+                                data : {id:data.id,status:44},
+                                success : function(re){
+                                    if(re.code == 1){
+                                        layer.msg(re.msg)
+                                    }else{
+                                        layer.msg(re.msg)
+                                    }
+                                    
+                                }
+                            })
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                })
+            }
+            if(obj.event == 'settlement'){
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("settlement/getSettlement")}',
+                    dataType : 'json',
+                    data : {id:data.id},
+                    success : function(re){
+                        if(re.code === 1){
+                            var html = '';
+                            html += '<div style="width:100%;height:100%; overflow:auto;"><table style="text-align:center;" class="layui-table"><thead>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="5">工人其他费用</th>'
+                            html +=     '</tr>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="1">工种</th>'
+                            html +=         '<th style="text-align:center" colspan="1">应得工资</th>'
+                            html +=         '<th style="text-align:center" colspan="1">补人工</th>'
+                            html +=         '<th style="text-align:center" colspan="1">房租</th>'
+                            html +=         '<th style="text-align:center" colspan="1">远程费</th>'
+                            html +=     '</tr>'
+                            $.each(re.data.worker_wage, function (key, val) {
+                                console.log(val);
+                                html += '<tr>'
+                                html +=   '<td>'+key+'</td>'
+                                html +=     '<td>'+toDecimal2(Number(val.due_wage))+'</td>'
+                                html +=     '<td>'+toDecimal2(val.wage)+'</td>'
+                                html +=     '<td>'+toDecimal2(val.rent)+'</td>'
+                                html +=     '<td>'+toDecimal2(val.remote)+'</td>'
+                                html += '</tr>'
+                            });
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="5">其他费用</th>'
+                            html +=     '</tr>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="1">材料附加费：</th>'
+                            html +=         '<th style="text-align:left" colspan="4">'+re.data.settlement.material_append+'</th>'
+                            html +=     '</tr>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="1">搬运费：</th>'
+                            html +=         '<th style="text-align:left" colspan="4">'+re.data.settlement.carry+'</th>'
+                            html +=     '</tr>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="1">其他费用：</th>'
+                            html +=         '<th style="text-align:left" colspan="4">'+re.data.settlement.other_fee+'</th>'
+                            html +=     '</tr>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="1">其他费用说明：</th>'
+                            html +=         '<th style="text-align:left" colspan="4">'+re.data.settlement.other_fee_content+'</th>'
+                            html +=     '</tr>'
+                            html += '</thead><tbody>';
+    
+                            
+                            
+                            html += '</tbody></table></div>'
+                            //显示人工明细
+                            layer.open({
+                                title: '其他成本明细',
+                                area: ['60%', '80%'],
+                                content:html
+                            });
+                        }else{
+                          layer.msg(re.msg);return false;
+                        }
+                    }
+                });
+            }
+            if (obj.event == 'show_info'){
+                $.ajax({
+                    type : 'post',
+                    url  :  '{:url("artificial/ajax_get_order_cb")}',
+                    dataType : 'json',
+                    data : {id:data.oid},
+                    success : function(re){
+                        if(re.code === 0){
+                            var html = '';
+                            html += '<div style="width:100%;height:100%; overflow:auto;"><table style="text-align:center;width:1550px;" class="layui-table"><thead>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center" colspan="1"></th>'
+                            html +=         '<th style="text-align:center" colspan="4">折前工程报价</th>'
+                            html +=         '<th style="text-align:center" colspan="3">折后工程报价</th>'
+                            html +=         '<th style="text-align:center" colspan="2">优惠</th>'
+                            html +=         '<th style="text-align:center" colspan="3">工程成本</th>'
+                            html +=         '<th style="text-align:center" colspan="2">毛利</th>'
+                            html +=     '</tr>'
+                            html +=     '<tr>'
+                            html +=         '<th style="text-align:center">工种类型</th>'
+                            html +=         '<th style="text-align:center">总报价</th>'
+                            html +=         '<th style="text-align:center">辅材报价</th>'
+                            html +=         '<th style="text-align:center">人工报价</th>'
+                            html +=         '<th style="text-align:center">其他费用</th>'
+                            html +=         '<th style="text-align:center">总报价</th>'
+                            html +=         '<th style="text-align:center">辅材报价</th>'
+                            html +=         '<th style="text-align:center">人工报价</th>'
+                            // html +=         '<th style="text-align:center">运杂</th>'
+                            html +=         '<th style="text-align:center">折扣优惠</th>'
+                            html +=         '<th style="text-align:center">金额优惠</th>'
+                            html +=         '<th style="text-align:center">总成本</th>'
+                            html +=         '<th style="text-align:center">辅材成本</th>'
+                            html +=         '<th style="text-align:center">人工成本</th>'
+                            html +=         '<th style="text-align:center">毛利</th>'
+                            html +=         '<th style="text-align:center">毛利率</th>'
+                            html +=     '</tr>'
+                            html += '</thead><tbody>';
+                            html += '<tr style="background-color:#f36f20;color:#ffffff">'
+                            html +=     '<td>整体工程</td>'
+                            html +=     '<td>'+toDecimal2(Number(re.total.quota) + Number(re.total.craft_show)+Number(data.order_cost_all_price))+'</td>'
+                            html +=     '<td>'+toDecimal2(re.total.quota)+'</td>'
+                            html +=     '<td>'+toDecimal2(re.total.craft_show)+'</td>'
+                            html +=     '<td>'+ data.order_cost_all_price +'</td>'
+                            html +=     '<td>'+toDecimal2(Number(re.total.discount_total) + Number(data.order_cost_all_price)  - Number(data.discount))+'</td>'
+                            html +=     '<td>'+ toDecimal2(re.total.discount_quota) +'</td>'
+                            html +=     '<td>'+ toDecimal2(re.total.discount_craft_show) +'</td>'
+                            // html +=     '<td>'+ data.sundry +'</td>'
+                            html +=     '<td>'+ toDecimal2(Number(re.total.quota) + Number(re.total.craft_show) - Number(re.total.discount_total)) +'</td>'
+                            html +=     '<td>'+ data.discount +'</td>'
+                            html +=     '<td>'+ toDecimal2(Number(re.total.quota_cb)+Number(re.total.labor_cost)) +'</td>'
+                            html +=     '<td>'+ toDecimal2(re.total.quota_cb) +'</td>'
+                            html +=     '<td>'+ toDecimal2(re.total.labor_cost) +'</td>'
+                            html +=     '<td>'+ toDecimal2(Number(re.total.discount_total) - Number(re.total.quota_cb) - Number(re.total.labor_cost) - Number(data.discount) + Number(data.   order_cost_all_price)) +'</td>'
+                            html +=     '<td>'+ toDecimal2((Number(re.total.discount_total) - Number(re.total.quota_cb) - Number(re.total.labor_cost) - Number(data.discount) + Number(data.  order_cost_all_price)) / (Number(re.total.discount_total) + Number(data.order_cost_all_price) - Number(data.discount)) *100) +'%</td>'
+                            html += '</tr>'
+    
+                            $.each(re.datas, function (key, val) {
+                                html += '<tr>'
+                                html +=   '<td>'+key+'</td>'
+                                html +=     '<td>'+toDecimal2(Number(val.quota)+Number(val.craft_show))+'</td>'
+                                html +=     '<td>'+toDecimal2(val.quota)+'</td>'
+                                html +=     '<td>'+toDecimal2(val.craft_show)+'</td>'
+                                html +=     '<td>'+ '-' +'</td>'
+                                html +=     '<td>'+toDecimal2(val.discount_total)+'</td>'
+                                html +=     '<td>'+ toDecimal2(val.discount_quota) +'</td>'
+                                html +=     '<td>'+ toDecimal2(val.discount_craft_show) +'</td>'
+                                // html +=     '<td>'+ '-' +'</td>'
+                                html +=     '<td>'+ toDecimal2(Number(val.quota)+Number(val.craft_show)-Number(val.discount_total)) +'</td>'
+                                html +=     '<td>'+ '-' +'</td>'
+                                html +=     '<td>'+ toDecimal2(Number(val.quota_cb)+Number(val.labor_cost)) +'</td>'
+                                html +=     '<td>'+ toDecimal2(val.quota_cb) +'</td>'
+                                html +=     '<td>'+ toDecimal2(val.labor_cost) +'</td>'
+                                html +=     '<td>'+ toDecimal2(Number(val.discount_total) - Number(val.quota_cb) - Number(val.labor_cost)) +'</td>'
+                                html +=     '<td>'+ toDecimal2((Number(val.discount_total) - Number(val.quota_cb) - Number(val.labor_cost)) / (Number(re.total.discount_total) + Number(data. order_cost_all_price) - Number(data.discount)) *100) +'%</td>'
+                                html += '</tr>'
+                             });
+                            
+                            html += '</tbody></table></div>'
+                            //显示人工明细
+                            layer.open({
+                                title: '工程详情',
+                                area: ['95%', '90%'],
+                                content:html
+                            });
+                        }else{
+                          layer.msg(re.msg);return false;
+                        }
+                    }
+                });
+            }
+        })
+    });
+    //保留2位小数 不足补0
+    function toDecimal2(x) {
+        var f = parseFloat(x);
+        if (isNaN(f)) {
+            return "0.00";
+        }
+        var f = Math.round(x*100)/100;
+        var s = f.toString();
+        var rs = s.indexOf('.');
+        if (rs < 0) {
+            rs = s.length;
+            s += '.';
+        }
+        while (s.length <= rs + 2) {
+            s += '0';
+        }
+        return s;
+    }
+
+</script>
+{/block}

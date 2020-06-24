@@ -1,0 +1,277 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/* 修改文件夹图标：*/
+/** 未展开 */
+.treeTable-icon .layui-icon-layer:before {content: "\e672";}
+/** 展开 */
+.treeTable-icon.open .layui-icon-layer:before {content: "\e672";}
+/*修改文件图标：*/
+.treeTable-icon .layui-icon-file:before {content: "\e621";}
+.tanceng{width: 100%;text-align: center; line-height: 30px;}
+.layui-form-label{width:60px}
+.layui-form-item{margin:20px 0}
+#edt-search{
+            height: 33px;
+            line-height: 33px;
+            padding: 0 7px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            margin-bottom: -2px;
+            outline: none;
+        }
+
+#edt-search:focus {
+    border-color: #009E94;
+}
+#frameid{width: 299px;padding: 10px;border: 1px solid #D2D2D2;}
+#frameid option{}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <blockquote class="layui-elem-quote news_search">
+            <div class="layui-btn-group">
+                <button class="layui-btn" id="btn-expand">全部展开</button>
+                <button class="layui-btn" id="btn-fold">全部折叠</button>
+                <button class="layui-btn" id="btn-refresh">刷新表格</button>
+            </div>
+            <input id="edt-search" type="text" placeholder="输入关键词" style="width: 120px;"/>&nbsp;&nbsp;
+            <button class="layui-btn" id="btn-search">&nbsp;&nbsp;搜索&nbsp;&nbsp;</button>
+        </blockquote>
+        {eq name="$admininfo['roleid']" value="1" }
+            <div class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择公司</label>
+                    <div class="layui-input-block w200">
+                        <select name="fid" id="check_fid" lay-filter="check_fid" lay-search>
+                            <option value=""></option>
+                            {foreach name="frame" item="v" key="k"}
+                                <option value="{$v['id']}">{$v['name']}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        {/eq}
+        <table id="table1" class="layui-table" lay-filter="table1"></table>
+        
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script type="text/html" id="oper-col">
+    <a class="" lay-event="add"><i class="layui-icon layui-icon-add-1" title="添加"></i></a>
+    <a class="" lay-event="edit"><i class="layui-icon layui-icon-edit" title="编辑"></i></a>
+    <a class="" lay-event="del"><i class="layui-icon layui-icon-delete" title="删除"></i></a>
+</script>
+<!-- <script src="/static/admin/js/jquery.min.js"></script> -->
+<script type="text/javascript">
+
+    layui.config({
+        base: '__STATIC__/module/'
+    }).extend({
+        treetable: 'treetable-lay/treetable'
+    }).use(['layer', 'table', 'treetable'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        var renderTable = function (fid=0) {
+            layer.load(2);
+            treetable.render({
+                // toolbar: '#', //设置打印
+                treeColIndex: 1,
+                treeSpid: -1,
+                treeIdName: 'id',
+                treePidName: 'pid',
+                treeDefaultClose: false,
+                treeLinkage: false,
+                elem: '#table1',
+                url: '{:url("department/treetype")}',
+                where: {fid:fid} ,
+                // url: '__STATIC__/module/json/data.json',
+                page: false,
+                cols: [[
+                    {type: 'numbers'},
+                    {field: 'name', title: '名称'},
+                    {field: 'id', title: 'id',hide:true},
+                    {field: 'remark', title: '备注'},
+                    {templet: '#oper-col', title: '操作'}
+                ]],
+                
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+        };
+
+        // 搜索显示
+        $('#btn-search').click(function () {
+            var keyword = $('#edt-search').val();
+            var searchCount = 0;
+            $('#table1').next('.treeTable').find('.layui-table-body tbody tr td').each(function () {
+                $(this).css('background-color', 'transparent');
+                var text = $(this).text();
+                if (keyword != '' && text.indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        treetable.expandAll('#table1');
+                        $('html,body').stop(true);
+                        $('html,body').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (keyword == '') {
+                layer.msg("请输入搜索内容", {icon: 5});
+            } else if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            }
+        });
+
+         // treetable.foldAll('#table1');
+        renderTable();
+        //全部展开
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#table1');
+        });
+
+        //全部折叠
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#table1');
+        });
+        //刷新表格
+        $('#btn-refresh').click(function () {
+            renderTable();
+        });
+
+        //监听工具条
+        table.on('tool(table1)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'add'){
+                var inputs = '<div class="newaddbox"><div class="layui-form-item"><label class="layui-form-label">部门名称 </label><div class="layui-input-inline w200"><input type="text" name="name" autocomplete="off" value="" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">备注 </label><div class="layui-input-inline w200"><input type="text" name="remark" autocomplete="off" value="" class="layui-input"></div></div><div class="layui-input-inline w200"><button id="add_ajax" style="margin-left:70px" class="layui-btn ajax-post">立即提交</button></div></div>';
+                //页面层
+                layer.open({
+                    type: 1,
+                    fixed: false,    //取消固定定位，因为固定定位是相对body的
+                    // offset: ['30%', '30%'],   //相对定位
+                    // skin: 'layui-layer-rim', //加上边框
+                    area: ['380px', '240px'], //宽高
+                    title: '添加<font style="color:red">'+data.name+'</font>下级',
+                    content: inputs
+                });
+                $("#add_ajax").click(function() {
+                    var names = $(this).parents(".newaddbox").find("input[name='name']").val();
+                    var remarks = $(this).parents(".newaddbox").find("input[name='remark']").val();
+                    if (!names) {layer.msg('部门名称不能为空');return false;}
+                    $.ajax({
+                        type : 'post',
+                        url  :  '{:url("department/adds")}',
+                        dataType : 'json',
+                        data : {name:names,remark:remarks,pid:data.id},
+                        success : function(re){
+                            if(re.code == 1){
+                                layer.closeAll('page');
+                                layer.msg(re.msg);
+                                renderTable();
+                            }else{
+                                layer.msg(re.msg);return false;
+                            }
+                        }
+                    });
+                });     
+            }else if(layEvent === 'edit'){
+                if(data.id == 0){
+                    layer.msg('公司名称不能修改');
+                    return false;
+                }
+                var inputs = '<div class="neweditbox"><div class="layui-form-item"><label class="layui-form-label">部门名称 </label><div class="layui-input-inline w200"><input type="text" name="name" autocomplete="off" value="'+data.name+'" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">备注 </label><div class="layui-input-inline w200"><input type="text" name="remark" autocomplete="off" value="'+data.remark+'" class="layui-input"></div></div><div class="layui-input-inline w200"><button id="edit_ajax" style="margin-left:70px" class="layui-btn ajax-post">立即提交</button></div></div>';
+                //页面层
+                layer.open({
+                    type: 1,
+                    fixed: false,    //取消固定定位，因为固定定位是相对body的
+                    // offset: ['30%', '30%'],   //相对定位
+                    // skin: 'layui-layer-rim', //加上边框
+                    area: ['380px', '240px'], //宽高
+                    title: '编辑部门',
+                    content: inputs
+                });
+                $("#edit_ajax").click(function() {
+                    var names = $(this).parents(".neweditbox").find("input[name='name']").val();
+                    var remarks = $(this).parents(".neweditbox").find("input[name='remark']").val();
+                    if (!names) {layer.msg('部门名称不能为空');return false;}
+                    $.ajax({
+                        type : 'post',
+                        url  :  '{:url("department/adds")}',
+                        dataType : 'json',
+                        data : {name:names,remark:remarks,id:data.id},
+                        success : function(re){
+                            if(re.code == 1){
+                                layer.closeAll('page');
+                                layer.msg(re.msg);
+                                renderTable();
+                            }else{
+                                layer.msg(re.msg);return false;
+                            }
+                        }
+                    });
+                });     
+            }else if(layEvent === 'del'){
+                if(data.id == 0){
+                    layer.msg('公司名称不能删除');
+                    return false;
+                }
+                if($(this).parent().parent().parent().find('.layui-icon-layer').length > 0){
+                    layer.msg('部门存在下级，不能删除');
+                    return false;
+                }
+                layer.open({
+                    content: '确定删除'+data.name+'吗',
+                    btn: ['删除', '取消'],
+                    yes: function(index, layero){
+                        $.ajax({
+                            type : 'post',
+                            url  :  '{:url("department/del")}',
+                            dataType : 'json',
+                            data : {id:data.id},
+                            success : function(re){
+                                if(re.code == 1){
+                                    layer.close(index);
+                                    layer.msg(re.msg);
+                                    renderTable();
+                                }else{
+                                    layer.msg(re.msg);return false;
+                                }
+                            }
+                        });
+                    },
+                    btn2: function(index, layero){
+                        layer.close(index);
+                    },
+                    cancel: function(){
+
+                    }
+                });
+            }
+        });
+
+        //最高管理员 选择分公司重新加载
+        layui.use('form', function(){
+            var form = layui.form;
+            form.on('select(check_fid)', function(data){
+                // console.log(data.value); 
+                renderTable(data.value);
+            });      
+        })
+    });
+
+
+
+    
+
+</script>
+{/block}

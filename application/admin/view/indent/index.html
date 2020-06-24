@@ -1,0 +1,590 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/* 修改文件夹图标：*/
+/** 未展开 */
+.treeTable-icon .layui-icon-layer:before {content: "\e672";}
+/** 展开 */
+.treeTable-icon.open .layui-icon-layer:before {content: "\e672";}
+/*修改文件图标：*/
+.treeTable-icon .layui-icon-file:before {content: "\e621";}
+.tanceng{width: 100%;text-align: center; line-height: 30px;}
+.layui-form-label{width:40px}
+.layui-form-item{margin:20px 0}
+#edt-search{
+    height: 33px;
+    line-height: 33px;
+    padding: 0 7px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    margin-bottom: -2px;
+    outline: none;
+}
+.h38{
+    height: 38px;
+    line-height: 38px;
+}
+
+#edt-search:focus {
+    border-color: #009E94;
+}
+#frameid{width: 299px;padding: 10px;border: 1px solid #D2D2D2;}
+#frameid option{}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-btn-group">
+                    <button class="layui-btn" id="btn-expand">全部展开</button>
+                    <button class="layui-btn" id="btn-fold">全部折叠</button>
+                    <button class="layui-btn" id="btn-refresh">刷新表格</button>
+                </div>
+                <input id="edt-search" type="text" placeholder="输入关键词" style="width: 120px;"/>&nbsp;&nbsp;
+                <button class="layui-btn" id="btn-search">&nbsp;&nbsp;搜索&nbsp;&nbsp;</button> 
+            </blockquote>
+            <!-- <?php dump($data);?>  -->
+            <table id="table1" class="layui-table" lay-filter="table1"></table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script type="text/html" id="oper-col">
+    <a class="" lay-event="add"><i class="layui-icon layui-icon-add-1" title="添加"></i></a>
+    <a class="" lay-event="edit"><i class="layui-icon layui-icon-edit" title="编辑"></i></a>
+    <!-- <a class="" lay-event="tmp"><i class="layui-icon layui-icon-template-1" title="编辑模板"></i></a> -->
+    <!-- <a class="" lay-event="up_datas"><i class="layui-icon layui-icon-upload-drag" title="更新报价,辅材"></i></a> -->
+    <!-- <a class="" lay-event="del"><i class="layui-icon layui-icon-delete" title="删除"></i></a> -->
+    <!-- <a class="" lay-event="editstatu"><i class="layui-icon layui-icon-about" title="禁用"></i></a> -->
+</script>
+<!-- <script src="/static/admin/js/jquery.min.js"></script> -->
+<script type="text/javascript">
+
+    layui.config({
+        base: '__STATIC__/module/'
+    }).extend({
+        treetable: 'treetable-lay/treetable'
+    }).use(['layer', 'table', 'treetable'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        var renderTable = function () {
+            layer.load(2);
+            treetable.render({
+                // toolbar: '#', //设置打印
+                treeColIndex: 1,
+                treeSpid: -1,
+                treeIdName: 'id',
+                treePidName: 'pid',
+                treeDefaultClose: true,
+                treeLinkage: false,
+                elem: '#table1',
+                url: '{:url("indent/TreeType")}',
+                // url: '__STATIC__/module/json/data.json',
+                page: false,
+                cols: [[
+                    {type: 'numbers'},
+                    {field: 'name', title: '名称'},
+                    {field: 'id', title: 'id'},
+                    {field: 'levelid', title: '级别'},
+                    {field: 'other', title: '其他备注'},
+                    {field: 'province', title: '省份'},
+                    {field: 'city', title: '城市'},
+                    {field: 'area', title: '地区'},
+                    // {field: 'pid', title: '父级id'},
+                    {field: 'status', title: '状态0启用1禁用'},
+                    {templet: '#oper-col', title: '操作'}
+                ]],
+                
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+        };
+
+        // 搜索显示
+        $('#btn-search').click(function () {
+            var keyword = $('#edt-search').val();
+            var searchCount = 0;
+            $('#table1').next('.treeTable').find('.layui-table-body tbody tr td').each(function () {
+                $(this).css('background-color', 'transparent');
+                var text = $(this).text();
+                if (keyword != '' && text.indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        treetable.expandAll('#table1');
+                        $('html,body').stop(true);
+                        $('html,body').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (keyword == '') {
+                layer.msg("请输入搜索内容", {icon: 5});
+            } else if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            }
+        });
+
+         // treetable.foldAll('#table1');
+        renderTable();
+
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#table1');
+        });
+
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#table1');
+        });
+
+        $('#btn-refresh').click(function () {
+            renderTable();
+        });
+
+        $(document).on('change','select[name="province"]',function(){
+            var province_id = $(this).val();
+            $.post('/admin/quote/ajax_get_address',{type:1,id:province_id},function(res){
+                if(res.code == 1){
+                    var html = '';
+                    var cityid = '';
+                    $(res.data).each(function(k,v){
+                        if(k == 0){
+                            cityid = v.cityid;
+                        }
+                        html += '<option value="'+v.cityid+'">'+v.city+'</option>';
+                    })
+                    console.log(html);
+                    $('select[name="cities"]').html('');
+                    $('select[name="cities"]').append(html);
+                    $('select[name="areas"]').html('');
+
+                    //选择区
+                    $.post('/admin/quote/ajax_get_address',{type:2,id:cityid},function(res){
+                        if(res.code == 1){
+                            var html1 = '';
+                            $(res.data).each(function(k,v){
+                                html1 += '<option value="'+v.areaid+'">'+v.area+'</option>';
+                            })
+                            $('select[name="areas"]').append(html1);
+                        }else{
+                            $('select[name="areas"]').html('');
+                        }
+                        // form.render();
+                    })
+
+                }else{
+                    $('select[name="areas"]').html('');
+                    $('select[name="cities"]').html('');
+                    // form.render();
+                }
+            })
+        })
+        $(document).on('change','select[name="cities"]',function(){
+            var cityid = $(this).val();
+            $('select[name="areas"]').html('');
+            $.post('/admin/quote/ajax_get_address',{type:2,id:cityid},function(res){
+                if(res.code == 1){
+                    var html1 = '';
+                    $(res.data).each(function(k,v){
+                        html1 += '<option value="'+v.areaid+'">'+v.area+'</option>';
+                    })
+                    $('select[name="areas"]').append(html1);
+                }else{
+                    $('select[name="areas"]').html('');
+                }
+                // form.render();
+            })
+        })
+
+        //监听工具条123
+        table.on('tool(table1)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'del') {
+              layer.confirm("确认要删除<font style='color:red'>"+data.name+"</font>删除后不能恢复", { title: "删除确认" }, function (index) {           
+                 $.ajax({
+                    type : 'post',
+                    url  :  '{:url("indent/dels")}',
+                    dataType : 'json',
+                    data : {msg:'del',id:data.id},
+                    success : function(re){
+                      if(re.status == 1){
+                         layer.msg(re.msg);return false;
+                      }
+                      layer.msg(re.msg);
+                      window.location.reload();
+                    }
+                   });
+              });              
+            } else if (layEvent === 'edit') {
+              //遍历扁插下拉上级
+                if (data.levelid == 3) {
+                    // var josnarr = JSON.parse(JSON.stringify(<?php echo json_encode($data);?>));
+                    var josnarr = JSON.parse(JSON.stringify({:json_encode($data)}));
+                    // alert(josnarr[0]['name']);return false;
+                    var _nbox = '';
+                    for (var i = 0; i < josnarr.length; i++) {
+                       
+                       if(josnarr[i]['id']==data.pid){
+                         _nbox += '<option selected value="'+josnarr[i]['id']+'">'+josnarr[i]['name']+'</option>';
+                       }else{
+                         _nbox += '<option value="'+josnarr[i]['id']+'">'+josnarr[i]['name']+'</option>';
+                       }
+                    }
+                    var newselect = '<div class="layui-form-item"><label class="layui-form-label">上级</label><div class="layui-input-inline"><select name="frameid" id="frameid">'+_nbox+'</select></div></div>';//下拉框
+                }else{
+                    var newselect = '';
+                }
+                 //遍历扁插下拉上级end
+                // var inputs = '<div class="newbox">'+newselect+'<div class="layui-form-item"><label class="layui-form-label">名称 </label><div class="layui-input-inline w300"><input type="text" name="name" autocomplete="off" value="'+data.name+'" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">其他 </label><div class="layui-input-inline w300"><input type="text" name="other" autocomplete="off" value="'+data.other+'" class="layui-input"></div></div><div class="layui-input-inline w300"><button id="edit_ajax" style="margin-left:70px" class="layui-btn ajax-post">立即提交</button></div></div>';
+                var inputs = ''
+                inputs +=   '<div class="newbox">'
+                inputs +=       newselect
+                inputs +=       '<div class="layui-form-item">'
+                inputs +=           '<label class="layui-form-label">名称 </label>'
+                inputs +=           '<div class="layui-input-inline w300">'
+                inputs +=               '<input type="text" name="name" autocomplete="off" value="'+data.name+'" class="layui-input">'
+                inputs +=           '</div>'
+                inputs +=       '</div>'
+
+                inputs +=       '<div class="layui-form-item">'
+                inputs +=           '<label class="layui-form-label">其他 </label>'
+                inputs +=           '<div class="layui-input-inline w300">'
+                inputs +=               '<input type="text" name="other" autocomplete="off" value="'+data.other+'" class="layui-input">'
+                inputs +=           '</div>'
+                inputs +=       '</div>'
+
+                
+
+                inputs +=       '<div class="layui-form-item">'
+                inputs +=           '<label class="layui-form-label">省份 </label>'
+                inputs +=           '<div class="layui-input-inline w300">'
+                inputs +=               '<select class="h38" name="province">'
+                inputs +=                   '<option value="">请选择</option>'
+                                {foreach($provinces as $k=>$v)}
+                                    inputs +=  '<option value="{$v['provinceid']}">{$v['province']}</option>'
+                                {/foreach}
+                inputs +=               '</select>'
+                inputs +=           '</div>'
+                inputs +=       '</div>'
+
+                inputs +=       '<div class="layui-form-item">'
+                inputs +=           '<label class="layui-form-label">城市 </label>'
+                inputs +=           '<div class="layui-input-inline w300">'
+                inputs +=               '<select class="h38" name="cities"></select>'
+                inputs +=           '</div>'
+                inputs +=       '</div>'
+
+                inputs +=       '<div class="layui-form-item">'
+                inputs +=           '<label class="layui-form-label">地区 </label>'
+                inputs +=           '<div class="layui-input-inline w300">'
+                inputs +=               '<select class="h38" name="areas"></select>'
+                inputs +=           '</div>'
+                inputs +=       '</div>'
+
+                inputs +=       '<div class="layui-form-item">'
+                inputs +=           '<div class="layui-input-inline w300">'
+                inputs +=               '<button id="edit_ajax" style="margin-left:70px" class="layui-btn ajax-post">立即提交</button>'
+                inputs +=           '</div>'
+                inputs +=       '</div>'
+                inputs +=    '</div>'
+                //页面层
+                layer.open({
+                  type: 1,
+                  fixed: false,    //取消固定定位，因为固定定位是相对body的
+                  offset: ['30%', '30%'],   //相对定位
+                  skin: 'layui-layer-rim', //加上边框
+                  area: ['420px', '480px'], //宽高
+                  title:'修改信息',
+                  content: inputs
+                });
+                $("#edit_ajax").click(function(){
+                    var frameids = $("#frameid").val();
+                    var names = $(this).parents(".newbox").find("input[name='name']").val();
+                    var others = $(this).parents(".newbox").find("input[name='other']").val();
+
+                    var province = $(this).parents(".newbox").find("select[name='province']").val();
+                    var cities = $(this).parents(".newbox").find("select[name='cities']").val();
+                    var areas = $(this).parents(".newbox").find("select[name='areas']").val();
+
+                    if (!names || !others) {layer.msg('信息不能为空');return false;}
+                    if(frameids==data.pid){
+                        frameids = 'current';//下拉是否为当前
+                    }
+                      // alert(frameids);
+                    $.ajax({
+                        type : 'post',
+                        url  :  '{:url("indent/edits")}',
+                        dataType : 'json',
+                        data : {name:names,other:others,id:data.id,frameid:frameids,province:province,cities:cities,areas:areas},
+                        success : function(re){
+                            if(re.status == 0){
+                                layer.msg(re.msg);window.location.reload();
+                            }else{
+                                layer.msg(re.msg);return false;
+                            }
+                        }
+                    });
+                });
+            }else if (layEvent === 'add'){
+                      var inputs = '<div class="newaddbox"><div class="layui-form-item"><label class="layui-form-label">名称 </label><div class="layui-input-inline w300"><input type="text" name="name" autocomplete="off" value="" class="layui-input"></div></div><div class="layui-form-item"><label class="layui-form-label">其他 </label><div class="layui-input-inline w300"><input type="text" name="other" autocomplete="off" value="" class="layui-input"></div></div><div class="layui-input-inline w300"><button id="add_ajax" style="margin-left:70px" class="layui-btn ajax-post">立即提交</button></div></div>';
+                    //页面层
+                    layer.open({
+                      type: 1,
+                      fixed: false,    //取消固定定位，因为固定定位是相对body的
+                      offset: ['30%', '30%'],   //相对定位
+                      skin: 'layui-layer-rim', //加上边框
+                      area: ['420px', '240px'], //宽高
+                      title: '添加<font style="color:red">'+data.name+'</font>下级',
+                      content: inputs
+                    });
+                    $("#add_ajax").click(function() {
+                      var names = $(this).parents(".newaddbox").find("input[name='name']").val();
+                      var others = $(this).parents(".newaddbox").find("input[name='other']").val();
+                      if (!names || !others) {layer.msg('信息不能为空');return false;}
+                      $.ajax({
+                        type : 'post',
+                        url  :  '{:url("indent/adds")}',
+                        dataType : 'json',
+                        data : {name:names,other:others,pid:data.id,levelid:data.levelid},
+                        success : function(re){
+                          if(re.status == 0){
+                             layer.msg(re.msg);window.location.reload();
+                          }else{
+                            layer.msg(re.msg);return false;
+                          }
+                        }
+                       });
+                    });     
+            }else if (layEvent === 'editstatu'){
+                      if(data.status == 0){
+                        var newstatu = '禁用';
+                        var colors = 'red';
+
+                      }else{
+                         var newstatu = '操作';
+                         var colors = 'green';
+                      }
+
+                      layer.confirm("确认要<font style='color:"+colors+"'>"+newstatu+"</font>", { title: "确认" }, function (index) {         
+                       $.ajax({
+                          type : 'post',
+                          url  :  '{:url("indent/editstatu")}',
+                          dataType : 'json',
+                          data : {id:data.id,status:data.status},
+                          success : function(re){
+                            if(re.status == 1){
+                               layer.msg(re.msg);return false;
+                            }
+                            layer.msg(re.msg);
+                            window.location.reload();
+                          }
+                         });
+                    });      
+            }else if (layEvent === 'tmp'){
+                    $.ajax({
+                        type : 'post',
+                        url  :  '{:url("indent/get_tmp")}',
+                        dataType : 'json',
+                        data : {f_id:data.id},
+                        success : function(re){
+                            var inputs = 
+                            '<div class="tmp_datas">'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">监理提成（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="supervisor" autocomplete="off" value="'+ re.data.supervisor+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">设计提成（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="design" autocomplete="off" value="'+ re.data.design+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">回头客提成（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="repeat" autocomplete="off" value="'+ re.data.repeat+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">业务提成（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="business" autocomplete="off" value="'+ re.data.business+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">订单底部文字<p>（每行一条）</p></label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<textarea name="order_tfoot" style="height:300px;width:550px">'+ re.data.order_tfoot+'</textarea>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">一期款收费比率（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="take_rate1" autocomplete="off" value="'+ re.data.take_rate1+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">二期款收费比率（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="take_rate2" autocomplete="off" value="'+ re.data.take_rate2+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">三期款收费比率（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="take_rate3" autocomplete="off" value="'+ re.data.take_rate3+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">四期款收费比率（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="take_rate4" autocomplete="off" value="'+ re.data.take_rate4+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">领料审核界限（%）</label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<input type="text" name="pick_rate" autocomplete="off" value="'+ re.data.pick_rate+'" class="layui-input">'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="layui-form-item">'
+                                    +'<label class="layui-form-label w150">质检流程<p>（每行一条，名称与说明使用"-"分开，名称不得超过3个字）</p></label>'
+                                    +'<div class="layui-input-inline w100">'
+                                        +'<textarea placeholder="例子： 流程1-流程1说明" name="order_check" style="height:300px;width:550px">'+ re.data.order_check+'</textarea>'
+                                    +'</div>'
+                                +'</div>'
+
+                                +'<div class="layui-input-inline w300">'
+                                    +'<button id="edit_tmp" style="margin-left:70px" class="layui-btn ajax-post">立即提交</button>'
+                                +'</div>'
+                                +'<div class="layui-input-inline w300">'
+                                    
+                                +'</div>'
+                            +'</div>';
+                             var tmp_open = layer.open({
+                              type: 1,
+                              skin: 'layui-layer-rim', //加上边框
+                              area: ['800px', '700px'], //宽高
+                              title:'修改信息',
+                              content: inputs
+                            });
+                            $("#edit_tmp").click(function() {
+                            var supervisor = $(this).parents(".tmp_datas").find("input[name='supervisor']").val();
+                            var design = $(this).parents(".tmp_datas").find("input[name='design']").val();
+                            var repeat = $(this).parents(".tmp_datas").find("input[name='repeat']").val();
+                            var business = $(this).parents(".tmp_datas").find("input[name='business']").val();
+                            var order_tfoot = $(this).parents(".tmp_datas").find("textarea[name='order_tfoot']").val();
+
+                            var take_rate1 = $(this).parents(".tmp_datas").find("input[name='take_rate1']").val();
+                            var take_rate2 = $(this).parents(".tmp_datas").find("input[name='take_rate2']").val();
+                            var take_rate3 = $(this).parents(".tmp_datas").find("input[name='take_rate3']").val();
+                            var take_rate4 = $(this).parents(".tmp_datas").find("input[name='take_rate4']").val();
+
+                            var pick_rate = $(this).parents(".tmp_datas").find("input[name='pick_rate']").val();
+                            var order_check = $(this).parents(".tmp_datas").find("textarea[name='order_check']").val();
+
+                            if(Number(take_rate1) + Number(take_rate2) + Number(take_rate3) + Number(take_rate4) != 100 ){
+                                layer.msg('收款比率合计必须为100');return false;
+                            }
+                            if (!supervisor || isNaN(supervisor)) {
+                                layer.msg('监理提成输入有误');return false;
+                            }
+                            if (!design || isNaN(design)) {
+                                layer.msg('设计提成输入有误');return false;
+                            }
+                            if (!repeat || isNaN(repeat)) {
+                                layer.msg('回头客提成输入有误');return false;
+                            }
+                            if (!business || isNaN(business)) {
+                                layer.msg('业务提成输入有误');return false;
+                            }
+                            if (parseFloat(supervisor)+parseFloat(design)+parseFloat(repeat)+parseFloat(business) > 100) {
+                                layer.msg('全部合计不得超过100');return false;
+                            }
+                            if (!pick_rate || isNaN(pick_rate)) {
+                                layer.msg('领料审核界限输入有误');return false;
+                            }
+                            if (!order_check) {
+                                layer.msg('质检流程不能为空');return false;
+                            }
+                            $.ajax({
+                                type : 'post',
+                                url  :  '{:url("indent/edit_tmp")}',
+                                dataType : 'json',
+                                data : {
+                                            f_id:data.id,
+                                            order_tfoot:order_tfoot,
+                                            supervisor:supervisor,
+                                            design:design,
+                                            repeat:repeat,
+                                            business:business,
+                                            take_rate1:take_rate1,
+                                            take_rate2:take_rate2,
+                                            take_rate3:take_rate3,
+                                            take_rate4:take_rate4,
+                                            pick_rate:pick_rate,
+                                            order_check:order_check,
+                                        },
+                                success : function(re){
+                                  if(re.status == 0){
+                                        layer.msg('编辑成功');
+                                        layer.close(tmp_open);
+                                        return false;
+                                  }else{
+                                    layer.msg(re.msg);return false;
+                                  }
+                                }
+                            });
+                        });     
+                    }
+                });
+            }else if(obj.event == 'up_datas'){
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                        content: '确定更新'+data.name+'的报价项目与辅材仓库吗?此操作不能撤回切会覆盖原来的报价项目与辅材仓库',
+                        title:'提示框?',
+                        btn: ['更新','取消'],
+                        yes: function(index, layero){
+                            $.post('/admin/basis_data/create_datas',{fid:data.id},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                }else{
+                                    alert(res.msg);
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                            // return false //开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }); 
+            }
+        });
+    });
+
+    // $(function(){
+    //   $("table").on("click","tr td",function(){
+    //     var _this = $(this).children();
+    //     alert(_this.html())
+    //   })
+      
+    // })
+
+</script>
+{/block}

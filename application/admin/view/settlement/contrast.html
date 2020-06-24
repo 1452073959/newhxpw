@@ -1,0 +1,187 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.ulall{overflow:auto;}
+.ulall li{float:left;border: 1px solid #ccc;padding: 5px;margin-right: 20px;}
+.layui-input{width:100px;}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                   <ul class="ulall">
+                      <li>客户姓名：{$data.0.customer_name}</li>
+                      <li>工程地址：{$data.0.address}</li>
+                      <li>联系电话：</li>
+                      <li>报价师姓名：{$data.0.quoter_name}</li>
+                      <li>设计师姓名：{$data.0.designer_name}</li>
+                   </ul>
+                </div>     
+              
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+              <div class="layui-btn-container">
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckData" id="batch">批量修改数据</button> -->
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button> -->
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
+              </div>
+            </script>
+            <form id="myform">
+              <table class="layui-table">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th class="taleft" >数据来源</th>
+                        <th class="taleft" >工程报价</th>
+                        <th class="taleft" >工程直接费</th>
+                        <th class="taleft" >辅材报价</th>
+                        <th class="taleft" >辅材成本</th>
+                        <th class="taleft" >人工报价</th>
+                        <th class="taleft" >人工成本</th>
+                        <th class="taleft" >管理费</th>
+                        <th class="taleft" >税金</th>
+                        <th class="taleft" >优惠</th>
+                        <th class="taleft" >工程毛利</th>
+                        <th class="taleft" >工程毛利率</th>
+                        <th class="taleft" >实际工程量</th>
+                        <th class="taleft" >录入时间</th>
+
+                    </tr>
+                </thead>
+                <tbody> 
+                  {volist name="data" id="vo" empty="暂无数据"}
+                      <tr>
+                        <td>预算</td>
+                        <td class="taleft">{$vo.proquant}</td>
+                        <td class="taleft">{$vo.direct_cost}</td>
+                        <td class="taleft">{$vo.matquant}</td>
+                        <td class="taleft">{$vo.fc_cost}</td>
+                        <td class="taleft">{$vo.manual_quota}</td>
+                        <td class="taleft">{$vo.labor_cost}</td>
+                        <td class="taleft">{$vo.tubemoney}</td>
+                        <td class="taleft">{$vo.taxes}</td>
+                        <td class="taleft">{$vo.discount}</td>
+                        <td class="taleft">{$vo.gross_profit}</td>
+                        <td class="taleft">{:round($vo.gross_profit / $vo.proquant * 100,2)}%</td>
+                        <td class="taleft"></td>
+                        <td class="taleft">{:date("Y/m/d",$vo.entrytime)}</td>
+                      </tr>
+                 {/volist}
+                  <tr>
+                      <td class="taleft">结算</td>
+                      <td class="taleft">
+                        <input class="layui-input" type="text" name="proquant" value="{$budget.proquant|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="direct_cost" class="layui-input" value="{$budget.direct_cost|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="matquant" class="layui-input" value="{$budget.matquant|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="fc_cost" class="layui-input" value="{$budget.fc_cost|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="manual_quota" class="layui-input" value="{$budget.manual_quota|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="labor_cost" class="layui-input" value="{$budget.labor_cost|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="tubemoney" class="layui-input" value="{$budget.tubemoney|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="taxes" class="layui-input" value="{$budget.taxes|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="discount" class="layui-input" value="{$budget.discount|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="gross_profit" class="layui-input" value="{$budget.gross_profit|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="gross_profit" class="layui-input" value="{$budget.gross_profit|default=''}">
+                      </td>
+                      <td class="taleft">
+                        <input type="text" name="fact_gcl" class="layui-input" value="{$budget.fact_gcl|default=''}">
+                      </td>
+                      <td class="taleft">{notempty name="$budget"}{:date("Y-m-d h:i:s",$budget.savetime)}{/notempty}</td>
+                  </tr>
+                </tbody>
+             </table>
+             <input type="hidden" name="offerlist_id" value="{$offerlist_id}">
+             <div class="layui-inline"><button type="submit" class="layui-btn">保存</button></div>
+           </form>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+//保存结算数据
+$(document).ready(function(){
+  $('#myform').submit(function(){
+    $.ajax({
+      url:"{:url('admin/Settlement/savebudget')}",
+      type:"post",
+      data:$('#myform').serialize(),
+      success:function(result){
+        console.log(result);
+      }
+    });
+  });
+
+});   
+
+</script>
+{/block}

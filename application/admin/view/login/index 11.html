@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>登录</title>
+    <link rel="shortcut icon" href="__STATIC__/../admins/images/logo.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/admin/css/style.css" />
+    <script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+</head>
+
+<body>
+    <style>
+        *{margin:0;padding: 0;box-sizing: border-box;-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+        .login-main{width: auto;background-color: rgba(183, 171, 171, 0.09);padding: 20px 64px;left: 46%;height: auto;}
+        body {width: 100%;height: 100%;overflow: hidden;background: url("__STATIC__/admin/images/lb.jpg") no-repeat center top;background-size: cover;}
+        .outer{position: relative;margin:20px auto;height: 40px;line-height: 40px;border:1px solid #ccc;border-radius: 2px;}
+        .outer span,.filter-box,.inner{position: absolute;top: 0;left: 0;}
+        .outer span{display: block;padding:0  0 0 36px;width: 100%;height: 100%;color: #fff;text-align: center;}
+        .filter-box{width: 0;height: 100%;background: green;z-index: 9;}
+        .outer.act span{padding:0 36px 0 0;}
+        .inner{width: 40px;height: 40px;text-align: center;background: url(/admins/images/logo.ico) no-repeat;background-size: 100% 100%;cursor: pointer;font-family: "宋体";z-index: 10;font-weight: bold;color: #929292;left: -1px;}
+        .outer.act .inner{color: green;}
+        .outer.act span{z-index: 99;}
+        .login-main form .layui-input-inline {margin-bottom: 17px; margin-right: 10px;}
+        .layui-btn{background-color:#ddd;}
+        h3.tab-h:nth-child(1) {color: #009688 !important;}
+        .tab-h{width: 50%;float: left;text-align: center;margin-top: 0;margin-bottom: 30px;font-size: 24px;font-weight: 500;padding: 0;line-height: 30px;color: #ccc;}
+        .outer1{position: relative;margin:20px auto;height: 40px;line-height: 40px;border:1px solid #ccc;border-radius: 2px;}
+        .outer1 span,.filter-box1,.inner1{position: absolute;top: 0;left: 0;}
+        .outer1 span{display: block;padding:0  0 0 36px;width: 100%;height: 100%;color: #ccc;text-align: center;}
+        .filter-box1{width: 0;height: 100%;background: green;z-index: 9;}
+        .outer1.act span{padding:0 36px 0 0;}
+        .inner1{width: 36px;height: 38px;text-align: center;background: #fff;cursor: pointer;font-family: "宋体";z-index: 10;font-weight: bold;color: #929292;}
+        .outer1.act .inner1{color: green;}
+        .outer1.act span{z-index: 99;}
+    </style>
+    <div id="mydiv">
+        <div class="login-main">
+        <h1 class="layui-elip" style="color: white;position: absolute;top: -120px;font-size: 38px;font-family: cursive;">　　创标助手后台管理系统</h1>
+            <h3 class="tab-h" style="color: #009688"> 账号登陆 </h3>
+            <!-- <h3 class="tab-h" style="" id="sms">验证码登陆</h3> -->
+            <form class="layui-form" action="{:url('admin/login/index')}">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline input-item">
+                        <label for="username">用户名</label>
+                        <input type="text" name="username" lay-verify="required" autocomplete="off" placeholder="账号" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline input-item">
+                        <label for="password">密码</label>
+                        <input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="密码" class="layui-input">
+                    </div>
+                <!--     <div class="outer layui-input-inline input-item">
+                        <div class="filter-box"></div>
+                        <span>
+                            滑动进行验证
+                        </span>
+                        <div class="inner"></div>
+                    </div> -->
+                    <div class="layui-input-inline login-btn">
+                        <button class="layui-btn" lay-filter="login" lay-submit disabled>登录</button>
+                    </div>
+                </div>
+            </form>
+            <div id="sms_div" style="display: none">
+                <div class="layui-form-item" style="padding-top: 10px;">
+                    <div class="layui-input-block" style="width: 80%;margin: auto;">
+                       <input type="text" name="phone" placeholder="请输入手机号" lay-verify="required"  autocomplete="off" class="layui-input">
+                       <input type="text" name="sms" placeholder="请输入短信验证码" lay-verify="required"  autocomplete="off" class="layui-input">
+                       <div class="outer1 layui-input-inline input-item" style="width:100%;">
+                            <div class="filter-box1"></div>
+                            <span>
+                                滑动发送短信验证码
+                            </span>
+                            <div class="inner1">&gt;&gt;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+    <script>
+        $(function(){
+            // $(".inner").mousedown(function(e){
+            //     var el = $(".inner"),os = el.offset(),dx,$span=$(".outer>span"),$filter=$(".filter-box"),_differ=$(".outer").width()-el.width();
+            //     $(document).mousemove(function(e){
+            //         dx = e.pageX - os.left;
+            //         if(dx<0){
+            //             dx=-1;
+            //         }else if(dx>_differ){
+            //             dx=_differ;
+            //         }
+            //         $filter.css('width',dx);
+            //         el.css("left",dx);
+            //     });
+            //     $(document).mouseup(function(e){
+            //         $(document).off('mousemove');
+            //         $(document).off('mouseup');
+            //         dx = e.pageX - os.left;
+            //         if(dx<_differ){
+            //             dx=-1;
+            //             $span.html("滑动进行验证");
+            //         }else if(dx>=_differ){
+            //             dx=_differ;
+            //             $(".outer").addClass("act");
+            //             $span.html("验证成功");
+            //             $("button").removeAttr('disabled');
+            //             $(".layui-btn").css('background-color','green');
+            //         }
+            //         $filter.css('width',dx);
+            //         el.css("left",dx);
+
+            //     })
+            // })
+        })
+        // var code = 0;
+        // $(function(){
+        //     $(".inner1").mousedown(function(e){
+        //         var el = $(".inner1"),os = el.offset(),dx,$span=$(".outer1>span"),$filter=$(".filter-box1"),_differ=$(".outer1").width()-el.width();
+        //         $(document).mousemove(function(e){
+        //             dx = e.pageX - os.left;
+        //             if(dx<0){
+        //                 dx=0;
+        //             }else if(dx>_differ){
+        //                 dx=_differ;
+        //             }
+        //             $filter.css('width',dx);
+        //             el.css("left",dx);
+        //         });
+        //         $(document).mouseup(function(e){
+        //             $(document).off('mousemove');
+        //             $(document).off('mouseup');
+        //             dx = e.pageX - os.left;
+        //             if(dx<_differ){
+        //                 dx=0;
+        //                 $filter.css('width',dx);
+        //                 el.css("left",dx);
+        //             }else if(dx>=_differ){
+        //                 var phonereg = /^1[34578]\d{9}$/;
+        //                 if (!phonereg.test($('[name=phone]').val())) {
+        //                     dx=0;
+        //                     $span.html("请输入有效的手机号码！");
+        //                     $span.css('color','red');
+        //                     $filter.css('width',dx);
+        //                     el.css("left",dx);
+        //                 }else{
+        //                     $.post('/admin/login/Phone_sms', {phone : $('[name=phone]').val()}, function (data) {
+        //                         if (data.status == 1) {
+        //                             code = data.info;
+        //                             dx=_differ;
+        //                             $(".outer1").addClass("act");
+        //                             $span.html("短信验证码发送成功");
+        //                             el.html('&radic;');
+        //                             $filter.css('width',dx);
+        //                             el.css("left",dx);
+        //                         } else {
+        //                             dx=0;
+        //                             $span.html(data.info);
+        //                             $span.css('color','red');
+        //                             $filter.css('width',dx);
+        //                             el.css("left",dx);
+        //                         }
+        //                     }, 'json');
+
+        //                 }
+        //             }
+        //         })
+        //     })
+        // })
+    //     $(document).on('click', '#sms', function () {
+    //         layer.open({
+    //             type       : 1,
+    //             title      : '短信验证码登陆',
+    //             content    : $('#sms_div'),
+    //             time       : 0,
+    //             shade      : 0.5,
+    //             area       : ['400px'],
+    //             shadeClose : true,
+    //             btn        : ['确定', '取消'],
+    // //          maxmin     : true,
+    //             scrollbar  : false,
+    //             yes        : function (index) {
+                    
+    //                 var lindex = layer.load(1);
+    //                 if ($('[name=sms]').val() == code) {
+    //                     $.post('/admin/login/index', {phone:$('[name=phone]').val(),code:code}, function (data) {
+    //                         if (data.code) {
+    //                             layer.msg('登入成功', {
+    //                                 offset: '15px',
+    //                                 icon: 1,
+    //                                 time: 1000
+    //                             }, function() {
+    //                                 window.location.href = data.url;
+    //                             });
+    //                         } else {
+    //                             layer.msg(data.msg, { icon: 5 });
+    //                         }
+    //                     }, 'json');
+    //                 }else{
+    //                     layer.alert('验证码错误');
+    //                     layer.close(lindex);
+    //                     layer.close(index);
+    //                 }
+    //             }
+    //         });
+    // })
+    </script>
+    <script type="text/javascript">
+    layui.use(['form', 'layer', 'jquery'], function() {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery;
+        //登录
+        form.on("submit(login)", function(data) {
+            var action = $(data.form).attr('action');
+            $.post(action, $(data.form).serialize(), success, "json");
+            return false;
+
+            function success(data) {
+                if (data.status == 1) {
+                    layer.msg('登陆成功', {
+                        offset: '15px',
+                        icon: 1,
+                        time: 1000
+                    }, function() {
+                        window.location.href = data.url;
+                    });
+                } else {
+                    layer.msg(data.info, { icon: 5 });
+                    //刷新验证码
+                    $("#verify").click();
+                }
+            }
+        });
+
+        //表单输入效果
+        $(".login-main .input-item").click(function(e) {
+            e.stopPropagation();
+            $(this).addClass("layui-input-focus").find(".layui-input").focus();
+        })
+        $(".login-main .input-item .layui-input").focus(function() {
+            $(this).parent().addClass("layui-input-focus");
+        })
+        $(".login-main .input-item .layui-input").blur(function() {
+            $(this).parent().removeClass("layui-input-focus");
+            if ($(this).val() != '') {
+                $(this).parent().addClass("layui-input-active");
+            } else {
+                $(this).parent().removeClass("layui-input-active");
+            }
+        })
+    })
+    </script>
+</body>
+
+</html>

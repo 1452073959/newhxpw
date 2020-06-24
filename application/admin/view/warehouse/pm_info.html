@@ -1,0 +1,70 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+    .bfffff{
+        background-color: #ffffff;
+    }
+</style>
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <table class="layui-table">
+                <thead >
+                    <tr>
+                        <th colspan="9" class="bfffff">客户：{$userinfo['customer_name']}　│　地址：{$userinfo['address']}　│　监理：{$jadmin['name']}</th>
+                    </tr>
+                    <tr>
+                        <th>工种类别</th>
+                        <th>辅材细类</th>
+                        <th>辅材名称</th>
+                        <th>领取数量</th>
+                        <th>单价</th>
+                        <th>单位</th>
+                        <th>包装规格</th>
+                        <th>品牌</th>
+                        <th>产地</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $data as $key=>$vo }
+                        <tr>
+                            <td>{$vo.type_of_work}</td>
+                            <td>{$vo.fine}</td>
+                            <td>{$vo.m_name}</td>
+                            <td>{$vo.num}</td>
+                            <td>{$vo.price}</td>
+                            <td>{$vo.units}</td>
+                            <td>{$vo.phr}</td>
+                            <td>{$vo.brand}</td>
+                            <td>{$vo.place}</td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+{/block}

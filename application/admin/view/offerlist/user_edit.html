@@ -1,0 +1,334 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .fenname{padding:10px;padding-right:8px;line-height:30px}
+    #sougs{line-height:35px;background-color:#009688;color:#fff;padding:5px;border-radius:2px;cursor:pointer;}
+    .bred{
+        color: red;
+    }
+    .add{
+      display: block;
+      float: left;
+      line-height: 38px;
+      width: 38px;
+      text-align: center;
+      border:1px solid #eee;
+      margin-right: 5px;
+    }
+    .delete{
+      display: block;
+      float: left;
+      line-height: 38px;
+      width: 38px;
+      text-align: center;
+      border:1px solid #eee;
+    }
+</style>
+<div class="layui-card">
+    <div class="layui-card-header">添加</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/Offerlist/user_edit')}" method="post">
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">客户姓名<i class="bred">*</i></label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="customer_name" autocomplete="off" required="" placeholder="" class="layui-input" value="{$data.customer_name|default=''}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">客户电话<i class="bred">*</i></label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="phone" autocomplete="off" lay-verify="required|phone|number" placeholder="" class="layui-input" value="{$data.phone|default=''}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋面积<i class="bred">*</i></label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="area" autocomplete="off" lay-verify="required|number" class="layui-input" value="{$data.area|default=''}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工程地址<i class="bred">*</i></label>
+                <div class="layui-input-inline">
+                    <select name="provinces" lay-filter="provinces" data-type=1 lay-verify="required" lay-search>
+                        <option value="">请选择省份</option>
+                        {foreach $provinces as $k=>$v } 
+                            <option value="{$v.provinceid}-{$v.province}" {eq name="$data['provinceid']" value="$v['provinceid']"}selected{/eq}>{$v.province}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="cities" lay-filter="cities" lay-verify="required" data-type=2 lay-search>
+                        <option value="">请选择城市</option>
+                        {foreach $cities as $k=>$v } 
+                            <option value="{$v.cityid}-{$v.city}" {eq name="$data['cityid']" value="$v['cityid']"}selected{/eq}>{$v.city}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="areas" lay-verify="required" class="">
+                        <option value="">请选择县区</option>
+                        {foreach $areas as $k=>$v } 
+                            <option value="{$v.areaid}-{$v.area}" {eq name="$data['areaid']" value="$v['areaid']"}selected{/eq}>{$v.area}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">详细地址<i class="bred">*</i></label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="address" lay-verify="required" value="<?php echo str_replace($address,'',$data['address']) ?>" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商务经理</label>
+                <div class="layui-input-inline w300">
+                    <select name="manager_id" lay-filter="" lay-verify="" lay-search>
+                        <option value=""></option>
+                        {if(isset($personnel_datas[3]))}
+                            {foreach $personnel_datas[3] as $k=>$v } 
+                                <option {if($data['manager_id'] == $v['id'])}selected{/if} value="{$v.id}">{$v.name}</option>
+                            {/foreach}
+                        {/if}
+                        {if(isset($personnel_datas[2]))}
+                            {foreach $personnel_datas[2] as $k=>$v } 
+                                <option {if($data['manager_id'] == $v['id'])}selected{/if} value="{$v.id}">{$v.name}</option>
+                            {/foreach}
+                        {/if}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">报价师<i class="bred">*</i></label>
+                <div class="layui-input-inline w300">
+                    <select name="quoter_id" lay-filter="" lay-verify="required" lay-search>
+                        <option value=""></option>
+                        {if(isset($personnel_datas[3]))}
+                            {foreach $personnel_datas[3] as $k=>$v} 
+                                <option {if($data['quoter_id'] == $v['id'])}selected{/if} value="{$v.id}">{$v.name}</option>
+                            {/foreach}
+                        {/if}
+                        {if(isset($personnel_datas[2]))}
+                            {foreach $personnel_datas[2] as $k=>$v } 
+                                <option {if($data['quoter_id'] == $v['id'])}selected{/if} value="{$v.id}">{$v.name}</option>
+                            {/foreach}
+                        {/if}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">设计师<i class="bred">*</i></label>
+                {foreach(:explode(',',$data['designer_id']) as $k=>$v)}
+                    <div class="layui-input-inline w300">
+                        <select name="designer_id[]" lay-filter="" lay-verify="required" lay-search>
+                            <option {if($v == 0)}selected{/if} value="0">其他</option>
+                            {if(isset($personnel_datas[1]))}
+                                {foreach $personnel_datas[1] as $k1=>$v1 } 
+                                    <option {if($v == $v1['id'])}selected{/if} value="{$v1.id}">{$v1.name}</option>
+                                {/foreach}
+                            {/if}
+                            {if(isset($personnel_datas[15]))}
+                                {foreach $personnel_datas[15] as $k1=>$v1 } 
+                                    <option {if($v == $v1['id'])}selected{/if} value="{$v1.id}">{$v1.name}</option>
+                                {/foreach}
+                            {/if}
+                        </select>
+                    </div>
+                {/foreach}
+                <a href="javascript:;" class="add">＋</a>
+                <a href="javascript:;" class="delete">-</a>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">画图<i class="bred">*</i></label>
+                {foreach(:explode(',',$data['assistant_id']) as $k=>$v)}
+                    <div class="layui-input-inline w300">
+                        <select name="assistant_id[]" lay-filter="" lay-verify="required" lay-search>
+                            <option {if($v == 0)}selected{/if} value="0">其他</option>
+                            {if(isset($personnel_datas[1]))}
+                                {foreach $personnel_datas[1] as $k1=>$v1 } 
+                                    <option {if($v == $v1['id'])}selected{/if} value="{$v1.id}">{$v1.name}</option>
+                                {/foreach}
+                            {/if}
+                            {if(isset($personnel_datas[15]))}
+                                {foreach $personnel_datas[15] as $k1=>$v1 } 
+                                    <option {if($v == $v1['id'])}selected{/if} value="{$v1.id}">{$v1.name}</option>
+                                {/foreach}
+                            {/if}
+                        </select>
+                    </div>
+                {/foreach}
+                <a href="javascript:;" class="add">＋</a>
+                <a href="javascript:;" class="delete">-</a>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">业务员<i class="bred">*</i></label>
+                {foreach(:explode(',',$data['sale_id']) as $k=>$v)}
+                    <div class="layui-input-inline w300">
+                        <select name="sale_id[]" lay-filter="" lay-verify="required" lay-search>
+                            <option {if($v == 0)}selected{/if} value="0">其他</option>
+                            {if(isset($personnel))}
+                                {foreach $personnel as $k1=>$v1 } 
+                                    <option {if($v == $v1['id'])}selected{/if} value="{$v1.id}">{$v1.name}</option>
+                                {/foreach}
+                            {/if}
+                        </select>
+                    </div>
+                {/foreach}
+                <a href="javascript:;" class="add">＋</a>
+                <a href="javascript:;" class="delete">-</a>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">设计总监</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="director_designer" value="{$data.director_designer|default=''}" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">木作设计师</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="wood_designer" value="{$data.wood_designer|default=''}" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">家具设计师</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="furniture_designer" value="{$data.furniture_designer|default=''}" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">软装设计师</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="soft_designer" value="{$data.soft_designer|default=''}" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">水电设计师</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="sd_designer" value="{$data.sd_designer|default=''}" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">助理设计师</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="aid_designer" value="{$data.aid_designer|default=''}" autocomplete="off" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋类型</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="room_type" value="平层" title="平层" {eq name="$data['room_type']" value="平层"}checked{/eq} >
+                    <input type="radio" name="room_type" value="复式" title="复式" {eq name="$data['room_type']" value="复式"}checked{/eq}>
+                    <input type="radio" name="room_type" value="别墅" title="别墅" {eq name="$data['room_type']" value="别墅"}checked{/eq}>
+                    <input type="radio" name="room_type" value="公装" title="公装" {eq name="$data['room_type']" value="公装"}checked{/eq}>
+                    <!-- <input type="radio" name="room_type" value="酒店" title="酒店" {eq name="$data['room_type']" value="酒店"}checked{/eq}> -->
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">单选项</label>
+                <div class="layui-input-block">
+                    <!-- layui-hide -->
+                    <input type="radio" name="house_type" lay-filter="" value="1" title="新房" {eq name="$data['house_type']" value="1"}checked{/eq}>
+                    <input type="radio" name="house_type" lay-filter="" value="2" title="旧房" {eq name="$data['house_type']" value="2"}checked{/eq}>
+                </div>
+            </div>
+            <!-- <div class="layui-form-item">
+                <label class="layui-form-label">客户状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="is_new" disabled lay-filter="is_new" value="1" title="新客户" {eq name="$data['is_new']" value="1"}checked{/eq}>
+                    <input type="radio" name="is_new" disabled lay-filter="is_new" value="9" title="旧客户" {eq name="$data['is_new']" value="9"}checked{/eq}>
+                    
+                </div>
+            </div> -->
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="hidden" name="id" value="{:input('id')}">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Offerlist/userlist')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $('.add').click(function(){
+        $(this).before($(this).prev().prop("outerHTML"));
+        layui.use('form', function(){
+            var form = layui.form;  
+            form.render('select'); //刷新select选择框渲染
+        });
+    })
+    $('.delete').click(function(){
+        var num = $(this).prevAll().length;
+        if(num > 3){
+            $(this).prevAll().eq(num-3).remove();
+        }
+    })
+    layui.use('form', function(){
+        var form = layui.form;
+        form.on('select(provinces)', function(data){
+            var type = data.elem.getAttribute('data-type');
+            var province_id = data.value.split('-')[0];
+            $.post('/admin/quote/ajax_get_address',{type:type,id:province_id},function(res){
+                if(res.code == 1){
+                    var html = '';
+                    var cityid = '';
+                    $(res.data).each(function(k,v){
+                        if(k == 0){
+                            cityid = v.cityid;
+                        }
+                        html += '<option value="'+v.cityid+'-'+v.city+'">'+v.city+'</option>';
+                    })
+                    $('select[name="cities"]').html('');
+                    $('select[name="cities"]').append(html);
+                    $('select[name="areas"]').html('');
+
+                    //选择区
+                    $.post('/admin/quote/ajax_get_address',{type:2,id:cityid},function(res){
+                        if(res.code == 1){
+                            var html1 = '';
+                            $(res.data).each(function(k,v){
+                                html1 += '<option value="'+v.areaid+'-'+v.area+'">'+v.area+'</option>';
+                            })
+                            $('select[name="areas"]').append(html1);
+                        }else{
+                            $('select[name="areas"]').html('');
+                        }
+                        form.render();
+                    })
+
+                }else{
+                    $('select[name="areas"]').html('');
+                    $('select[name="cities"]').html('');
+                    form.render();
+                }
+            })
+        });
+        form.on('select(cities)', function(data){
+            var type = data.elem.getAttribute('data-type');
+            var city_id = data.value.split('-')[0];
+            $.post('/admin/quote/ajax_get_address',{type:type,id:city_id},function(res){
+                if(res.code == 1){
+                    var html = '';
+                    $(res.data).each(function(k,v){
+                        html += '<option value="'+v.areaid+'-'+v.area+'">'+v.area+'</option>';
+                    })
+                    $('select[name="areas"]').html('');
+                    $('select[name="areas"]').append(html);
+                    form.render();
+                }else{
+                    $('select[name="areas"]').html('');
+                    form.render();
+                }
+            })
+        });
+    });
+    
+</script>
+{/block}

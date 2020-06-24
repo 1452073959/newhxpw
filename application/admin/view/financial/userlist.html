@@ -1,0 +1,214 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.layui-form-item .layui-input-inline{
+    margin-right: 0px;
+    
+}
+.layui-form-item{
+    clear:none;
+    float: left;
+    margin-bottom:5px;
+
+}
+.layui-form-label{
+    width:60px;
+}
+.layui-form-select .layui-input{
+    padding-right:5px;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <!-- <a class="layui-btn layui-btn-sm" href="{:url('Offerlist/add')}">新建客户</a> -->
+                </div>     
+				<div class="layui-input-inline" style="">
+    				<form class="layui-form" method="get" action="{:url('Financial/userlist')}" class="layui-form form-signin" enctype="multipart/form-data">
+                         <div class="layui-form-item">
+                            <label class="layui-form-label">客户姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="customer_name" value="<?php echo input('customer_name') ?>" placeholder="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">报价师</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="quoter_name" value="<?php echo input('quoter_name') ?>" placeholder="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">设计师</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="designer_name" value="<?php echo input('designer_name') ?>" placeholder="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">客户经理</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="manager_name" value="<?php echo input('manager_name') ?>" placeholder="" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">签单时间</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="begin_time" name="begin_time" value="<?php echo input('begin_time') ?>" placeholder="开始时间">
+                            </div>
+                            <label class="layui-form-label" style="width: auto">~</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="end_time" name="end_time" value="<?php echo input('end_time') ?>" placeholder="结束时间">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-block" style="margin-left: 90px">
+                                <select name="status">
+                                     <option value="">请选择</option>
+                                    {foreach name="status" item="v" key="k"}
+                                        <option value="{$k}" {$k==input('status')?'selected':''}>{$v}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="layui-form-item" style="margin-left: 10px">
+                             <button type="submit" class="layui-btn layui-btn-blue">搜索</button>
+                                 <a href="{:url('financial/userlist')}" class="layui-btn layui-btn-blue">清空筛选</a>
+                        </div>
+                    </form>
+                </div>
+            </blockquote>
+            <table class="layui-table">
+                <colgroup>
+                    <col width="80">
+                    <col width="120">
+                    <col width="80">
+                    <col width="110">
+                    <col width="110">
+                    <col width="110">
+                    <col width="110">
+                    <col width="110">
+                    <col>
+                    <col width="120">
+                    <col width="60">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th>ID</th>
+                        <th>客户姓名</th>
+                        <th>状态</th>
+                        <th>面积</th>
+                        <th>房屋类型</th>
+                        <th>报价师姓名</th>
+                        <th>设计师姓名</th>
+                        <th>商务经理</th>
+                        <th>地址</th>
+                        <th>签单时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  
+                  {foreach name="data" item="vo"}
+                    <tr>   
+                      <td >{$vo.id} </td> 
+                      <td >{$vo.customer_name}{eq name="$vo['is_new']" value="9"}<i title="旧客户" style="color: red" class="layui-icon layui-icon-username"></i>{/eq}</td> 
+                      <td >{$status[$vo.status]} </td> 
+                      <td >{$vo.area}</td> 
+                      <td >{$vo.room_type}</td> 
+                      <td >{$vo.quoter_name}</td> 
+                      <td >{$vo.designer_name}</td> 
+                      <td >{$vo.manager_name}</td> 
+                      <td >{$vo.address}</td> 
+                      <td >{$vo.sign_bill_time|date='Y-m-d'}</td> 
+                      <!-- <td><a class="" href="{:url('admin/offerlist/index',['customer_id'=>$vo.id])}"><i class="layui-icon layui-icon-search" title="查看历史"></i></a></td> -->
+                      <td >
+                        <a class="" href="{:url('admin/financial/get_money',['customer_id'=>$vo.id])}" ><i class="layui-icon layui-icon-search" title="查看"></i></a>
+                      </td>    
+                 {/foreach}
+                </tbody>
+            </table>
+              {$data|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+    $('.add_order').on('click','',function(){
+        var userid = $(this).data('userid');
+        layui.use('layer', function(){
+            var html = '';
+            html += '<ul style="text-align:center;padding:10px">'
+            html += '<li style="margin:3px;"><a style="width:150px" href="/admin/offerlist/add_order/customer_id/'+userid+'" class="layui-btn layui-btn-radius layui-btn-primary">半包报价</a></li>'
+            html += '<li style="margin:3px;"><a  style="width:150px" href="/admin/furniture_orther/add_order/customer_id/'+userid+'/type/2" class="layui-btn layui-btn-radius layui-btn-primary">主材报价</a></li>'
+            html += '<li style="margin:3px;"><a  style="width:150px" href="/admin/furniture_orther/add_order/customer_id/'+userid+'/type/3" class="layui-btn layui-btn-radius layui-btn-primary">智能、家电报价</a></li>'
+            html += '<li style="margin:3px;"><a  style="width:150px" href="/admin/furniture_orther/add_order/customer_id/'+userid+'/type/4" class="layui-btn layui-btn-radius layui-btn-primary">软装报价</a></li>'
+            html += '</ul>'
+            layer.open({
+                title: '选择报价内容',
+                type:1,
+                area: ['200px'],
+                content:html
+            }); 
+        })
+    })
+
+  layui.use('laydate', function(){
+    var laydate = layui.laydate;
+    //常规用法
+    laydate.render({
+      elem: '#begin_time'
+    });
+    laydate.render({
+      elem: '#end_time'
+    });
+  })
+</script>
+{/block}

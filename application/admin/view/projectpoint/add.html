@@ -1,0 +1,152 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .fenname{padding:10px;padding-right:8px;line-height:30px}
+    #sougs{line-height:35px;background-color:#009688;color:#fff;padding:5px;border-radius:2px;cursor:pointer;}
+</style>
+<div class="layui-card">
+    <div class="layui-card-header">添加</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/Offerlist/add')}" method="post">
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">客户姓名 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="name" autocomplete="off" placeholder="客户姓名" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">生日</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="birthday" id="test1" placeholder="yyyy年MM月dd日" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">单选框</label>
+                <div class="layui-input-block">
+                  <input type="radio" name="sex" value="1" title="男" checked="">
+                  <input type="radio" name="sex" value="2" title="女">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="address" autocomplete="off" placeholder="地址" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">房屋类型</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="house" autocomplete="off" placeholder="房屋类型" class="layui-input">
+                </div>
+            </div>
+       
+            <div class="layui-form-item">
+                <label class="layui-form-label">空间类型</label>
+                <div class="layui-input-inline w300">
+                  <select name="spaceid" lay-verify="required"  lay-filter="business">
+                    <option value=""></option>
+                  {volist name="data" id="vo"}
+                    <option value="{$vo.id}">{$vo.title}</option>
+                  {/volist}
+                  </select>
+                </div>
+            </div> 
+                   
+             <div class="layui-form-item">
+                <label class="layui-form-label">报价条目</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="entry" autocomplete="off" placeholder="报价条目" class="layui-input">
+                    <input type="hidden" name="hidecid" lay-verify="hidecid" autocomplete="off" placeholder="所属公司id" class="layui-input">
+                </div>
+                <span id="sougs"  onclick="return myquery()">搜索项目编码</span>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工程量</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="quant" autocomplete="off" placeholder="工程量" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Offerlist/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+function myquery(){
+     var getval = $('input[name="entry"]').val();
+     if(!getval){layer.msg("请搜索项目编号");return false;}
+        // alert(getval);
+        $.ajax({
+          type : 'post',
+          url  :  '{:url("Offerlist/ajaxquery")}',
+          dataType : 'json',
+          data : {value:getval},
+          success : function(re){
+               if(re.status!=0){
+                  layer.msg(re.msg);return false;
+               }else{
+                  // layer.msg(re.msg);
+                  var rehui = re.data;
+                  var _html = "";
+                  for (var i = 0; i <rehui.length; i++) {
+                     _html += '<span class="fenname" data-nid="'+rehui[i]['id']+'">'+rehui[i]['item_number']+'</span><span class="fenname">'+rehui[i]['type_of_work']+'</span><br />';
+                  }
+                   layer.open({
+                      type: 1,
+                      area:["500px","300px"],
+                      title: false,
+                      closeBtn: 0,
+                      shadeClose: true,
+                      skin: 'yourclass',
+                      content: _html
+                    });
+                   
+                   $(".fenname").click(function(){
+                      var text = $(this).text();
+                      $('input[name="entry"]').val(text);
+
+                  });
+               }
+          }
+        })
+   }
+</script>
+<script>
+layui.use(['layedit','form','laydate'], function(){
+  var laydate = layui.laydate;  
+  // var layedit = layui.layedit;
+  // layedit.build('demo'); //建立编辑器
+   //常规用法
+    // laydate.render({
+    //       elem: '#test1'
+    // });
+    //点我触发
+  laydate.render({
+    elem: '#test1'
+    ,eventElem: '#test1'
+    ,trigger: 'click'
+     ,format: 'yyyy年MM月dd日'
+  });
+   // $("#test1").click(function(){
+   //      laydate.render({
+   //        elem: '#test1'
+   //      });
+   // });
+ 
+
+});
+
+
+</script>
+{/block}

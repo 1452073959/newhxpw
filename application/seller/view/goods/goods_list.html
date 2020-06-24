@@ -1,0 +1,295 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>创标助手系统后台</title>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="stylesheet" href="/static/12/admin/css/admin.css">
+        <link rel="stylesheet" href="/static/12/admin/css/layer.css">
+        <link rel="stylesheet" href="/static/12/admin/css/iconfont.css">
+        <link rel="stylesheet" href="/static/12/admin/css/jquery-ui.min.css">
+        <script src="/static/12/admin/js/jquery-2.1.4.min.js"></script>
+        <script src="/static/12/admin/js/admin.js"></script>
+        <script src="/static/12/admin/js/layer.js"></script>
+    </head>
+    <body>
+        <div id="append_parent"></div>
+        <div id="ajaxwaitid"></div>
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>产品管理</h3>
+                <h5></h5>
+            </div>
+            <ul class="tab-base ds-row">
+        <li><a href="/index.php/admin/goods/index.html" class="current"><span>所有产品</span></a></li>
+        <li><a href="/index.php/admin/goods/index.html?type=lockup" ><span>下架产品</span></a></li>
+        <li><a href="/index.php/admin/goods/index.html?type=waitverify" ><span>待审核</span></a></li>
+    </ul>
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  
+  <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示" class="arrow"></span>
+        </div>
+        <ul>
+            <li>上架，当产品处于非上架状态时，前台将不能浏览该产品，商户可控制产品上架状态</li>
+            <li>违规下架，当产品处于违规下架状态时，前台将不能购买该产品，只有管理员可控制产品违规下架状态，并且产品只有重新编辑后才能上架</li>
+        </ul>
+    </div>
+  <form method="get" name="formSearch" id="formSearch">
+      <div class="ds-search-form">
+            <dl>
+                <dt>产品名称</dt>
+                <dd><input type="text" value="" name="s=g_name" id="search_goods_name" class="txt"></dd>
+            </dl>
+            <dl>
+                <dt>产品ID</dt>
+                <dd><input type="text" value="" name="id" id="search_commonid" class="txt" /></dd>
+            </dl>
+          <dl>
+              <dt>分类</dt>
+              <select name="tr_id" lay-verify="">
+                <option value="">请选择行业</option>
+                <option value="1">金融</option>
+                <option value="2">餐饮</option>
+                <option value="3">商城</option>
+              </select>
+              <select name="la_id" lay-verify="">
+                <option value="">请选择开发语言</option>
+                <option value="1">PHP</option>
+                <option value="2">java</option>
+              </select> 
+          </dl>
+          <dl>
+              <dt>所属商户</dt>
+              <dd><input type="text" value="" name="search_store_name" id="search_store_name" class="txt"></dd>
+          </dl>
+          <dl>
+              <dt>品牌</dt>
+              <dd>
+                  <div id="ajax_brand" class="dssc-brand-select w180">
+                      <div class="selection">
+                          <input name="b_name" id="b_name" value="" type="text" class="txt w180" readonly="readonly" />
+                          <input type="hidden" name="b_id" id="b_id" value="" />
+                      </div>
+                      <div class="dssc-brand-select-container">
+                          <div class="brand-index" data-url="/index.php/admin/common/ajax_get_brand.html">
+                              <div class="letter" dstype="letter">
+                                  <ul>
+                                      <li><a href="javascript:void(0);" data-letter="all">全部品牌</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="A">A</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="B">B</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="C">C</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="D">D</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="E">E</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="F">F</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="G">G</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="H">H</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="I">I</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="J">J</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="K">K</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="L">L</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="M">M</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="N">N</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="O">O</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="P">P</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="Q">Q</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="R">R</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="S">S</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="T">T</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="U">U</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="V">V</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="W">W</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="X">X</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="Y">Y</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="Z">Z</a></li>
+                                      <li><a href="javascript:void(0);" data-letter="0-9">其他</a></li>
+                                  </ul>
+                              </div>
+                              <div class="search" dstype="search"><input name="search_brand_keyword" id="search_brand_keyword" type="text" class="text" placeholder="品牌名称关键字查找"/><a href="javascript:void(0);" class="dssc-btn-mini" style="vertical-align: top;">Go</a></div>
+                          </div>
+                          <div class="brand-list" dstype="brandList">
+                              <ul dstype="brand_list">
+                                                                </ul>
+                          </div>
+                          <div class="no-result" dstype="noBrandList" style="display: none;">没有符合"<strong>搜索关键字</strong>"条件的品牌</div>
+                      </div>
+                  </div>
+              </dd>
+          </dl>
+          <dl>
+                            <dt>上架</dt>
+              <dd>
+                  <select name="goods_state">
+                      <option value="">请选择...</option>
+                                            <option value="1" >展示中</option>
+                                            <option value="0" >下架</option>
+                                        </select>
+              </dd>
+          </dl>
+          <dl>
+              <dt>等待审核</dt>
+              <dd>
+                  <select name="goods_verify">
+                      <option value=""  >请选择...</option>
+                                            <option value="1" >通过</option>
+                                            <option value="0" >未通过</option>
+                                            <option value="10" >等待审核</option>
+                                        </select>
+              </dd>
+                        </dl>
+          
+            <div class="btn_group">
+                 <a href="javascript:void(0);" id="dssubmit" class="btn " title="查询">查询</a>     
+                 <a href="/index.php/admin/goods/index.html" class="btn btn-default" title="取消">取消</a>
+            </div>
+        </div>
+  </form>
+  
+      
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th class="w24"></th>
+          <th class="w24"></th>
+          <th class="w60 align-center">平台货号</th>
+          <th colspan="2">产品名称</th>
+          <th>品牌&分类</th>
+          <th class="w72 align-center">价格(元)</th>
+          <th class="w72 align-center">库存</th>
+          <th class="w72 align-center">产品状态</th>
+          <th class="w72 align-center">审核状态</th>
+          <th class="w200 align-center" >操作</th>
+        </tr>
+      </thead>
+      <tbody>
+                <tr class="hover edit" id="ds_row_118">
+          <td><input type="checkbox" value="118" class="checkitem"></td>
+          <td><i class="iconfont icon-jia" status="open"  style="cursor: pointer;" dstype="ajaxGoodsList" data-comminid="118" title="点击展开查看此产品全部规格；规格值过多时请横向拖动区域内的滚动条进行浏览。"></i></td>
+          <td class="align-center">118</td>
+          <td class="w60 picture"><div class="size-56x56"><span class="thumb size-56x56"><i></i><img onload="javascript:ResizeImage(this,56,56);"/></span></div></td>
+          <td>
+          <dl class="goods-info"><dt class="goods-name">新西兰进口牛奶纽仕兰高钙低脂纯牛奶250ml*24盒*1箱</dt>
+          <dd class="goods-type">
+                            <i class="iconfont " title="手机端产品详情">&#xe65c;</i>
+            </dd>
+            <dd class="goods-store">平台店铺：创标助手</dd></dl>
+            </td>
+          <td>
+            <p>食品/ 酒水/ 生鲜/ 特产 >饮料冲乳 >纯牛奶</p>
+            <p class="goods-brand">品牌：</p>
+            </td>
+          <td class="align-center">89.00</td>
+          <td class="align-center">74</td>
+          <td class="align-center">出售中</td>
+          <td class="align-center">通过</td>
+          <td class="align-center">
+              <a href="/index.php/home/goods/index.html?goods_id=127" target="_blank" class="dsui-btn-view"><i class="iconfont"></i>查看</a>
+              
+                            <a href="javascript:void(0);" onclick="goods_lockup(118);" class="dsui-btn-del"><i class="iconfont"></i>违规下架</a>
+                        </td>
+        </tr>
+       
+              </tbody>
+      <tfoot>
+        <tr class="tfoot">
+            &nbsp;&nbsp;
+                        <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+            <td colspan="16"><label for="checkallBottom">全选</label>
+            <a href="JavaScript:void(0);" class="btn btn-small" dstype="lockup_batch"><span>违规下架</span></a>
+            </td>
+                    </tr>
+      </tfoot>
+    </table>
+    <ul class="pagination"><li class="disabled"><span>&laquo;</span></li> <li class="active"><span>1</span></li><li><a href="/index.php/admin/Goods/index?page=2">2</a></li><li><a href="/index.php/admin/Goods/index?page=3">3</a></li><li><a href="/index.php/admin/Goods/index?page=4">4</a></li><li><a href="/index.php/admin/Goods/index?page=5">5</a></li><li><a href="/index.php/admin/Goods/index?page=6">6</a></li><li><a href="/index.php/admin/Goods/index?page=7">7</a></li><li><a href="/index.php/admin/Goods/index?page=8">8</a></li><li class="disabled"><span>...</span></li><li><a href="/index.php/admin/Goods/index?page=11">11</a></li><li><a href="/index.php/admin/Goods/index?page=12">12</a></li> <li><a href="/index.php/admin/Goods/index?page=2">&raquo;</a></li></ul></div>
+<script type="text/javascript">
+
+    // ajax获取产品列表
+    $('i[dstype="ajaxGoodsList"]').click(
+        function(){
+        
+            var status = $(this).attr("status");
+                    if (status == 'open') {
+                        $(this).attr('status', 'close');
+                        $(this).removeClass('icon-jia').addClass('icon-jian');
+            var _parenttr = $(this).parents('tr');
+            var _commonid = $(this).attr('data-comminid');
+            var _div = _parenttr.next().find('.dssc-goods-sku');
+            if (_div.html() == '') {
+                $.getJSON('/admin/goods/goods_list.html' , {commonid : _commonid}, function(date){
+                    if (date != 'false') {
+                        var _ul = $('<ul class="dssc-goods-sku-list"></ul>');
+                                var res = eval('(' + date + ')');
+                                for (var i = 0; i < res.length; i++)
+                                {
+                                    $('<li><div class="goods-thumb" title="商家货号：' + res[i].goods_serial + '"><a href="' + res[i].url + '" target="_blank"><image src="' + res[i].goods_image + '" ></a></div>' + res[i].goods_spec + '<div class="goods-price">价格：<em title="￥' + res[i].goods_price + '">￥' + res[i].goods_price + '</em></div><div class="goods-storage">库存：<em title="' + res[i].goods_storage + '">' + res[i].goods_storage + '</em></div><a href="' + res[i].url + '" target="_blank" class="dssc-btn-mini">查看产品详情</a></li>').appendTo(_ul);
+                                    _ul.appendTo(_div);
+                                    _parenttr.next().show();
+                                }
+                        
+                        // 计算div的宽度
+                        _div.css('width', document.body.clientWidth-54);
+                        
+//                        _div.perfectScrollbar();
+                    }
+                });
+            } else {
+            	_parenttr.next().show()
+            }
+                    }else{
+                        $(this).attr('status', 'open');
+                        $(this).removeClass('icon-jian').addClass('icon-jia');
+            $(this).parents('tr').next().hide();
+                    }
+            
+        }
+    );
+
+    // 获得选中ID
+    function getItems() {
+        /* 获取选中的项 */
+        var items = '';
+        $('.checkitem:checked').each(function () {
+            items += this.value + ',';
+        });
+        if (items != '') {
+            items = items.substr(0, (items.length - 1));
+        }else{
+            layer.alert('请勾选选项', {icon: 2})  
+        }
+        return items;
+    }
+
+    // 产品下架
+    function goods_lockup(ids_str) {
+        _uri = ADMINSITEURL+"/Goods/goods_lockup?commonid=" + ids_str;
+        dsLayerOpen(_uri,'违规下架理由','400px','200px');
+    }
+    
+    // 产品审核
+    function goods_verify(ids_str) {
+        _uri = ADMINSITEURL+"/Goods/goods_verify?commonid=" + ids_str;
+        dsLayerOpen(_uri,'审核产品','400px','200px');
+    }
+    
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Goods/goods_del.html?common_id=" + ids_str;
+        dsLayerConfirm(_uri,'您确定要删除吗?');
+    }
+</script>
+
+
+
+
+

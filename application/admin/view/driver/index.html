@@ -1,0 +1,78 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <a class="layui-btn layui-btn-sm" href="">总共<b>{$count}</b>个司机</a>
+
+                </div>
+            </blockquote>
+            <table class="layui-table">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="taleft">ID</th>
+                        <th class="taleft">头像</th>
+                        <th class="taleft">司机名称</th>
+                        <th class="taleft">手机号</th>
+                        <th class="taleft">昵称</th>
+                        <th class="taleft">车牌号</th>
+                        <th class="taleft" width="150">添加时间</th>
+                        <th class="taleft" width="150">是否禁用</th>
+                        <th class="taleft" width="150">认证审核</th>
+                        <th width="150">操作</th>
+                    </tr>
+                </thead>
+                <!-- <?php dump($data)?> -->
+                <tbody> 
+                  {foreach name="data" item="vo"}
+                    <tr>
+                 <!--      <td>
+                      <input type="checkbox" name="ids[]" lay-skin="primary" lay-filter="choose" value="1"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon"></i></div>
+                      </td> -->
+                      <td class="taleft">{$vo.id}</td>    
+                      <td class="taleft"><img src="{$urls}/{$vo.headerimg}" width="50px"></td>    
+                      <td class="taleft">{$vo.surname}{$vo.truename}</td>   
+                      <td class="taleft">{$vo.mobile}</td>    
+                      <td class="taleft">{$vo.nickname}</td>                   
+                      <td class="taleft">{$vo.license_plate}</td>                   
+                      <td class="taleft">2018-06-13 12:00:52</td>
+                      <td class="taleft">
+                         <input type="checkbox" {if $vo['status']==0}checked{/if} lay-skin="switch" lay-filter="switchStatus" lay-text="启用|禁用" value="{$vo.status}" data-href="{:url('admin/driver/setstate',['id'=>$vo.id])}">
+                      </td>  
+                      <td class="taleft"> {if $vo['pass']==0}未认证{else /}<span style="color: #5FB878">已认证</span>{/if}</td>
+                      <td>
+                        <a href="{:url('Driver/edit', array('id' => $vo['id']))}" class="layui-btn layui-btn-xs layui-btn-normal"> 编辑</a>
+                     
+                      </td>
+                    </tr>       
+                 {/foreach}
+                 <!--    <tr>
+                      <td>贤心</td>
+                      <td>人生就像是一场修行</td>
+                      <td>2016-11-29</td>
+                      <td><a class="layui-btn layui-btn-xs" href=' . url("Menu/edit", array("id" => $r['id'])) . '>编辑</a><a class="layui-btn layui-btn-xs layui-btn-normal" href=' . url("Menu/add", array("parentid" => $r['id'])) . '>添加</a><a class="layui-btn layui-btn-xs ajax-get confirm layui-btn-danger" url=' . url("Menu/delete", array("id" => $r['id'])) . '>删除</a></td>
+                    </tr> -->
+                </tbody>
+            </table>
+            {$data->render()|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+{/block}

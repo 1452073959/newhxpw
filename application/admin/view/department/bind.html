@@ -1,0 +1,62 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+<form class="layui-form" action="/admin/department/bindadd" method="post">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名<i class="bred">*</i></label>
+        <div class="layui-input-inline w300">
+            <input type="text" name="username" autocomplete="off" lay-verify="required" placeholder=""
+                   class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">该账号用于登录</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码<i class="bred">*</i></label>
+        <div class="layui-input-inline w300">
+            <input type="password" name="password" autocomplete="off" lay-verify="required" placeholder=""
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">请选择绑定员工<i class="bred">*</i></label>
+        <div class="layui-input-inline w300">
+            <!-- <input type="text" name="quoter_name" autocomplete="off" lay-verify="required" placeholder="" class="layui-input"> -->
+            <select name="quoter_id" lay-filter="" lay-verify="required" lay-search>
+                <option value="">可手动输入后选择</option>
+                {foreach $quoter_name as $k=>$v }
+                <option value="{$v.id}">{$v.name}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限组</label>
+        <div class="layui-input-inline" id="tipsc">
+            <select name="roleid" lay-filter="roleid">
+                {volist name="roles" id="vo"}
+                <option value="{$vo['id']}">{$vo['title']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" id="#check">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+    });
+
+</script>
+
+{/block}

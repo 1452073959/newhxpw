@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>应用类型</title>
+	 <style type="text/css">
+	.wrap {
+		width: 98%;
+		margin-left: 1%;
+		padding-top: 20px;
+	}
+	.onLine-list .layui-col-md3 {
+		margin-top: 20px;
+	}
+	.onLine-list {
+		margin-top: 20px;
+	}
+	.cxBtn{
+		text-align: right;
+	}
+	.layui-breadcrumb a:last-child cite{
+		color: #5FB878;
+	}
+	.layui-table-cell{
+		padding: 0 5px!important;
+	}
+	.scroll-wrapper {  
+	    /*-webkit-overflow-scrolling: touch;*/  
+	    /*overflow-y: scroll;*/  
+	} 
+		.layui-layer-setwin .layui-layer-maxmin{
+		display: inline-block!important;		
+	}
+		
+	</style>
+<link rel="stylesheet" href="/static/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="/static/12/admin/css/font-awesome.min.css" media="all"/>
+<script src="/static/12/admin/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="/static/12/admin/layui/layui.js"></script>
+<script type="text/javascript" src="/static/12/admin/layui/config.js"></script>
+
+<link rel="stylesheet" href="/static/12/admin/css/online.css"/>
+<script type="text/javascript" src="/static/12/admin/js/areadata_min.js"></script>
+<script type="text/javascript" src="/static/12/admin/js/area.js"></script>
+<style>
+    th,td{
+        text-align: center;
+    }
+    .wrap{
+        width: 98%;
+        /*margin: 30px auto;*/
+    }
+    .layui-btn-group .layui-btn:first-child {
+        width: 30px !important;
+        background: url(/static/12/admin/images/jyjl.png) no-repeat center/15px 12px;
+    }
+    .layui-btn-group .layui-btn:nth-child(2) {
+        width: 30px !important;
+        background: url(/static/12/admin/images/del.png) no-repeat center/15px 12px;
+    }
+    .layui-btn{
+        margin: 0 10px !important;
+    }
+    #typeInfo{
+        display: none;
+        padding: 20px 40px;
+    }
+    .res_val{
+        width: 50%;
+        float: right;
+        margin-top: 25px;
+        color: red;
+    }
+    .onLine-list .layui-col-md3{
+    	margin-top: 0!important;
+    }
+    .layui-table-header th{
+    	text-align: center;
+    }
+    .layui-table-header table,.layui-table-body table{
+    	width: 100%;
+    	height: 100%;   	
+    }
+    .must:after {
+	    content: "*";
+	    clear: both;
+	    color: red;
+	}
+</style>
+</head>
+<script type="text/javascript" src="/static/12/admin/js/areadata_min.js"></script>
+<script type="text/javascript" src="/static/12/admin/js/area.js"></script>
+<!--excel导出-->
+<script>
+    	var $export_url='/admin/index.php/user/api/line_list.html';
+	</script>
+
+<body>
+
+<div class="wrap">
+	<span class="layui-breadcrumb" lay-separator=">" style="visibility: visible;">
+		<span>您当前所在位置：</span>
+		<a href="javascript:;">商户管理</a>
+		<span lay-separator="">&gt;</span>
+		<a><cite>应用类型</cite></a>
+	</span>
+    <div class="onLine-list">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-xs12 layui-col-sm3 layui-col-md3">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <input class="layui-btn layui-btn-normal advanced-search" id="add_rule_type" type="button" name="" value="新增应用类型">
+                        <div class="triangle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box"></div>
+        <table class="layui-table" lay-filter="typeinfo" id="typelist"></table>
+    </div>
+    <div class="" id="typeInfo">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label must">应用类型名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="interface_name" placeholder="请输入应用类型名称" lay-verify="required"  autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--<script src="/admin/skin/build/js/jquery.min.js"></script>-->
+<script type="text/javascript">
+	function arrayToJson(formArray){
+		var dataArray = {};
+		$.each(formArray,function(){
+			if(dataArray[this.name]){
+				if(!dataArray[this.name].push){
+					dataArray[this.name] = [dataArray[this.name]];
+				}
+				dataArray[this.name].push(this.value || '');
+			}else{
+				dataArray[this.name] = this.value || '';
+			}
+		});
+		return JSON.stringify(dataArray);
+	}
+	function aa(e){
+		if(e.keyCode==116){
+			location.reload();
+			return false;
+		}
+	}
+	document.onkeydown = aa;
+	
+	//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+
+	//ipad端禁止缩放屏幕
+	window.onload=function () {  
+        document.addEventListener('touchstart',function (event) {  
+            if(event.touches.length>1){  
+                event.preventDefault();  
+            }  
+        })  
+        var lastTouchEnd=0;  
+        document.addEventListener('touchend',function (event) {  
+            var now=(new Date()).getTime();  
+            if(now-lastTouchEnd<=300){  
+                event.preventDefault();  
+            }  
+            lastTouchEnd=now;  
+        },false)  
+    }
+</script>
+<script type="text/javascript">
+    layui.use(['table','form','laypage'], function () {
+        var table   = layui.table,
+            form    = layui.form;
+        //第一个实例
+		table.render({
+			elem: '#typelist'
+			, id      : 'idtest'
+			, loading : true
+			, even    : true
+			, where   : {word:$('#word').val()}
+			, url     : '/admin/goods/goods_style.html' //数据接口
+			, method  : 'post' //http请求类型
+			, page    : true
+	        , cols    : [[ //表头
+                {field : 'id', title : 'ID', }
+                , {field : 'interface_name', title : '应用类型' }
+				, {field : 'time', title : '操作时间'}
+				, {field : 'caozuo', title : '操作'}
+			]],
+
+		});
+        $('.form-search').on('submit', function () {
+            var where = {word:$('#word').val()};
+            table.reload('idtest', {where : where, page : {
+                    curr : 1 //重新从第 1 页开始
+                }});
+            return false;
+        });
+        //监听工具条按钮
+        table.on('tool(typeinfo)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('真的删除【'+data.interface_name+'】吗？', function(index){
+                    $.post('/admin/goods/style_del',{id:data.id},function(msg){
+                        if (msg.status == 1){
+                            layer.msg("删除成功");
+                            obj.del();
+                        }else{
+                            layer.msg(msg.mag);
+                        }
+                    });
+                    layer.close(index);
+                });
+            }else if(obj.event === 'edit'){
+                $('[name=interface_name]').val(data.interface_name);
+                var lindex = layer.open({
+                    type       : 1,
+                    title      : '编辑',//不显示标题栏
+                    area       : ['500px'],
+                    offset: '100px',
+                    shade      : 0.5,
+                    shadeClose : true,
+                    id         : 'LAY_layuipro',//设定一个id，防止重复弹出
+                    btn        : ['确定', '取消'],
+                    btnAlign   : 'r',
+                    moveType   : 1,//拖拽模式，0或者1
+//                  maxmin     : true,
+                    content    : $("#typeInfo"),
+                    success    : function (layero) {
+                        layer.iframeAuto(lindex)
+                    },
+                    yes        : function () {
+                        putform(lindex,data.id);
+                        return false;
+                    }
+                });
+            }
+        });
+        //新增类型
+        $(document).on('click','#add_rule_type',function(){
+        	$("#typeInfo input").val("");
+        	$("#typeInfo .layui-textarea").val("");
+            //动态加载规则表
+            var lindex=layer.open({
+                type       : 1,
+                title      : '添加规则',//不显示标题栏
+                area       : ['500px'],
+                offset: '100px',
+                shade      : 0.5,
+                btnAlgin    : 'r',
+                shadeClose : true,
+                btn        : ['确定', '取消'],
+//              maxmin     : true,
+                content    : $('#typeInfo'),
+                yes        : function (index,data1) {
+                    putform(lindex);
+                    return false;
+                }
+            });
+        });
+        function putform(lindex,id) {
+            var interface_name  = $('[name=interface_name]').val();
+            if (!interface_name){
+                layer.msg('应用类型不能为空！');
+                return false;
+            }
+            $.post("/admin/goods/style_edit.html",{id:id,interface_name:interface_name},function(data){
+                layer.close(lindex);
+                if (data.status == 1){
+                    layer.msg(data.info,'',function(){
+                        window.location.reload();
+                    });
+                }else{
+                    layer.msg(data.info);
+                }
+            });
+            return false;
+        }
+    });
+
+
+</script>
+
+
+</body>
+
+
+</html>

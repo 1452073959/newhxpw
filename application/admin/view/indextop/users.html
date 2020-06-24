@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://v2.demo.hisiphp.com/admin.php/system/member/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>会员列表 -  Powered by HisiPHP</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<!-- <link id="layuicss-layer" rel="stylesheet" href="./会员列表 - Powered by HisiPHP_files/layer.css" media="all"></head> -->
+<body class="hisi-theme-0">
+        
+        <div class="page-tab-content">
+            <style type="text/css">
+    .layui-table-body{overflow-x:auto;}
+    .layui-table-cell{font-size:12px;}
+</style>
+<div class="listMain">
+            <form class="layui-form">
+            <table class="layui-table">
+              <thead>
+                <tr>
+                  <!-- <th width="50"><input type="checkbox" name="" lay-skin="primary" lay-filter="allChoose" id="allChoose"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon"></i></div></th> -->
+                  <!-- <th class="taleft">ID</th> -->
+                  <th class="taleft">ID</th>
+                  <th class="taleft">头像</th>
+                  <th class="taleft">司机名称</th>
+                  <th class="taleft">手机号</th>
+                  <th class="taleft">昵称</th>
+                  <th class="taleft">车牌号</th>
+                  <th class="taleft" width="150">添加时间</th>
+                  <th class="taleft" width="150">是否禁用</th>
+                  <th width="150">操作</th>
+                </tr> 
+              </thead>
+              <?php print_r($data);?>
+              <tbody>
+                {foreach name="data" item="vo"}
+                    <tr>
+                 <!--      <td>
+                      <input type="checkbox" name="ids[]" lay-skin="primary" lay-filter="choose" value="1"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon"></i></div>
+
+                      </td> -->
+                      <td class="taleft">{$vo.id}</td>    
+                      <td class="taleft"><img src="{$urls}/{$vo.headerimg}" width="50px"></td>    
+                      <td class="taleft">{$vo.surname}{$vo.truename}</td>   
+                      <td class="taleft">{$vo.mobile}</td>    
+                      <td class="taleft">{$vo.nickname}</td>                   
+                      <td class="taleft">{$vo.license_plate}</td>                   
+                      <td class="taleft">2018-06-13 12:00:52</td>
+                      <td class="taleft"><div class=""><input type="checkbox" name="switch" lay-skin="switch"></div></td>  
+                      <td>
+                        <a href="/admin.php/Member/edit/id/1" class="layui-btn layui-btn-mini btn-bg-1AB394"><i class="iconfont"></i> 编辑</a>
+                     
+                      </td>
+                    </tr>       
+                 {/foreach}
+             </tbody>
+            </table>
+
+
+            <!--分页栏--> 
+            <div class="larry-table-page clearfix">
+                  <!-- <a href="javascript:;" class="layui-btn layui-btn-small btn-bg-ED5565 all_del">批量删除</a> -->
+                  <!-- <a href="javascript:;" class="layui-btn layui-btn-small btn-bg-1C84C6 all_sort">批量排序</a> -->
+     <!--              <div><div id="page" data-allnum="6" data-page="1" data-url="/admin.php/Member/index/p/" data-total="共 80 条记录"><div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-0"><span class="layui-laypage-total" style="color:#333">共 80 条记录</span><span class="layui-laypage-curr layui-btn-disabled">上一页</span><span class=" layui-btn-disabled">首页</span><span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>1</em></span><a href="javascript:;" data-page="2">2</a><a href="javascript:;" data-page="3">3</a><a href="javascript:;" data-page="4">4</a><a href="javascript:;" data-page="5">5</a><span class=" layui-btn-disabled">…</span><a href="javascript:;" class="layui-laypage-last" title="尾页" data-page="6">末页</a><a href="javascript:;" class="layui-laypage-next" data-page="2">下一页</a><span class="layui-laypage-total">到第 <input type="number" min="1" onkeyup="this.value=this.value.replace(/\D/, '');" value="1" class="layui-laypage-skip"> 页 <button type="button" class="layui-laypage-btn">确定</button></span></div></div></div>             </div> -->
+            </form>
+        </div>
+        </body>
+        </html>
+<script>
+//Demo
+layui.use('form', function(){
+  var form = layui.form;
+  
+  //监听提交
+  form.on('submit(formDemo)', function(data){
+    layer.msg(JSON.stringify(data.field));
+    return false;
+  });
+});
+</script>

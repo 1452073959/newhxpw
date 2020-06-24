@@ -1,0 +1,405 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.layui-form-select{float:left;margin-right:10px}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote">
+                <form class="layui-form layui-inline" action="" method="post">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">礼品名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gname" placeholder="" value="{:input('gname')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">品牌</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gbrand" placeholder="" value="{:input('gbrand')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-block">
+                            <select name="status" lay-search>
+                                <option value="">请选择</option>
+                                <option value="1">正常</option>
+                                <option value="2">禁用</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item"  style="margin:5px 0">
+                        <label class="layui-form-label" style="width:70px;padding:9px 5px">分类：</label>
+                        <input id="sex" type="text" list="sexlist" class="layui-input" style="width:165px;margin-left: 85px;" name="cates">
+                        <datalist id="sexlist">
+                            {foreach $cate as $key=>$vo }
+                            <option>{$vo}</option>
+                            {/foreach}
+                        </datalist>
+                    </div>
+                    <div class="layui-form-item" style="margin-left:10px">
+                        <div class="layui-input-inline">
+                          <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                          <a href="/admin/gift/gift_index" class="layui-btn layui-btn-primary">重置</a>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="add" id="add">新增礼品</button> 
+                </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['print'],limit:20}">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th width="150" lay-data="{field:'id',width:100}">id</th>
+                        <th width="150" lay-data="{field:'cate',width:100}">分类</th>
+                        <th class="" lay-data="{field:'name',width:150}">礼品名称</th>
+                        <th class="" lay-data="{field:'brand',width:100}">品牌</th>
+                        <th class="" lay-data="{field:'unit',width:100}">单位</th>
+                        <th class="" lay-data="{field:'price',width:100}">市场价</th>
+                        <th class="" lay-data="{field:'cost',width:150}">成本价</th>
+                        <th class="" lay-data="{field:'status', width:200}">状态</th>
+                        <th class="" lay-data="{field:'content',}">描述</th>
+                        <?php if($admininfo['roleid'] == 1){ ?>
+                            <th class="" lay-data="{field:'frame',width:150}">所属公司</th>
+                        <?php } ?>
+                        <th class="" lay-data="{field:'edit',width:200}">操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  {foreach name="data" item="vo"}
+                    <tr>
+                        <td class="">{$vo.id}</td>
+                        <td class="">{$vo.cate}</td>
+                        <td class="">{$vo.name}</td>
+                        <td class="">{$vo.brand}</td>
+                        <td class="">{$vo.unit}</td>
+                        <td class="">{$vo.price}</td>
+                        <td class="">{$vo.cost}</td>
+                        <td class=""><a href="javascript:;" lay-event="edit_ststus" style="{$vo.status==1?'正常':'color:red'}" status="{$vo.status}">{$vo.status==1?'正常':"禁用"}</a></td>
+                        <td class="">{$vo.content}</td>
+                        <?php if($admininfo['roleid'] == 1){ ?>
+                            <td class="">{$frame[$vo['fid']]['name']}</td>
+                        <?php } ?>
+                        <td class="">
+                            <!-- <a href="javascript:;" lay-event="edit">修改</a> -->
+                            <a href="javascript:;" lay-event="del">删除</a>
+                        </td>
+                    </tr>       
+                 {/foreach}
+                </tbody>
+            </table>
+            {$data->render()|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+        table.on('tool(test3)',function(obj){
+            var data = obj.data;
+            //禁用
+            if(obj.event == 'edit_ststus'){
+                if($(this).attr('status') == 1){
+                    var status = 2;
+                    var str = "禁用";
+                }else{
+                    var status = 1;
+                    var str = "启用";
+                }
+                var that = this;
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                    content: '是否'+str+'该礼品？',
+                    title:'修改礼品',
+                    btn: ['修改', '取消'],
+                        yes: function(index, layero){
+                            
+                            $.post('/admin/gift/gift_edit_status',{id:data.id,status:status},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    // alert(res.msg);
+                                    $(that).attr('status',status);
+                                    if(status == 2){
+                                        $(that).css('color','red');
+                                    }else{
+                                        $(that).css('color','#333');
+                                        str = '正常';
+                                    }
+                                    
+                                    $(that).text(str);
+                                    //不需要刷新页面 直接改html了
+                                    // setTimeout(function(){
+                                    // 　　window.location.reload()
+                                    // },1000);
+                                }else{
+                                    alert(res.msg);
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }); 
+            }
+            //删除
+            if(obj.event == 'del'){
+                
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                    content: '是否删除该礼品？删除后不能恢复',
+                    title:'删除礼品',
+                    btn: ['删除', '取消'],
+                        yes: function(index, layero){
+                            
+                            $.post('/admin/gift/gift_del',{id:data.id},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    // alert(res.msg);
+                                    setTimeout(function(){
+                                    　　window.location.reload()
+                                    },1000);
+                                }else{
+                                    layer.msg(res.msg);
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }); 
+            }
+            //修改
+            if(obj.event == 'edit'){
+                var html = '';
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">礼品名称：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" value="'+data.name+'" name="name" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">品牌：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" value="'+data.brand+'" name="brand" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">市场价：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" value="'+data.price+'" name="price" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">成本价：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" value="'+data.cost+'" name="cost" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">礼品描述：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <textarea name="content" style="padding:5px;width:180px;height:130px;">'+data.content+'</textarea>'
+                html += '  </div>'
+                html += '</div>'
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                    content: html,
+                    title:'修改礼品',
+                    btn: ['修改', '取消'],
+                        yes: function(index, layero){
+                            var name = $('input[name="name"]').val();
+                            var brand = $('input[name="brand"]').val();
+                            var price = $('input[name="price"]').val();
+                            var cost = $('input[name="cost"]').val();
+                            var content = $('textarea[name="content"]').val();
+                            $.post('/admin/gift/gift_edit',{id:data.id,name:name,brand:brand,price:price,cost:cost,content:content},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    // alert(res.msg);
+                                    setTimeout(function(){
+                                    　　window.location.reload()
+                                    },1000);
+                                }else{
+                                    alert(res.msg);
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }); 
+            }
+        })
+        table.on('toolbar(test3)', function(obj){
+            if (obj.event == 'add'){
+                var html = '';
+                html    +='                    <div class="layui-form-item"  style="margin:5px 0">\n' +
+                    '                        <label class="layui-form-label" style="width:70px;padding:9px 5px">分类：</label>\n' +
+                    '                        <input id="sex" type="text" value="" name="cate" list="sexlist" class="layui-input" autocomplete="off" style="width:165px;margin-left: 85px;" >\n' +
+                    '                        <datalist id="sexlist">\n' +
+                    '                            {foreach $cate as $key=>$vo }\n' +
+                    '                            <option>{$vo}</option>\n' +
+                    '                            {/foreach}\n' +
+                    '                        </datalist>\n' +
+                    '                    </div> '
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">礼品名称：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="name" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">品牌：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="brand" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">单位：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="unit" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">市场价：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="price" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">成本价：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <input type="text" name="cost" autocomplete="off" class="layui-input">'
+                html += '  </div>'
+                html += '</div>'
+
+                html += '<div class="layui-form-item" style="margin:5px 0">'
+                html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">礼品描述：</label>'
+                html += '  <div class="layui-input-block" style="margin-left:85px">'
+                html += '    <textarea name="content" style="padding:5px;width:180px;height:130px;"></textarea>'
+                html += '  </div>'
+                html += '</div>'
+                layui.use('layer', function(){
+                    var layer = layui.layer;
+                    layer.open({
+                    content: html,
+                    title:'添加礼品',
+                    btn: ['添加', '取消'],
+                        yes: function(index, layero){
+                            var name = $('input[name="name"]').val();
+                            var brand = $('input[name="brand"]').val();
+                            var price = $('input[name="price"]').val();
+                            var cost = $('input[name="cost"]').val();
+                            var content = $('textarea[name="content"]').val();
+                            var cate = $('input[name="cate"]').val();
+                            var unit = $('input[name="unit"]').val();
+                            console.log(cate);
+                            $.post('/admin/gift/gift_add',{name:name,brand:brand,price:price,cost:cost,content:content,cate:cate,unit:unit},function(res){
+                                if(res.code == 1){
+                                    layer.msg(res.msg);
+                                    // alert(res.msg);
+                                    setTimeout(function(){
+                                    　　window.location.reload()
+                                    },1000);
+                                }else{
+                                    alert(res.msg);
+                                }
+                            },'json')
+                        },
+                        btn2: function(index, layero){
+                            layer.close(index);
+                        },
+                        cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                }); 
+            }
+        })
+    })
+</script>
+{/block}

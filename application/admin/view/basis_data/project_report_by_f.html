@@ -1,0 +1,151 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.layui-form-item .layui-input-inline{
+    margin-right: 0px;
+    
+}
+.layui-form-item{
+    clear:none;
+    float: left;
+    margin-bottom:5px;
+
+}
+.layui-form-label{
+    width:60px;
+}
+.layui-form-select .layui-input{
+    padding-right:5px;
+}
+.layui-input-block{
+    width:300px;
+}
+#datafrom{
+    background-color: #ffffff
+}
+</style>
+<div class="layui-form">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-input-inline" style="">
+            <form class="layui-form" method="post" action="{:url('basis_data/project_report_by_f')}" class="layui-form form-signin" enctype="multipart/form-data">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">编码</label>
+                    <div class="layui-input-block">
+                        <input class="layui-input" value="{:input('item_number')}" name="item_number" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工种类别</label>
+                    <div class="layui-input-block">
+                        <select name="type_of_work" id="" lay-filter="" xm-select="type_of_word" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach name="type_of_work" item="v"}
+                                <option value="{$v.id}" {if(!empty(input('type_of_work') && in_array($v['id'],explode(',',input('type_of_work')))))}selected{/if}>{$v.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分公司</label>
+                    <div class="layui-input-block">
+                        <select name="frame" id="" lay-filter="" xm-select="frame" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach name="frame" item="v"}
+                                <option value="{$v.id}" {if(!empty(input('frame') && in_array($v['id'],explode(',',input('frame')))))}selected{/if}>{$v.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所需字段</label>
+                    <div class="layui-input-block">
+                        <select name="field" id="" lay-filter="" xm-select="field" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach $field as $key=>$v}
+                                <option value="{$key}" {if(!empty(input('field') && in_array($key,explode(',',input('field')))))}selected{/if}>{$v}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-left: 10px">
+                        <button type="submit" class="layui-btn layui-btn-blue">搜索</button>
+                        <a href="{:url('basis_data/project_report_by_f')}" class="layui-btn layui-btn-blue">清空筛选</a>
+                </div>
+            </form>
+        </div>
+    </blockquote>
+    <!-- <table lay-filter="demo"> -->
+        <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['filter'],page: true,limit:20,limits:[50,100,300,500,1000,2000,5000]}">
+        <thead>
+            <tr>
+                <th lay-data="{field:'item_number', width:110,sort:true,align:'center',style:'font-size:12px',align:'center'}">项目编码</th>
+                <th lay-data="{field:'type_of_work', sort:true, width:120,align:'center',style:'font-size:12px',align:'center'}">工种类别</th>
+                <th lay-data="{field:'name', sort:true, width:200,align:'center',style:'font-size:12px',align:'center'}">项目名称</th>
+                <th lay-data="{field:'unit', sort:true, width:110,align:'center',style:'font-size:12px',align:'center'}">单位</th>
+                <th lay-data="{field:'count_all', sort:true, width:110,align:'center',style:'font-size:12px',align:'center'}">总使用数</th>
+                <th lay-data="{field:'count', sort:true, width:150,align:'center',style:'font-size:12px',align:'center'}">选中公司使用数</th>
+                {if(!empty($fid)) && !empty(input('field'))}
+                    {foreach name="fid" item="v1"}
+                        {foreach :explode(',',input('field')) as $k=>$v2}
+                            <th lay-data="{field:'f_{$v2}{$v1}', sort:true, width:160,align:'center',style:'font-size:12px',align:'center'}">{$frame[$v1]['name']}{$field[$v2]}</th>
+                        {/foreach}
+                    {/foreach}
+                {/if}
+            </tr> 
+        </thead>
+        <tbody>
+            {foreach name="basis_project" item="v"}
+                {if(in_array($v['item_number'],$has_f_project))}
+                    <tr>
+                        <td>{$v['item_number']}</td>
+                        <td>{$type_of_work[$v['type_word_id']]['name']}</td>
+                        <td>{$v['name']}</td>
+                        <td>{$v['unit']}</td>
+                        <td>{$v['count_all']}</td>
+                        <td>{$v['count']}</td>
+
+                        {foreach name="fid" item="v1"}
+                            {if(isset($f_project[$v1][$v['item_number']]))}
+                                {if(!empty(input('field')))}
+                                    {foreach :explode(',',input('field')) as $k2=>$v2}
+                                        <td>{$f_project[$v1][$v['item_number']][0][$v2]}</td>
+                                    {/foreach}
+                                {/if}
+                            {else /}
+                                {if(!empty(input('field')))}
+                                    {foreach :explode(',',input('field')) as $k2=>$v2}
+                                        <td></td>
+                                    {/foreach}
+                                {/if}
+                            {/if}
+                        {/foreach}
+                    </tr>
+                {/if}
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+  
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<!-- 引入select多选 -->
+<script src="https://raw.githack.com/hnzzmsf/layui-formSelects/master/dist/formSelects-v4.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/hnzzmsf/layui-formSelects/master/dist/formSelects-v4.css" />
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+        //转换静态表格
+        // table.init('demo', {
+        //   height: 800, //设置高度
+        //   limit: 50,
+        //   limits:[50,100,300,500,1000,2000,5000],
+        //   toolbar: 'exports'  ,
+        //   defaultToolbar: ['filter', 'print', 'exports'],
+        //   page: true //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+        //   //支持所有基础参数
+        // }); 
+    })
+</script>
+{/block}

@@ -1,0 +1,520 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.form-control{display: inline-block;padding: 5px;}
+/*.text-limit{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;max-width: 110px;}*/
+    .text-center{text-align: center !important;}
+    td{
+        text-align: center;
+        padding:5px 5px !important;
+        color:#3e3232;
+    }
+    th{
+        padding:5px 5px !important;
+        color:#3e3232;
+        /*font-weight: bold!important;*/
+    }
+.layui-card-body{
+    line-height:normal;
+}
+.layui-table td, .layui-table th{
+    line-height:normal;
+}
+p{
+    color: #484646
+}
+.text-left{
+    text-align: left
+}
+table,td,th{border:1px solid #000000;text-align:center;padding:2px;}
+/*td{
+    padding: 3px !important;
+    font-size: 12px !important;
+}
+th{
+    padding: 3px !important;
+    font-size: 12px !important;
+}*/
+</style>
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="">
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-inline">
+                    <button class="layui-btn layui-btn-sm" type="button" data-fun="print" id="btn_export">打印</button>
+                </form>
+            </blockquote>
+            <div id="export-table">
+                
+                <p>
+                   <img style="max-width:160px;" src="__STATIC__/imgs/logo.png">
+                </p>
+                <p style="text-align: center;font-weight: 900;font-size: 22px;margin-bottom:10px">
+                    {$userinfo.room_type ?: '住宅'}装饰工程造价{$userinfo.status <= 6 ? '预算书': '结算书'}
+                </p>
+                <p style="width: 98%;padding:0 1%;">
+                    <span style="text-align: left">面积：{$userinfo.area}㎡</span>
+                </p>
+                <p style="width: 98%;padding:0 1%;">
+                    <span style="text-align: left">工程名称：{$userinfo.address}</span>
+                    <span style="float: right"><?php echo date('Y-m-d'); ?></span>
+                </p>
+                
+                {notempty name="datas"}
+                <!-- <table class="layui-table" style="word-break:break-all"> -->
+                <table class="layui-table" id="tables"  border="1"  rull="all" style="border:1px solid black" >
+                    <colgroup>
+                        <col width="30">
+                        <col width="50">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="250">
+                      </colgroup>
+                    <thead>
+                        
+                    </thead>
+                    <tbody> 
+
+                        <tr>
+                            <th style="text-align:center;" colspan="9">公司名称：{$order_info.unit}</th>                
+                        </tr>
+                        <tr>
+                                <td colspan="3"> 客户：{$userinfo.customer_name}</td>
+                                <td colspan="3">设计师：{$userinfo.designer_name}</td>
+                                <td colspan="2">报价师：{$userinfo.quoter_name}</td>
+                                <td colspan="1" >设计总监：{$userinfo.director_designer ?: '暂无'}</td>
+                        </tr>
+                        <tr>
+
+                                <td colspan="2">木作设计师：{$userinfo.wood_designer ?: '暂无'}</td>
+                                <td colspan="2">家具设计师：{$userinfo.furniture_designer ?: '暂无'}</td>
+                                <td colspan="2">软装设计师：{$userinfo.soft_designer ?: '暂无'}</td>
+                                <td colspan="2">水电设计师：{$userinfo.sd_designer ?: '暂无'}</td>
+                                <td colspan="1">助理设计师：{$userinfo.aid_designer ?: '暂无'}</td>
+
+                        </tr>
+                        <tr>      
+                            <th class="text-center" rowspan="2" colspan="1">序号</th>
+                            <th class="text-center" rowspan="2">工程项目名称</th>         
+                            <th class="text-center" rowspan="2">数量</th>       
+                            <th class="text-center" rowspan="2">单位</th>
+                            {if $type==2}
+                            <th class="text-center" colspan="4">综合费</th>
+                            {else/}
+                            <th class="text-center" colspan="2">辅材费</th>
+                            <th class="text-center" colspan="2">人工费</th>
+                            {/if}
+                            <th class="text-center" rowspan="2">施工工艺及材料说明</th> 
+                        </tr>
+                        <tr>
+                            {if $type==2}
+                            <th class="text-center" colspan="2">单价</th>
+                            <th class="text-center" colspan="2">合计</th>
+                            {else/}
+                            <th class="text-center">单价</th>
+                            <th class="text-center">合计</th>
+                            <th class="text-center">单价</th>
+                            <th class="text-center">合计</th>
+                            {/if}
+                        </tr>
+                        {notempty name="datas"}
+                            <?php 
+                                $num1 = 65;
+                                $total_quota = 0;
+                                $total_craft_show = 0;
+                                $num2=65; 
+                            ?>
+                            <?php if(input('word') == 1){?>
+                                {foreach name="datas" item="v1" key="k1"}
+                                    <tr data-cate="tr{$k1}">
+                                        <td colspan="1"><?php echo chr($num1); ?></td>
+                                        <td colspan="2" style="font-weight:bold;">{$k1}</td>
+                                        <td colspan="6"></td>
+                                    </tr>
+                                    <?php $num1++;$num2=97; ?>
+                                    {foreach name="$v1" key="k2" item="v2"}
+                                        <tr id="tr{$k2}">
+                                            <td colspan="1"><?php echo chr($num2); ?></td>
+                                            <td class="text-center" colspan="8" style="font-weight:bold;">{$k2}</td>
+                                        </tr>
+                                        <?php $num3=1; $num2++; ?>
+                                        {foreach name="$v2" item="v3" key="k3"}
+                                            <tr class="tr{$k1}{$k2}">
+                                                <td>{$num3}</td>
+                                                <td>{:htmlspecialchars_decode($v3['info']['project'])}</td>
+                                                <td>{$v3.num}</td>
+                                                <td>{$v3['info']['company']}</td>
+                                                {if $type==2}
+                                                    <td colspan="2">{$v3['info']['quota']+$v3['info']['craft_show']}</td>
+                                                    <td colspan="2">
+                                                        {if($v3['num'])}
+                                                            {$v3['num']*$v3['info']['craft_show']+$v3['num']*$v3['info']['quota']}
+                                                        {/if}
+                                                     </td>
+                                                {else/}
+                                                    <td>{$v3['info']['quota']}</td>
+                                                    <td>{$v3.num?$v3.num*$v3['info']['quota']:''}</td>
+                                                    <td>{$v3['info']['craft_show']}</td>
+                                                    <td>{$v3.num?$v3.num*$v3['info']['craft_show']:''}</td>
+                                                {/if}
+                                                <td class="text-left">{:htmlspecialchars_decode($v3['info']['material'])}</td>
+                                                <input type="hidden" form="myform" name="" value="">
+                                            </tr>
+                                            <?php
+                                                $total_quota += $v3['num']?$v3['num']*$v3['info']['quota']:0;
+                                                $total_craft_show += $v3['num']?$v3['num']*$v3['info']['craft_show']:0;
+                                                $num3++;
+                                             ?>
+                                        {/foreach}
+                                    {/foreach}
+                                    <tr class="tr{$k1}total">
+                                        <td class="text-center" colspan="2">小计</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                {/foreach}
+                            <?php }else{?>
+                                {foreach name="datas" item="v1" key="k1"}
+                                    <tr id="tr{$k1}">
+                                            <td><?php echo chr($num2); ?></td>
+                                            <td style="text-align: left; padding-left: 25px!important;font-weight:bold;" colspan="8">{$k1}</td>
+                                        </tr>
+                                    <?php
+                                            $num1 = 1;
+                                            $num2++; 
+                                            $space_total1=0;//辅材
+                                            $space_total2=0; //人工
+                                    ?>
+                                    {foreach name="$v1" key="k2" item="v2"}
+                                        <tr class="">
+                                                <td>{$num1}</td>
+                                                <td style="text-align: left;">{:htmlspecialchars_decode($v2['info']['project'])}</td>
+                                                <td>{$v2.num}</td>
+                                                <td>{$v2['info']['company']}</td>
+                                            {if $type==2}
+                                            <td colspan="2">{$v2['info']['quota']+$v2['info']['craft_show']}</td>
+                                            <td colspan="2">
+                                                {$v2['num']?($v2['num']*$v2['info']['craft_show']+$v2['num']*$v2['info']['quota']):''}
+                                            </td>
+                                            {else/}
+                                            <td>{$v2['info']['quota']}</td>
+                                            <td>{$v2.num?$v2.num*$v2['info']['quota']:'0'}</td>
+                                            <td>{$v2['info']['craft_show']}</td>
+                                            <td>{$v2.num?$v2.num*$v2['info']['craft_show']:'0'}</td>
+                                            {/if}
+                                                <td class="text-left">{:htmlspecialchars_decode($v2['info']['material'])}</td>
+                                                <input type="hidden" form="myform" name="" value="">
+                                            </tr>
+                                            <?php 
+                                                $total_quota += $v2['num']?$v2['num']*$v2['info']['quota']:0;
+                                                $total_craft_show += $v2['num']?$v2['num']*$v2['info']['craft_show']:0;
+                                                $space_total1 += $v2['num']?$v2['num']*$v2['info']['quota']:0;
+                                                $space_total2 += $v2['num']?$v2['num']*$v2['info']['craft_show']:0;
+                                                $num1++;
+                                             ?>
+                                    {/foreach}
+                                    <tr class="">
+                                        <td class="text-center"  colspan="2">小计</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{$space_total1}</td>
+                                        <td></td>
+                                        <td>{$space_total2}</td>
+                                        <td></td>
+                                    </tr>
+                                {/foreach}
+                            <?php }?>
+                            <tr>
+                                <td class="text-left" colspan="2">直接费小计</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{$total_quota}</td>
+                                <td></td>
+                                <td>{$total_craft_show}</td>
+                                <td></td>
+                            </tr>
+                            <?php $num=97; ?>
+                            <?php $has_tax=0; ?>
+                            {if($offerlist_info['order_info']['order_cost'])}
+                                {foreach name="$offerlist_info['order_info']['order_cost']" item="vcost" key="kcost"}
+                                    <?php if($vcost['name'] == '优惠'){ 
+                                        if($vcost['price'] == 0){
+                                            continue;
+                                        }
+                                    } ?>
+                                    <?php if($vcost['name'] == '总计'){ 
+                                        if($offerlist_info['order_info']['discount_proquant'] == $vcost['price']){
+                                            continue;
+                                        }
+                                    } ?>
+                                    <!-- 显示设计费 -->
+                                    {if $offerlist_info['order_info']['design_val']['design_in'] == 1 && $vcost['name']=='工程报价'  && $offerlist_info['order_info']['design_price'] > 0}
+                                        {if $offerlist_info['order_info']['design_val']['design_type'] == 1}
+                                            <tr>
+                                                <td class="text-left" colspan="2">{$offerlist_info['order_info']['design_val']['design_project_info']['project']}</td>
+                                                <td colspan="6">{$offerlist_info['order_info']['design_price']}</td>
+                                                <td class="text-left">{{$offerlist_info['order_info']['design_val']['design_project_info']['material'] ?: ''}</td>
+                                            </tr>
+                                        {else /}
+                                            <tr>
+                                                <td class="text-left" colspan="2">设计费</td>
+                                                <td colspan="6">{$offerlist_info['order_info']['design_price']}</td>
+                                                <td class="text-left">{$offerlist_info['order_info']['design_val']['design_content'] ?: ''}</td>
+                                            </tr>
+                                        {/if}
+                                    {/if}
+
+                                    <tr>
+                                        <td class="text-left" colspan="2">{$vcost.name}{if($vcost['name']=='直接费' && in_array($order_info['frameid'],[204,176]))}(A){/if}</td>
+                                        <td colspan="6">{$vcost.price}</td>
+                                        <td class="text-left">{$vcost.content ?: ''}</td>
+                                    </tr>
+                                    {if $offerlist_info['order_info']['design_val']['design_in'] == 2 && $vcost['name']=='工程报价' && $offerlist_info['order_info']['design_price'] > 0}
+                                        {if $offerlist_info['order_info']['design_val']['design_type'] == 1}
+                                            <tr>
+                                                <td class="text-left" colspan="2">{$offerlist_info['order_info']['design_val']['design_project_info']['project']}</td>
+                                                <td colspan="6">{$offerlist_info['order_info']['design_price']}</td>
+                                                <td class="text-left">{{$offerlist_info['order_info']['design_val']['design_project_info']['material'] ?: ''}</td>
+                                            </tr>
+                                        {else /}
+                                            <tr>
+                                                <td class="text-left" colspan="2">设计费</td>
+                                                <td colspan="6">{$offerlist_info['order_info']['design_price']}</td>
+                                                <td class="text-left">{$offerlist_info['order_info']['design_val']['design_content'] ?: ''}</td>
+                                            </tr>
+                                        {/if}
+                                    {/if}
+                                    <?php $num++; ?>
+                                {/foreach}
+                            {else /}
+                                <tr>
+                                    <td class="text-left" colspan="2">直接费{if(in_array($order_info['frameid'],[204,176]))}(A){/if}</td>
+                                    <td colspan="6">{$total_quota+$total_craft_show}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left" colspan="2">工程报价</td>
+                                    <td colspan="6">{$offerlist_info['order_info'].discount_proquant}</td>
+                                    <td></td>
+                                </tr>
+                            {/if}
+                            <!-- {notempty name="design"}
+                                {foreach name="$design" key="k" item="v"}
+                                    <tr>
+                                        <td class="text-left" colspan="2">{$v['project']}</td>
+                                        <td colspan="6">{$v['craft_show']*$v['num']}</td>
+                                        <td class="text-left">{$v['material']}</td>
+                                    </tr>
+                                {/foreach}
+                            {/notempty} -->
+                            
+                            {notempty name="order_info['o_remark']"}
+                                <tr>
+                                    <td colspan="9" style="text-align: left;"><div style="padding:3px">{:nl2br($order_info['o_remark'])}</div></td>
+                                </tr>
+                            {/notempty}
+                        {/notempty}
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+                <div style="padding: 20px;color: #484646">
+                    <span style="width: 24% ;display: inline-block;text-align:left;">业主：</span>
+                    <span style="width: 24% ;display: inline-block;text-align:left;">设计师：</span>
+                    <span style="width: 24% ;display: inline-block;text-align:left;">商务经理：</span>
+                    <span style="width: 24% ;display: inline-block;text-align:left;">报价师：</span>
+                </div>
+                {/notempty}
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<!-- 打印 -->
+<script src="__STATIC__/bootstrap/js/table/printThis.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $('tr').each(function(){
+        var cate = $(this).attr('data-cate');
+        if(cate){
+          var fd_total = 0,rd_total = 0;
+             $('tr[class*='+cate+']').each(function(){
+                var fd = $(this).find('td').eq(5).html() * 1;//辅材合价
+                var rd = $(this).find('td').eq(7).html() * 1;//人工合价
+               fd_total += fd;
+               rd_total += rd;
+             });
+          $('.'+cate+'total').find('td').eq(4).html(Math.round(fd_total * 100)/100);
+          $('.'+cate+'total').find('td').eq(6).html(Math.round(rd_total * 100)/100);
+         }
+    });
+
+    // $('name["printIframe"]').load(function(){
+    //     alert(1);
+    // })
+    
+     //打印
+     $(document).on('click','[data-fun="print"]',function(){
+
+         var getExplorer = (function () {
+             var explorer = window.navigator.userAgent,
+                 compare = function (s) { return (explorer.indexOf(s) >= 0); },
+                 ie11 = (function () { return ("ActiveXObject" in window) })();
+             if (compare("MSIE") || ie11) { return 'ie'; }
+             else if (compare("Firefox") && !ie11) { return 'Firefox'; }
+             else if (compare("Chrome") && !ie11) {
+                 if (explorer.indexOf("Edge") > -1) {
+                     return 'Edge';
+                 } else {
+                     return 'Chrome';
+                 }
+             }
+             else if (compare("Opera") && !ie11) { return 'Opera'; }
+             else if (compare("Safari") && !ie11) { return 'Safari'; }
+
+         })()
+
+        if(getExplorer == 'Edge' || getExplorer == 'ie'){
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.open({
+                    content: '当前浏览器可能对打印功能存在不兼容，可切换到极速模式或使用谷歌浏览器打印？',
+                    title:'打印确认',
+                    btn: ['确认','继续打印'],
+                    yes: function(index, layero){
+                        layer.close(index);
+                        // return false;
+                    },
+                    btn2:function(){
+                        $("#export-table").printThis({
+                            debug: false,
+                            importCSS: true,
+                            importStyle: true,
+                            printContainer: true,
+                            loadCSS: "__STATIC__/bootstrap/css/printThis-p.css",
+                            // pageTitle: '　',
+                            removeInline: false,
+                            printDelay: 333,
+                            header: null,
+                            formValues: false
+                        });
+                    },
+                    cancel: function(){ 
+                        //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            })
+        } else{
+            $("#export-table").printThis({
+                debug: false,
+                importCSS: true,
+                importStyle: true,
+                printContainer: true,
+                loadCSS: "__STATIC__/bootstrap/css/printThis-p.css",
+                // pageTitle: '　',
+                removeInline: false,
+                printDelay: 333,
+                header: null,
+                formValues: false
+            });
+        }
+        
+      })
+  });
+</script>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/core.js"></script>
+<script type="text/javascript" src="/static/libs/FileSaver/FileSaver.min.js"></script>
+<script type="text/javascript" src="/static/libs/tableExport.min.js"></script>
+<script>
+    <!--初始化插件-->
+    $("#export").click(function(){
+        $('#tables').tableExport({
+            type:'excel',
+            escape:false,
+            htmlContent: false,
+            fileName: '123456',
+            bootstrap: false,
+        });
+    });
+    function readyNumber() { 
+      $('textarea').each(function () {
+          this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+          this.style.width = '100%';
+          this.style.border = 'none';
+          this.style.resize = 'none';
+          this.style.color = '#3e3232';
+      }).on('input', function () {
+          this.style.height = 'auto';
+          this.style.height = (this.scrollHeight) + 'px';
+          this.style.width = '100%';
+          this.style.border = 'none';
+          this.style.resize = 'none';
+          this.style.color = '#3e3232';
+      })
+    }
+    readyNumber()
+</script>
+
+
+<script>
+
+</script>
+{/block}
+
+      

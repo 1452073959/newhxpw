@@ -1,0 +1,147 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.form-signin{}
+.daoru{position:absolute;bottom:2px;left:188px;}
+.daorus{position:absolute;bottom:10px;left:10px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <a class="layui-btn layui-btn-sm" href="">刷新</a>
+                </div>     
+                <div class="layui-inline">
+                    <a class="layui-btn layui-btn-sm"><?php echo getcid($str['frameid']);?></a>
+                </div> 
+                 <div class="layui-input-inline" style="margin-left: 100px;">
+                   <form method="post" style="position:relative;" action="{:url('Projectpoint/index')}" class="form-signin" enctype="multipart/form-data">
+                    <input style="height:34px" type="text" name="search" placeholder="请按公司搜索" autocomplete="off" class="layui-input">
+                    <input type="submit" value="搜索" class="layui-btn layui-btn-sm daoru">
+                  </form>
+                 </div>  
+                <!-- <a  title="点我查看" style="float:right;" ></a> -->
+                <a id="tishi" title="点我查看" style="float:right;" > <i class="layui-icon">&#xe702;</i></a>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+              <div class="layui-btn-container">
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckData" id="batch">批量修改数据</button> -->
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button> -->
+                <!-- <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
+              </div>
+            </script>
+
+        </div>
+     <form method="post" action="{:url('Projectpoint/edit')}" class="form-signin" enctype="multipart/form-data" style="position:relative;min-height:1000px">
+        <input type="text" name="frameid" value="{$str.frameid}">
+       <p><b>一、套房</b></p>
+        <textarea name="suite" id="suite" >{$str['suite']}</textarea>   
+        <br /><p><b>二、别墅</b></p>
+        <textarea name="villa" id="villa" >{$str['villa']}</textarea>   
+        <br /><p><b>三、复式</b></p>
+        <textarea name="compound" id="compound" >{$str['compound']}</textarea>   
+       <input type="submit" value="提交" class="layui-btn layui-btn-sm daorus">
+     </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+  <!-- 配置文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js"></script>
+ <!-- 实例化编辑器 -->
+ <script type="text/javascript">
+        //var ue = UE.getEditor('container');
+        var ue = UE.getEditor('suite', {
+            toolbars: [
+                ['fullscreen', 'source', 'undo', 'redo']
+            ],
+          /*  autoHeightEnabled:false,
+            initialFrameHeight:420*/
+            initialFrameWidth :800,//设置编辑器宽度
+            initialFrameHeight:300,//设置编辑器高度
+            scaleEnabled:true//设置不自动调整高度
+        });
+
+        var ue1 = UE.getEditor('villa', {
+          toolbars: [
+                ['fullscreen', 'source', 'undo', 'redo']
+            ],
+          /*  autoHeightEnabled:false,
+            initialFrameHeight:420*/
+            initialFrameWidth :800,//设置编辑器宽度
+            initialFrameHeight:150,//设置编辑器高度
+            scaleEnabled:true//设置不自动调整高度
+        });
+
+        var ue2 = UE.getEditor('compound', {
+          toolbars: [
+                ['fullscreen', 'source', 'undo', 'redo']
+            ],
+          /*  autoHeightEnabled:false,
+            initialFrameHeight:420*/
+            initialFrameWidth :800,//设置编辑器宽度
+            initialFrameHeight:150,//设置编辑器高度
+            scaleEnabled:true//设置不自动调整高度
+        });
+    </script>
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+
+<script type="text/javascript">
+$("#tishi").click(function(){
+      var content = '<p>这里是九折报价定点区间<br>九折基准定点</p>';
+      //自定页
+      layer.tips(content, '#tishi', {
+          tips: [4, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+
+       });
+</script>
+{/block}

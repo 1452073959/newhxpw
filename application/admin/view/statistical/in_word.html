@@ -1,0 +1,250 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item {
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear: none;
+    }
+</style>
+
+<style type="text/css">
+    /*分页样式*/
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .pagination li {
+        margin: 0px 10px;
+        border: 1px solid #e6e6e6;
+        padding: 3px 8px;
+        display: inline-block;
+    }
+
+    .pagination .active {
+        background-color: #dd1a20;
+        color: #fff;
+    }
+
+    .pagination .disabled {
+        color: #aaa;
+    }
+
+    .onfile {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+
+    .onfile input {
+        position: absolute;
+        font-size: 20px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .onfile:hover {
+        opacity: 0.8;
+        color: #1E88C7 /* background: #AADFFD;
+         border-color: #78C3F3;
+         color: #fff;
+         text-decoration: none;*/
+    }
+
+    .daoru {
+        position: absolute;
+        top: 1px;
+        right: -90px;
+    }
+
+    .daorus {
+        position: absolute;
+        top: 1px;
+        right: -50px;
+        height: 35px
+    }
+
+    .bigbox {
+        padding: 10px
+    }
+
+    .bigbox input {
+        margin-bottom: 10px
+    }
+
+    #imgs {
+        position: relative;
+    }
+
+    .batchs span {
+        cursor: pointer;
+    }
+
+    .form-control {
+        display: inline-block;
+        padding: 5px;
+    }
+
+    .select_tmp {
+        height: 30px;
+    }
+
+    .layui-btn + .layui-btn {
+        margin-left: 3px;
+    }
+
+    .ulall li {
+        float: left;
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin-right: 5px;
+    }
+
+    .layui-tab-title li {
+        padding: 0;
+    }
+
+    .layui-tab-title li a {
+        padding: 0 25px;
+    }
+</style>
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-form layui-inline" action="">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="customer_name" placeholder="" autocomplete="off" value="{:input('customer_name')}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">工程地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="address" placeholder="" autocomplete="off" value="{:input('address')}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-input-inline" style="margin-left:30px;">
+                        <label class="layui-form-label">工程监理</label>
+                        <div class="layui-input-inline" id="tipsc">
+                            <select name="jid" lay-filter="roleid" lay-verify="" lay-search>
+                                <option value="">可手动输入后选择</option>
+                                {foreach $users as $k=>$v }
+                                <option value="{$v['userid']}" {if(input('jid') == $v['userid'])}selected{/if}>{$v['name']}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        <input type="submit" value="搜索" class="layui-btn layui-btn-sm daoru">
+
+                    </div>
+
+                </form>
+            </blockquote>
+
+            <table class="layui-table">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col>
+                    <col width="110">
+                    <col width="110">
+                    <col width="110">
+                    <col width="110">
+                    <col width="300">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>客户姓名</th>
+                    <th>监理姓名</th>
+                    <th>工程地址</th>
+                    <th>房屋类型</th>
+                    <th>面积</th>
+                    <th>工程报价</th>
+                    <th style="display: none">在施状态</th>
+                    <th>预计领料</th>
+                    <th>已领金额</th>
+                    <th>未领金额</th>
+                    <th>签单时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $order as $key=>$vo }
+                <tr>
+                    <td>{$vo.customer_name}</td>
+                    <td>{$vo.user.name}</td>
+                    <td>{$vo.address}</td>
+                    <td>{$vo.room_type}</td>
+                    <td>{$vo.area}</td>
+                    <td>{$vo.discount_proquant}</td>
+                    <td style="display: none">
+                        <a href="javascript:;" style="margin-left:2px" class="layui-btn layui-btn-primary layui-btn-xs">开工准备</a>
+                        <a href="javascript:;" style="margin-left:2px" class="layui-btn layui-btn-primary layui-btn-xs">杂</a>
+                        <a href="javascript:;" style="margin-left:2px" class="layui-btn layui-btn-primary layui-btn-xs">泥</a>
+                        <a href="javascript:;" style="margin-left:2px" class="layui-btn layui-btn-primary layui-btn-xs">水</a>
+                    </td>
+                    <td>{$vo.order_info.material_cb}</td>
+                    <td>{$vo.total_picking}</td>
+                    <td>{$vo.order_info.material_cb-$vo.total_picking}</td>
+                    <td>{$vo.addtime|date="Y-m-d"}</td>
+<!--                    <td><a href="javascript:;" class="layui-btn layui-btn-primary">查看报价</a></td>-->
+                    <td class="taleft" style="width: 200px;">
+                        <a href="{:url('admin/offerlist/history',['customerid'=>$vo.id,'report_id'=>$vo.profile.id])}" style="color:#007498">查看报价</a>
+                        <a href="{:url('admin/auxiliary/history',['id'=>$vo.profile.id])}" style="color:#007498" >查看领料单</a>
+                        <a href="/admin/statistical/history?uid={$vo.id}" style="color:#007498" >领料记录</a>
+                        <a href="/admin/statistical/actual_picking_dz?uid={$vo.id}" style="color:#007498" >自购/定点订单领料</a>
+                        <a href="/admin/statistical/total?uid={$vo.id}" style="color:#007498" >合计</a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+
+            </table>
+
+        </div>
+        {$order|raw}
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+{/block}

@@ -1,0 +1,413 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <a href="javascript:;" class="layui-btn layui-btn-primary add_menu">新增菜单</a>
+                <span style="color:red">（请在程序员指导下操作此页面）</span>
+            </blockquote>
+     
+            <table class="layui-table">
+                <colgroup>
+                    <col width="200">
+                    <col>
+                    <col width="100">
+                    <col width="100">
+                    <col width="250">
+                    <col width="100">
+                    <col width="100">
+                    <col width="180">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th>菜单名称</th>
+                        <th>url</th>
+                        <th>图片</th>
+                        <th>排序</th>
+                        <th>权限</th>
+                        <th>上级</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach name="$menu" item="v" key="k"}
+                        <tr data-id="{$v.id}">
+                            <td class="name" data-val="{$v.name}">{$v.name}</td>
+                            <td class="url" data-val="{$v.url}">{$v.url}</td>
+                            <td><img src="/uploads/images/{$v.img}" style="max-height: 38px"></td>
+                            <td class="sort" data-val="{$v.sort}">{$v.sort}</td>
+                            <td class="auth" data-val="{$v.auth}">{$v.auth}</td>
+                            <td class="pid" data-val="{$v.pid}"></td>
+                            <td class="status" data-val="{$v.status}">{$v.status==1?'显示':'隐藏'}</td>
+                            <td>
+                                <a href="javascript:;" class="layui-btn layui-btn-primary edit_menu">编辑</a>
+                                <a href="javascript:;" data-id="{$v.id}" class="layui-btn layui-btn-primary del_menu">删除</a>
+                            </td>
+                        </tr>
+                        {if (isset($v['child']))}
+                            {foreach name="$v['child']" item="child" key="key"}
+                                <tr data-id="{$child.id}">
+                                    <td class="name" data-val="{$child.name}">└------------{$child.name}</td>
+                                    <td class="url" data-val="{$child.url}">{$child.url}</td>
+                                    <td><img src="/uploads/images/{$child.img}" style="max-height: 38px"></td>
+                                    <td class="sort" data-val="{$child.sort}">{$child.sort}</td>
+                                    <td class="auth" data-val="{$child.auth}">{$child.auth}</td>
+                                    <td class="pid" data-val="{$child.pid}">{$applet_menu[$child.pid]['name']}</td>
+                                    <td class="status" data-val="{$child.status}">{$child.status==1?'显示':'隐藏'}</td>
+                                    <td>
+                                        <a href="javascript:;" class="layui-btn layui-btn-primary edit_menu">编辑</a>
+                                        <a href="javascript:;" data-id="{$child.id}" class="layui-btn layui-btn-primary del_menu">删除</a>
+                                    </td>
+                                </tr>
+                            {/foreach}
+                        {/if}
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    layui.use('form', function(){
+        var form = layui.form;
+        form.on('submit(add_menu)', function(data){
+            console.log(data.field);
+            if(data.field.img == ''){
+                alert('请上传图片');
+                return false;
+            }
+            $.post('/admin/menu/add_applet_menu',data.field,function(res){
+                if(res.code == 1){
+                    layer.msg(res.msg);
+                    setTimeout(function () { 
+                        window.location.href = res.url; 
+                    }, 500); 
+                    return false;
+                }else{
+                    alert(res.msg);
+                    return false;
+                }
+            },'json')
+            return false;
+        });
+        form.on('submit(edit_menu)', function(data){
+            $.post('/admin/menu/edit_applet_menu',data.field,function(res){
+                if(res.code == 1){
+                    layer.msg(res.msg);
+                    setTimeout(function () { 
+                        window.location.href = res.url; 
+                    }, 500); 
+                    return false;
+                }else{
+                    alert(res.msg);
+                    return false;
+                }
+            },'json')
+            return false;
+        });
+    });
+    $('.add_menu').click(function(){
+        var checkbox = '';
+        var option = '<option value="0">顶级菜单</option>';
+        {foreach name="$auth_group" item="v" key="k"}
+            {if ($v['status'] == 1)}
+            checkbox += '<input type="checkbox" name="auth[]" lay-skin="primary" value="{$v.id}" title="{$v.title}">';
+            {/if}
+        {/foreach}
+        {foreach name="$applet_menu" item="v" key="k"}
+            {if ($v.pid == 0)}
+                option += '<option value="{$v.id}">{$v.name}</option>';
+            {/if}
+        {/foreach}
+        var html = '<form class="layui-form" action="" style="margin-top:15px">'
+                    + '<div class="layui-form-item w300" style="margin-bottom:5px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">菜单名称</label>'
+                    + '     <div class="layui-input-block">'
+                    + '          <input type="text" name="name" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">'
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-form-item w300" style="margin-bottom:5px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">上级菜单</label>'
+                    + '     <div class="layui-input-block">'
+                    + '          <select lay-verify="required" name="pid">'
+                    +               option
+                    + '          </select>'
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-form-item w300" style="margin-bottom:5px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">url</label>'
+                    + '     <div class="layui-input-block">'
+                    + '          <input type="text" name="url" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">'
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-form-item w300" style="margin-bottom:5px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">排序</label>'
+                    + '     <div class="layui-input-block">'
+                    + '          <input type="text" name="sort" required  lay-verify="required" value="99" placeholder="" autocomplete="off" class="layui-input">'
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-form-item" style="margin-bottom:15px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">图片</label>'
+                    + '     <div class="layui-upload" id="upload_file" style="">'
+                    + '         <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" id="test8">上传图片</button>'
+                    + '         <input type="hidden" name="img" value="" />'
+                    + '         <img class="layui-upload-img" id="demo1" style="max-height:38px;">'
+                    + '         <p id="demoText"></p>'
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-form-item w300" style="margin-bottom:5px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">状态</label>'
+                    + '     <div class="layui-input-block">'
+                    + '          <input type="radio" name="status" value="1" title="显示" checked>'
+                    + '          <input type="radio" name="status" value="2" title="隐藏">'
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-form-item w300" style="margin-bottom:5px">'
+                    + '     <label class="layui-form-label" style="line-height:25px">权限</label>'
+                    + '     <div class="layui-input-block">'
+                    +           checkbox
+                    + '     </div>'
+                    + '</div>'
+                    + '<div class="layui-form-item" style="">'
+                    + '     <div style="text-align:center;" id="set_status_btn">'
+                    + '         <button type="button" class="layui-btn" lay-submit lay-filter="add_menu">提交</button>'
+                    + '         <button type="button" class="layui-btn close">取消</button>'
+                    + '     </div>'
+                    + '</div>'
+                    + '</form>';
+                    
+        layer.open({
+            title: '添加菜单(请在程序员指导下添加)',
+            area: ['400px', '600px'], //宽高
+            type:1,
+            content: html
+        });
+        layui.use('form', function(){
+            var form = layui.form;
+            form.render()
+        });
+        layui.use('upload', function(){
+            var upload = layui.upload;
+            var uploadInst = upload.render({
+                elem: '#test8',
+                url: '/admin/menu/upload_image',
+                accept:'images',
+                size:1024,
+                //,multiple: true
+                done: function(res){
+                    if(res.code == 1){
+                        $('input[name="img"]').val(res.data);
+                    }else{
+                        var demoText = $('#demoText');
+                        demoText.html('<span style="color: #FF5722;">'+res.msg+'</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                        demoText.find('.demo-reload').on('click', function(){
+                            uploadInst.upload();
+                        });
+                    }
+                    layer.closeAll('loading'); //关闭loading
+                },
+                before: function(obj){
+                  //预读本地文件示例，不支持ie8
+                  layer.load();
+                  obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                  });
+                },
+                error: function(){
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+        });
+    })
+
+    $('.edit_menu').click(function(){
+        var tr = $(this).parent().parent()
+        var id = tr.data('id');
+        var name = tr.find('td[class="name"]').data('val');
+        var url = tr.find('td[class="url"]').data('val');
+        var sort = tr.find('td[class="sort"]').data('val');
+        var auth = tr.find('td[class="auth"]').data('val');
+        var pid = tr.find('td[class="pid"]').data('val');
+        var status = tr.find('td[class="status"]').data('val');
+        var checkbox = '';
+        var option = '<option value="0">顶级菜单</option>';
+        {foreach name="$auth_group" item="v" key="k"}
+            {if ($v['status'] == 1)}
+                checkbox += '<input type="checkbox" name="auth[]" lay-skin="primary" value="{$v.id}" title="{$v.title}">';
+            {/if}
+        {/foreach}
+        auth = auth.split(',');
+        $(auth).each(function(k,v){
+            console.log(v);
+            if(checkbox.indexOf('title="'+v+'"')!=-1){
+                checkbox = checkbox.replace('title="'+v+'"','checked title="'+v+'"')
+            }
+        })
+        {foreach name="$applet_menu" item="v" key="k"}
+            {if ($v.pid == 0)}
+                option += '<option value="{$v.id}">{$v.name}</option>';
+            {/if}
+        {/foreach}
+        option = option.replace('<option value="'+id+'">'+name+'</option>','');
+        if(option.indexOf('option value="'+pid+'"')!=-1){
+            option = option.replace('option value="'+pid+'"','option selected value="'+pid+'"')
+        }
+        var html = '<form class="layui-form" action="" style="margin-top:15px">'
+            html +=   '<input type="hidden" name="id" value="'+id+'" />'
+            html +=   '<div class="layui-form-item w300" style="margin-bottom:5px">'
+            html +=   '     <label class="layui-form-label" style="line-height:25px">菜单名称</label>'
+            html +=   '     <div class="layui-input-block">'
+            html +=   '          <input type="text" name="name" required value="'+name+'" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">'
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '<div class="layui-form-item w300" style="margin-bottom:5px">'
+            html +=   '     <label class="layui-form-label" style="line-height:25px">上级菜单</label>'
+            html +=   '     <div class="layui-input-block">'
+            html +=   '          <select lay-verify="required" name="pid">'
+            html +=                 option
+            html +=   '          </select>'
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '<div class="layui-form-item w300" style="margin-bottom:5px">'
+            html +=   '     <label class="layui-form-label" style="line-height:25px">url</label>'
+            html +=   '     <div class="layui-input-block">'
+            html +=   '          <input type="text" name="url" value="'+url+'" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">'
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '<div class="layui-form-item w300" style="margin-bottom:5px">'
+            html +=   '     <label class="layui-form-label" style="line-height:25px">排序</label>'
+            html +=   '     <div class="layui-input-block">'
+            html +=   '          <input type="text" name="sort" value="'+sort+'" required  lay-verify="required" value="99" placeholder="" autocomplete="off" class="layui-input">'
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '<div class="layui-form-item" style="margin-bottom:15px">'
+            html +=   '     <label class="layui-form-label" style="line-height:25px">图片</label>'
+            html +=   '     <div class="layui-upload" id="upload_file" style="">'
+            html +=   '         <button type="button" class="layui-btn layui-btn-radius layui-btn-primary" id="test8">上传图片</button>'
+            html +=   '         <input type="hidden" name="img" value="" />'
+            html +=   '         <img class="layui-upload-img" id="demo1" style="max-height:38px;">'
+            html +=   '         <p style="color:red" id="demoText">(不上传不修改)</p>'
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '<div class="layui-form-item w300" style="margin-bottom:5px">'
+            html +=   '     <label class="layui-form-label" style="line-height:25px">状态</label>'
+            html +=   '     <div class="layui-input-block">'
+            var checked1 = '';
+            var checked2 = '';
+            if(status == 1){
+                checked1 = 'checked';
+            }
+            if(status == 2){
+                checked2 = 'checked';
+            }
+            html +=   '          <input type="radio" name="status" value="1" title="显示" '+checked1+'>'
+            html +=   '          <input type="radio" name="status" value="2" title="隐藏" '+checked2+'>'
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '<div class="layui-form-item w300" style="margin-bottom:5px">'
+            html +=   '     <label class="layui-form-label" style="line-height:25px">权限</label>'
+            html +=   '     <div class="layui-input-block">'
+            html +=             checkbox
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '<div class="layui-form-item" style="">'
+            html +=   '     <div style="text-align:center;" id="set_status_btn">'
+            html +=   '         <button type="button" class="layui-btn" lay-submit lay-filter="edit_menu">提交</button>'
+            html +=   '         <button type="button" class="layui-btn close">取消</button>'
+            html +=   '     </div>'
+            html +=   '</div>'
+            html +=   '</form>';
+                    
+        layer.open({
+            title: '添加菜单(请在程序员指导下添加)',
+            area: ['400px', '600px'], //宽高
+            type:1,
+            content: html
+        });
+        layui.use('form', function(){
+            var form = layui.form;
+            form.render()
+        });
+        layui.use('upload', function(){
+            var upload = layui.upload;
+            var uploadInst = upload.render({
+                elem: '#test8',
+                url: '/admin/menu/upload_image',
+                accept:'images',
+                size:1024,
+                //,multiple: true
+                done: function(res){
+                    if(res.code == 1){
+                        $('input[name="img"]').val(res.data);
+                    }else{
+                        var demoText = $('#demoText');
+                        demoText.html('<span style="color: #FF5722;">'+res.msg+'</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                        demoText.find('.demo-reload').on('click', function(){
+                            uploadInst.upload();
+                        });
+                    }
+                    layer.closeAll('loading'); //关闭loading
+                },
+                before: function(obj){
+                  //预读本地文件示例，不支持ie8
+                  layer.load();
+                  obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#demoText').text('');
+                  });
+                },
+                error: function(){
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+        });
+    })
+    $('.del_menu').click(function(){
+        var id = $(this).data('id');
+        layer.confirm('确定要删除选中菜单吗', {
+            btn: ['确认删除', '取消'], //可以无限个按钮
+            btn2: function(index, layero){
+                layer.close(index);
+            }
+        }, function(index, layero){
+            $.post('/admin/menu/del_applet_menu',{id:id},function(res){
+                if(res.code == 1){
+                    layer.msg(res.msg);
+                    setTimeout(function () { 
+                        window.location.href = res.url; 
+                    }, 500); 
+                    return false;
+                }else{
+                    layer.msg(res.msg);
+                    return false;
+                }
+            },'json')
+        });
+    })
+    $(document).on('click','.close',function(){
+        layer.closeAll();
+    })
+</script>
+{/block}

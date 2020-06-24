@@ -1,0 +1,48 @@
+{extend name="index_layout"/}
+{block name="main"}
+{if empty($regulation)}
+<div class="layui-fluid">
+    <div class="layadmin-tips">
+        <i class="layui-icon" face>&#xe664;</i>
+
+        <div class="layui-text" style="font-size: 20px;">
+          该报价无增减项
+        </div>
+
+    </div>
+</div>
+{else/}
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>编号</th>
+        <th>金额</th>
+        <th>添加时间</th>
+        <th>备注</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $regulation as $k=>$v}
+       <tr onclick=location.href='/admin/artificial/show_append?id={$v.o_id}&one={$v.id}'>
+       <td>{$k + 1}</td>
+           <td>{$v.discount_proquant}</td>
+        <td>{$v['add_time']||date="Y-m-d H:i:s"}</td>
+        <td>{if $v['remark']==''}无备注
+            {/if}
+        </td>
+         </tr>
+    {/foreach}
+    <tr onclick=location.href='/admin/artificial/show_append?id={$v.o_id}'>
+        <td>合计</td>
+        <td>{$total}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{/if}
+{/block}

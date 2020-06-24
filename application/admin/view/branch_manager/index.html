@@ -1,0 +1,120 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    /*分页样式*/
+    .pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+    .pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+    .pagination .active{background-color: #dd1a20;color: #fff;}
+    .pagination .disabled{color:#aaa;}
+    .onfile {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+    .onfile input {
+        position: absolute;
+        font-size: 20px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+    .onfile:hover {
+        opacity:0.8;
+        color: #1E88C7
+        /* background: #AADFFD;
+         border-color: #78C3F3;
+         color: #fff;
+         text-decoration: none;*/
+    }
+    .daoru{position:absolute;top:1px;right:-90px;}
+    .daorus{position:absolute;top:1px;right:-50px;height:35px}
+    .bigbox{padding:10px}
+    .bigbox input{margin-bottom:10px}
+    #imgs{position:relative;}
+    .batchs span{cursor:pointer;}
+    .form-control{display: inline-block;padding: 5px;}
+    .select_tmp{
+        height:30px;
+    }
+    .layui-btn+.layui-btn{
+        margin-left: 3px;
+    }
+    .ulall li{float:left;border: 1px solid #ccc;padding: 5px;margin-right: 5px;}
+    .layui-tab-title li {
+        padding: 0;
+    }
+    .layui-tab-title li a{
+        padding: 0 25px;
+    }
+</style>
+<style type="text/css">
+    .daoru{position:absolute;top:1px;right:-50px;height:35px}
+
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                    <a class="layui-btn layui-btn-sm" href="{:url('admin/manager/add')}">添加管理员</a>
+                </div>
+            </blockquote>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th lay-data="{field:'water'}">登录名</th>
+                    <th lay-data="{field:'electricity'}">真实姓名</th>
+                    <th lay-data="{field:'timber'}">手机号</th>
+                    <th lay-data="{field:'tile'}">岗位</th>
+                    <th lay-data="{field:'grey' }">email</th>
+                    <th lay-data="{field:'cz',}">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $admin as  $k=>$v}
+                <tr>
+                    <td>{$v['username']}</td>
+                    <td>{$v['name']}</td>
+                    <td>{$v['phone']}</td>
+                    <td>{$v['auth']}</td>
+                    <td>{$v['email']}</td>
+                    <td>
+                        <a class="" href="{:url('admin/manager/edit',['id'=>$v.userid])}"><i class="layui-icon layui-icon-edit" title="编辑"></i></a>
+                        <a class=" {php} echo ($v['status']==1)?'':'layui-btn layui-btn-disabled layui-btn-xs'{/php}  ajax-get confirm" url="{:url('admin/manager/bankai',['id'=>$v.userid,'status'=>$v.status])}">{php} echo ($v['status']==1)?'<i class="layui-icon layui-icon-close" title="禁用"></i>':'已禁用'{/php}</a>
+                    </td>
+
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="https://www.layuicdn.com/layer/layer.js"></script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+    });
+</script>
+
+{/block}

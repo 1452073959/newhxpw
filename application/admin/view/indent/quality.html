@@ -1,0 +1,237 @@
+{extend name="index_layout"/}
+{block name="main"}
+<link rel="stylesheet" type="text/css" href="/static/layui/layui-v2.5.6/layui.css" />
+
+
+<style>
+    input{
+        line-height:30px;
+        display:inline;
+        width: 500px;
+        margin:  0 30px;
+    }
+    .toolbar {
+        border: 1px solid #ccc;
+    }
+    .text {
+        border: 1px solid #ccc;
+        height: 500px;
+    }
+</style>
+<div style="width: 100%;margin: 0 auto;border:1px solid #DDDDDD;display: flex;background-color: white">
+
+    <div class="information-box" style="border:1px solid #DDDDDD; width: 250px;">
+            <button type="button" class="layui-btn" id="cre" >新增子标题</button>
+            <button type="button" class="layui-btn" id="rs" >热搜</button>
+        <div id="test1" class="demo-tree demo-tree-box" style="height: 700px"></div>
+    </div>
+    <div style="width: 100%;height:800px;border:1px solid #DDDDDD;">
+
+        <form id="form1"  class="layui-form" >
+            {if isset($neq)}
+            <input type="hidden" value="{$neq['id']} " id="tid" name="id">
+            <span style="color: #2bf678;font-size: 20px " id="title2">标题:</span>   <input type="text" value="{$neq['title']}" id="title" name="title">
+            <div>
+
+                <div id="div1" class="toolbar">
+                </div>
+                <div id="div2" class="text"> <!--可使用 min-height 实现编辑区域自动增加高度-->
+                    <p>                <?php
+echo htmlspecialchars_decode($neq['content']);
+?>
+                    </p>
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限:</label>
+                <span id="lq"></span>
+                <div class="layui-input-block" id="le">
+                    {foreach $net as $key=>$vo }
+                    <input type="checkbox" name="role" title="{$vo['title']}" {in name="$vo['key']" value="$vo['auth']"}checked{/in} value="{$vo['id']}"  >
+                    {/foreach}
+                </div>
+            </div>
+            {else /}
+            <input type="hidden"value="" id="tid" name="id">
+            <span style="color: #2bf678;font-size: 20px " id="title2">标题:</span>   <input type="text" value="" id="title" name="title">
+            <div>
+                <div id="div1" class="toolbar">
+                </div>
+                <div id="div2" class="text"> <!--可使用 min-height 实现编辑区域自动增加高度-->
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限:</label>
+                <span id="lq"></span>
+
+            </div>
+            {/if}
+
+
+            <div style="padding-left: 60px ">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button class="layui-btn" lay-submit lay-filter="del">删除该文章</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="https://www.layuicdn.com/layui/layui.js"></script>
+<script type="text/javascript" src="http://unpkg.com/wangeditor/release/wangEditor.min.js"></script>
+<script src="__STATIC__/12/admin/js/jquery-2.0.0.js"></script>
+
+<!--<script src="https://www.layuicdn.com/layer/layer.js"></script>-->
+<script>
+    layui.use(['tree', 'util','form'], function () {
+        var form = layui.form;
+        var E = window.wangEditor
+        var editor = new E('#div1', '#div2')
+        editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+        editor.create()
+        var tree = layui.tree
+            , layer = layui.layer
+            , util = layui.util
+        function funName(){
+            $.ajax({
+                type: "get",
+                url: "/admin/indent/calendar",
+                // async:false,
+                success: function (e) {
+                    da=e;
+                    tree.render({
+                        elem: '#test1' //默认是点击节点可进行收缩
+                        , data: da
+                        ,spread: true//默认展开无效????
+                        ,showLine: false
+                        ,click: function(obj){
+                            console.log(obj.data); //得到当前点击的节点数据
+                            zy=obj.data.id;
+                            var  id =obj.data.id;
+                            $(".layui-tree-set").css('background',"none");
+                            $(".layui-tree-set[data-id= "+id+" ]").css('background',"#eee");
+                            $.ajax({
+                                type: "post",
+                                url: "/admin/indent/one",
+                                data:{id:obj.data.id},
+                                success: function (e) {
+                                    $('#le').remove();
+                                    $('#lq').append(e.str)
+                                    editor.txt.html(e.res.content);
+                                    $('#title').remove();
+                                    $('#title2').append(' <input type="text" value="" id="title" name="title">')
+                                    $("#title").attr('value',e.res.title);
+                                    $("#tid").attr('value',e.res.id);
+                                    form.render();
+                                },
+                            })
+
+
+                        }
+                    });
+                }
+            });
+
+
+        }
+        funName();
+        $("#cre").click(function () {
+            console.log(zy);
+            var html=
+                '<form class="layui-form" action="" id="crea">\n'+
+                '            <div class="layui-form-item" >\n' +
+                '                <label class="layui-form-label">文章类目</label>\n' +
+                '                <div class="layui-input-inline w300">\n' +
+                '                     <input type="hidden" value=' + zy + ' name="pid">\n'+
+                '                    <input type="text" name="title" lay-verify="required"  class="layui-input">\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '\n' +
+                '            <div class="layui-form-item">\n' +
+                '                <div class="layui-input-block">\n' +
+                '                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="create" target-form="form-horizontal">立即提交</button>\n' +
+                '                    <a class="layui-btn layui-btn-normal" href="{:url(\'admin/indent/quality\')}">返回</a>\n' +
+                '                </div>\n' +
+                '            </div>\n'+
+                '</form>'
+            layer.open({
+                type: 1,
+                title: false,
+                closeBtn: 0,
+                shadeClose: true,
+                skin: 'yourclass',
+                content: html
+            });
+            form.on('submit(create)', function(data){
+                console.log($('#crea').serialize());
+                $.ajax({
+                    type: "post",
+                    url: "/admin/indent/createpost",
+                    data:$('#crea').serialize(),
+                    success: function (e) {
+                        layer.msg(e.msg);
+                        window.location.reload();
+                    },
+                })
+                return false;
+            });
+        })
+
+        $("#rs").click(function () {
+            $.ajax({
+                type: "post",
+                url: "/admin/indent/topsearch",
+                data:{id:zy},
+                success: function (e) {
+                    layer.msg(e.msg);
+                    // window.location.reload();
+                },
+            })
+            return false;
+        })
+        layui.use('form', function(){
+            var form = layui.form;
+            //监听提交
+            form.on('submit(formDemo)', function(data){
+                // layer.msg(JSON.stringify(data.field));
+                var html = editor.txt.html();
+                var id= $('#tid').val();
+                var title= $('#title').val();
+                var auth=[];
+                $("input[name='role']:checked").each(function(){
+                    auth.push($(this).val());
+                });
+                $.ajax({
+                    type: "post",
+                    url: "/admin/indent/update",
+                    data:{id:id,title:title,content:html,role:auth},
+                    success: function (e) {
+                        layer.msg(e.msg);
+                        funName();
+                    },
+                })
+                return false;
+            });
+            form.on('submit(del)', function(data){
+                var id= $('#tid').val();
+                $.ajax({
+                    type: "post",
+                    url: "/admin/indent/del",
+                    data:{id:id},
+                    success: function (e) {
+                        layer.msg(e.msg);
+                        funName();
+                    },
+                })
+                return false;
+            });
+        });
+    });
+
+
+</script>
+{/block}

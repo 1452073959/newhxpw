@@ -1,0 +1,47 @@
+{extend name="index_layout"/}
+{block name="main"}
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th lay-data="{field:'water'}">ID</th>
+                    <th lay-data="{field:'electricity'}">操作人账号</th>
+                    <th lay-data="{field:'timber'}">行为</th>
+                    <th lay-data="{field:'tile'}">被操作账号</th>
+                    <th lay-data="{field:'grey' }">IP</th>
+                    <th lay-data="{field:'cz',}">时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $log as  $k=>$v}
+                <tr>
+                    <td>{$v.id}</td>
+                    <td>{$v.username}</td>
+                    <td>{$v.description}</td>
+                    <td>{$v.cname}</td>
+                    <td>{$v.ip}</td>
+                    <td>{$v.operate_time}</td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="https://www.layuicdn.com/layer/layer.js"></script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+    });
+</script>
+
+{/block}

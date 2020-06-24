@@ -1,0 +1,289 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-form layui-inline" action="">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <!-- <div class="layui-form-item">
+                        <label class="layui-form-label">职位</label>
+                        <div class="layui-input-block">
+                            <select name="city" lay-verify="required">
+                                <option value=""></option>
+                                <option value="1">设计师</option>
+                                <option value="2">报价师</option>
+                                <option value="3">商务经理</option>
+                                <option value="4">工程监理</option>
+                            </select>
+                        </div>
+                    </div> -->
+                    <div class="layui-inline" style="float: left;margin-right: 15px">
+                        <label class="layui-form-label">签单时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="begin_time" name="begin_time" autocomplete="off" value="" placeholder="开始时间">
+                        </div>
+                        <span> - </span>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="end_time" name="end_time" autocomplete="off" value="" placeholder="结束时间">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-inline">
+                          <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+     
+            <table class="layui-table">
+                <colgroup>
+                    <col width="100">
+                    <col width="300">
+                    <col width="120">
+                    <col width="120">
+                    <col width="120">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col>
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th>客户姓名</th>
+                        <th>工程地址</th>
+                        <th>房屋类型</th>
+                        <th>面积</th>
+                        <th>工程报价</th>
+                        <th>设计师名称</th>
+                        <th>报价师名称</th>
+                        <th>签单时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    <tr>
+                        <td>冯小姐</td>
+                        <td>广州市黄埔区黄埔万科中心</td>
+                        <td>别墅</td>
+                        <td>300</td>
+                        <td>720000</td>
+                        <td>张鹏飞</td>
+                        <td>周诗雨</td>
+                        <td>2019-8-28</td>
+                        <td>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary send">派单</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary">查看报价</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>胡先生</td>
+                        <td>广州市越秀区北京路374号</td>
+                        <td>复式</td>
+                        <td>180</td>
+                        <td>320000</td>
+                        <td>付超</td>
+                        <td>林南南</td>
+                        <td>2019-8-29</td>
+                        <td>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary send">派单</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary">查看报价</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>蒋先生</td>
+                        <td>广州市黄埔区黄埔黄埔东路123号</td>
+                        <td>二手房</td>
+                        <td>133</td>
+                        <td>264000</td>
+                        <td>吴宇</td>
+                        <td>林绵绵</td>
+                        <td>2019-8-29</td>
+                        <td>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary send">派单</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary">查看报价</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>韩小姐</td>
+                        <td>广州市黄埔区黄埔碧桂园3期5栋1301</td>
+                        <td>套房</td>
+                        <td>125</td>
+                        <td>155000</td>
+                        <td>李建波</td>
+                        <td>周诗雨</td>
+                        <td>2019-8-31</td>
+                        <td>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary send">派单</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary">查看报价</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+    $('.send').click(function(){
+        var html =   '<table class="layui-table" style="text-align:center !important">'
+                    +'  <colgroup>'
+                    +'      <col width="120">'
+                    +'      <col width="300">'
+                    +'      <col width="90">'
+                    +'      <col width="90">'
+                    +'      <col width="90">'
+                    +'      <col width="90">'
+                    +'      <col width="100">'
+                    +'      <col width="140">'
+                    +'      <col width="110">'
+                    +'      <col width="110">'
+                    +'      <col width="110">'
+                    +'      <col>'
+                    +'  </colgroup>'
+                    +'  <thead >'
+                    +'      <tr>'
+                    +'          <th>监理姓名</th>'
+                    +'          <th>监理标签</th>'
+                    +'          <th>水电工</th>'
+                    +'          <th>木工</th>'
+                    +'          <th>瓦工</th>'
+                    +'          <th>漆工</th>'
+                    +'          <th>在施金额</th>'
+                    +'          <th>在施工地数</th>'
+                    +'          <th>前期施工</th>'
+                    +'          <th>中期施工</th>'
+                    +'          <th>尾期施工</th>'
+                    +'          <th>操作</th>'
+                    +'      </tr>'
+                    +'  </thead>'
+                    +'  <tbody> '
+                    +'      <tr>'
+                    +'          <td>张三</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">10年经验</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">延期少</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">可接公装</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">客户关系好</a>'
+                    +'          </td>'
+                    +'          <td>2</td>'
+                    +'          <td>2</td>'
+                    +'          <td>1</td>'
+                    +'          <td>1</td>'
+                    +'          <td>560000</td>'
+                    +'          <td>2</td>'
+                    +'          <td>1</td>'
+                    +'          <td>1</td>'
+                    +'          <td>0</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" class="layui-btn layui-btn-warm">派单</a>'
+                    +'          </td>'
+                    +'      </tr>'
+                    +'      <tr>'
+                    +'          <td>李四</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">10年经验</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">擅长别墅</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">客户关系好</a>'
+                    +'          </td>'
+                    +'          <td>3</td>'
+                    +'          <td>1</td>'
+                    +'          <td>2</td>'
+                    +'          <td>1</td>'
+                    +'          <td>1304000</td>'
+                    +'          <td>4</td>'
+                    +'          <td>1</td>'
+                    +'          <td>2</td>'
+                    +'          <td>1</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" class="layui-btn layui-btn-warm">派单</a>'
+                    +'          </td>'
+                    +'      </tr>'
+                    +'      <tr>'
+                    +'          <td>王五</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">10年经验</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">可接公装</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">客户关系好</a>'
+                    +'          </td>'
+                    +'          <td>3</td>'
+                    +'          <td>2</td>'
+                    +'          <td>3</td>'
+                    +'          <td>1</td>'
+                    +'          <td>654000</td>'
+                    +'          <td>2</td>'
+                    +'          <td>0</td>'
+                    +'          <td>0</td>'
+                    +'          <td>2</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" class="layui-btn layui-btn-warm">派单</a>'
+                    +'          </td>'
+                    +'      </tr>'
+                    +'      <tr>'
+                    +'          <td>刘六</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">成本控制好</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">延期少</a>'
+                    +'              <a href="javascript:;" style="margin-left:0px" class="layui-btn layui-btn-primary layui-btn-xs">监管到位</a>'
+                    +'          </td>'
+                    +'          <td>3</td>'
+                    +'          <td>1</td>'
+                    +'          <td>2</td>'
+                    +'          <td>4</td>'
+                    +'          <td>499000</td>'
+                    +'          <td>3</td>'
+                    +'          <td>1</td>'
+                    +'          <td>1</td>'
+                    +'          <td>1</td>'
+                    +'          <td>'
+                    +'              <a href="javascript:;" class="layui-btn layui-btn-warm">派单</a>'
+                    +'          </td>'
+                    +'      </tr>'
+                    +'  </tbody>'
+                    +'</table>'
+        layui.use('layer', function(){
+            layer.open({
+                type:1,
+                title: '选择监理',
+                area: ['1200px', '500px'],
+                content: html
+            });
+        });
+    })
+    
+  layui.use('laydate', function(){
+    var laydate = layui.laydate;
+    //常规用法
+    laydate.render({
+      elem: '#begin_time'
+    });
+    laydate.render({
+      elem: '#end_time'
+    });
+  })
+</script>
+{/block}

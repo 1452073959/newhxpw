@@ -1,0 +1,74 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style>
+    .ty li{
+        float: left;
+    }
+</style>
+<form action="/admin/Offerlist/superbind" method="get"  class="layui-form" id="registerform">
+    <div class="layui-form-item">
+        <label class="layui-form-label">工种筛选</label>
+        <div class="layui-input-block">
+            <ul class="ty">
+                {foreach $typeof as $k=>$v}
+                <li class="typ">
+                    <input type="radio" name="typeof" value="{$v.id}" {if (input('typeof')==$v.id)} checked {/if} title="{$v.name}">
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+        <input type="hidden" name="id" value="{$da['id']}">
+    </div>
+</form>
+
+
+<form class="layui-form" action="/admin/Offerlist/superbind" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">绑定到已有报价条目</label>
+        <div class="layui-input-block">
+            <select name="basis_project" lay-filter="basis_project" lay-search required  lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="basis_project" id="vo"}
+                <option value="{$vo['id']}">{$vo.item_number}.{$vo.name}</option>
+                {/volist}
+            </select>
+            <input type="hidden" name="id" value="{$da['id']}">
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <div class="layui-input-block" style="margin: auto;width: 150px;margin-top: 50px">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+<script>
+    $(function () {
+        $(".typ").click(function(){
+            $("#registerform").submit();
+        });
+    })
+</script>
+{/block}

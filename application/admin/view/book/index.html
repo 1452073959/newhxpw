@@ -1,0 +1,173 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+td{
+    text-align: center;
+}
+.w160{
+    width: 160px;
+}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-btn-container">
+            <a class="layui-btn layui-btn-sm add_book" href="javascript:;">添加书名</a> 
+        </div>
+        <table class="layui-table">
+            <colgroup>
+                <col width="80">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead >
+                <tr>
+                    <th>书名</th>
+                    <th>标识符</th>
+                    <th>操作</th>
+                   
+                </tr>
+            </thead>
+            <tbody> 
+              {foreach name="data" item="v"}
+                <tr>
+                    <td class="">{$v.name}</td>
+                    <td class="">{$v.tag}</td>
+                    <td>
+                        <a href="javascript:;" data-id="{$v.id}" class="update_img">更新图片</a>
+                        <a href="javascript:;" data-id="{$v.id}" class="edit_book">编辑</i></a>
+                        <a href="javascript:;" data-id="{$v.id}" class="del_parent">删除</i></a>
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $('.update_img').click(function(){
+        var id = $(this).data('id');
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                content: '是否批量更新选择图片？',
+                title:'批量更新图片',
+                area: ['400', '120'], //宽高
+                btn: ['确认'],
+                yes: function(index, layero){
+                    $.post('/admin/book/update_img',{id:id},function(res){
+                        if(res.code === 0){
+                            layer.msg(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+    $('.add_book').click(function(){
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var html = '';
+            html += '<input id="name" class="layui-input" placeholder="请输入书名" value="" />';
+            html += '<input id="tag" class="layui-input" placeholder="请输入标识符" value="" />';
+            layer.open({
+                content: html,
+                title:'添加流程',
+                area: ['400', '120'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    var name = $('#name').val();
+                    var tag = $('#tag').val();
+                    if(!name || !tag){
+                        alert('内容不能为空');
+                    }
+                    $.post('/admin/book/add_book',{name:name,tag:tag},function(res){
+                        if(res.code === 0){
+                            alert(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+    $('.edit_book').click(function(){
+        var id = $(this).data('id');
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var html = '';
+            html += '<input id="name" class="layui-input" placeholder="请输入书名" value="" />';
+            html += '<input id="tag" class="layui-input" placeholder="请输入标识符" value="" />';
+            layer.open({
+                content: html,
+                title:'添加流程',
+                area: ['400', '120'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    var name = $('#name').val();
+                    var tag = $('#tag').val();
+                    if(!name || !tag){
+                        alert('内容不能为空');
+                    }
+                    $.post('/admin/book/add_book',{id:id,name:name,tag:tag},function(res){
+                        if(res.code === 0){
+                            alert(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+    $('.del_parent').click(function(){
+        var id = $(this).data('id');
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+                content: '是否确认删除选中流程？',
+                title:'删除流程',
+                area: ['400', '120'], //宽高
+                btn: ['提交'],
+                yes: function(index, layero){
+                    $.post('/admin/book/del_book',{id:id},function(res){
+                        if(res.code === 0){
+                            layer.msg(res.msg);
+                        }else{
+                            layer.msg(res.msg);
+                            setTimeout(function(){
+                            　　window.location.reload()
+                            },1000);
+                        }
+                    },'json')
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    })
+</script>
+{/block}

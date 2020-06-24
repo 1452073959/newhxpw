@@ -1,0 +1,99 @@
+{extend name="index_layout"/}
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header">添加</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/offerquota/add')}" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择分公司</label>
+                <div class="layui-input-inline w300">
+                  <select name="frameid" lay-verify="required"  lay-filter="business" lay-search>
+                    <option value=""></option>
+                  {volist name="data" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                  {/volist}
+                  </select>
+                </div>
+            </div> 
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目编号</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="item_number" autocomplete="off" placeholder="项目编号" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工种 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="type_of_work" autocomplete="off" placeholder="工种" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="project" autocomplete="off" placeholder="工程项目" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">单位</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="company" autocomplete="off" placeholder="单位" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">辅材单价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="quota" autocomplete="off" placeholder="辅材单价" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">人工单价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="craft_show" autocomplete="off" placeholder="人工单价" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">综合价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="cost_value" autocomplete="off" placeholder="成本价值" class="layui-input">
+                </div>
+            </div>
+             
+             <div class="layui-form-item">
+                <label class="layui-form-label">施工工艺与材料说明</label>
+                <div class="layui-input-inline w600">
+                    <!-- <input type="text" name="material" autocomplete="off" placeholder="辅材说明" class="layui-input"> -->
+                    <textarea name="material" style="padding:10px;border:1px solid #D2D2D2;width:100%;height:200px; resize:none;"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/offerquota/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script>
+layui.use(['layedit','form'], function(){
+  var layedit = layui.layedit;
+  layedit.build('demo'); //建立编辑器
+
+//   var form = layui.form, layer = layui.layer;
+
+// form.on('select(business)', function(data){
+
+//     alert($('select option:selected').val());
+
+// })
+
+});
+
+
+</script>
+{/block}

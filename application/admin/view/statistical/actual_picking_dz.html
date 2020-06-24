@@ -1,0 +1,99 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="100">
+                    <col width="100">
+                    <col width="120">
+                    <col width="120">
+                    <col width="120">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col>
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th>客户姓名</th>
+                        <th>监理姓名</th>
+                        <th>申请领料金额</th>
+                        <th>备注信息</th>
+                        <th>申请时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $datas as $k=>$v}
+                        <tr>
+                            <td>{$userinfo['customer_name']}</td>
+                            <td>{$admins[$v['adminid']]['name'] ?: 0}</td>
+                            <td>{$v['money']}</td>
+                            <td>{$v['remark']}</td>
+                            <td>{$v['addtime']}</td>
+                            <td>
+                                <a href="javascript:;" key="{$v.id}" class="zjdd">查看领料单</a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+  
+  layui.use('laydate', function(){
+    var laydate = layui.laydate;
+    //常规用法
+    laydate.render({
+      elem: '#begin_time'
+    });
+    laydate.render({
+      elem: '#end_time'
+    });
+  })
+</script>
+
+
+<script>
+$(function () {
+    layui.use('layer', function () {
+        var layer = layui.layer;
+        $(document).on('click','.zjdd', function(){
+            var Tresult=$(this).attr('key');
+            layer.open({
+                type: 2,
+                title: '自购/定点领料图片',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1000px', '80%'],
+                content: '/admin/Statistical/buying?uid='+ Tresult
+            });
+        });
+
+    });
+})
+</script>
+{/block}

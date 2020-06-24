@@ -1,0 +1,236 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    /*分页样式*/
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .pagination li {
+        margin: 0px 10px;
+        border: 1px solid #e6e6e6;
+        padding: 3px 8px;
+        display: inline-block;
+    }
+
+    .pagination .active {
+        background-color: #dd1a20;
+        color: #fff;
+    }
+
+    .pagination .disabled {
+        color: #aaa;
+    }
+
+    .onfile {
+        position: relative;
+        display: inline-block;
+        background: #D0EEFF;
+        border: 1px solid #99D3F5;
+        border-radius: 4px;
+        padding: 4px 12px;
+        overflow: hidden;
+        color: #1E88C7;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+    }
+
+    .onfile input {
+        position: absolute;
+        font-size: 20px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .onfile:hover {
+        opacity: 0.8;
+        color: #1E88C7 /* background: #AADFFD;
+         border-color: #78C3F3;
+         color: #fff;
+         text-decoration: none;*/
+    }
+
+    .daoru {
+        position: absolute;
+        top: 1px;
+        right: -90px;
+    }
+
+    .daorus {
+        position: absolute;
+        top: 1px;
+        right: -50px;
+        height: 35px
+    }
+
+    .bigbox {
+        padding: 10px
+    }
+
+    .bigbox input {
+        margin-bottom: 10px
+    }
+
+    #imgs {
+        position: relative;
+    }
+
+    .batchs span {
+        cursor: pointer;
+    }
+
+    .form-control {
+        display: inline-block;
+        padding: 5px;
+    }
+
+    .select_tmp {
+        height: 30px;
+    }
+
+    .layui-btn + .layui-btn {
+        margin-left: 3px;
+    }
+
+    .ulall li {
+        float: left;
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin-right: 5px;
+    }
+
+    .layui-tab-title li {
+        padding: 0;
+    }
+
+    .layui-tab-title li a {
+        padding: 0 25px;
+    }
+</style>
+<style type="text/css">
+    .layui-table-cell {
+        height: auto;
+        line-height: 40px;
+    }
+</style>
+<blockquote class="layui-elem-quote news_search">
+    <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title">
+            <li class=""><a href="/admin/financial/financeaudit">监理</a></li>
+            <li class="layui-this"><a href="/admin/financial/agencyaudit">监理代工人</a></li>
+            <a href="/admin/financial/printing" class="layui-btn">打印</a>
+        </ul>
+
+    </div>
+</blockquote>
+<table class="layui-table" >
+    <thead>
+    <tr>
+        <th lay-data="{field:'id'}">借支客户</th>
+        <th lay-data="{field:'address'}">工程地址</th>
+        <th lay-data="{field:'username'}">借支人(监理)</th>
+        <th lay-data="{field:'usere'}">代借支工人</th>
+        <th lay-data="{field:'sex'}">审核人(工程经理)</th>
+        <th lay-data="{field:'city'}">申请借支金额(单位: 元)</th>
+        <th lay-data="{field:'sign'}">收款账号</th>
+        <th lay-data="{field:'experience' }">借支原因</th>
+        <th lay-data="{field:'experience' }">申请时间</th>
+        <th lay-data="{field:'experie' }">状态</th>
+        <th lay-data="{field:'score',width:300}">操作/拨款时间</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {foreach $audit as $k=>$v}
+    <tr>
+        <td>{$v.offer.customer_name}</td>
+        <td>{$v.offer.address}</td>
+        <td>{$v.user.name}</td>
+        <td>{$v.workername}</td>
+        <td>{$v.audit.name}</td>
+        <td class="mon">{$v.money}</td>
+        <td>{$v.shroff}</td>
+        <td>{$v.so}</td>
+        <td>{$v.create_time}</td>
+        <td>{if $v.status==2}待拨款
+            {elseif $v.status==3 /}拨款成功
+            {elseif $v.status==5 /}审核不通过
+            {/if}
+        </td>
+        <td>
+            {if $v.status==2}
+            <button key="{$v.id}" class="layui-btn  cwsh">确认拨款</button>
+            <button key="{$v.id}" class="layui-btn  nosh">审核不通过</button>
+            {elseif $v.status==3||5 /}
+            {$v.cwtime}
+            {/if}
+        </td>
+    </tr>
+    {/foreach}
+
+    </tbody>
+
+</table>
+{$audit|raw}
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+    });
+</script>
+<script src="https://www.jq22.com/jquery/jquery-2.1.1.js"></script>
+<script src="https://www.layuicdn.com/layer/layer.js"></script>
+<script>
+    $(function () {
+        $(document).on('click', '.cwsh', function () {
+            var a = $(this).attr('key');
+            $.ajax({
+                type: "get",
+                url: "/admin/financial/financeajax",
+                data: {key: a, status: 3},
+                success: function (e) {
+                    console.log(e);
+                    if (e.code == '1') {
+                        layer.msg(e.msg);
+                    } else {
+                        alert('系统错误');
+                    }
+                    setTimeout(function () {
+                        window.location.reload();
+                        console.log(2);
+                    }, 2000);
+                }
+            })
+        });
+
+        $(document).on('click', '.nosh', function () {
+            var a = $(this).attr('key');
+            $.ajax({
+                type: "get",
+                url: "/admin/financial/financeajax",
+                data: {key: a, status: 5},
+                success: function (e) {
+                    if (e.code == '2') {
+                        layer.msg(e.msg);
+                        console.log(123);
+                    } else {
+                        alert('系统错误');
+                    }
+                    setTimeout(function () {
+                        window.location.reload();
+                        console.log(2);
+                    }, 2000);
+                }
+            })
+        });
+    })
+
+
+</script>
+
+{/block}
+

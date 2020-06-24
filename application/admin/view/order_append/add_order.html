@@ -1,0 +1,482 @@
+{extend name="index_layout"/}
+{block name="main"}
+</div>
+<!-- 弹窗 -->
+<style>
+    #diolog li{
+        line-height: 3;
+        cursor: pointer;
+        
+    }
+    #diolog li:hover{
+        border: 1px solid #ccc;
+    }
+    #diolog .left{
+        border-top: 1px solid #ccc;
+    }
+    #diolog .right{
+        border-top: 1px solid #ccc;
+    }
+    #diolog .left li{
+        text-align: center;
+    }
+    #diolog .right li{
+        padding-left: 5px;
+    }
+    .checkli{
+        color:#f36f20;
+    }
+    .add_project{
+        width: /*100%;
+        height: 100%;*/
+        cursor: pointer;
+        /*display: block*/
+    }
+    .add_project:hover{
+        /*color:red;*/
+    }
+    .pad_0{
+        padding: 0 !important;
+    }
+    #project td,#project th{
+        padding:5px 3px;
+        text-align: center;
+    }
+    #seach_project th{
+        text-align: center;
+        padding:5px 3px;
+    }
+    .layui-card-body .layui-table{
+        margin:0 0 5px 0;
+    }
+    .height26{
+        height:26px;
+        line-height: 26px
+    }
+    i{
+        cursor: pointer;
+    }
+    .layui-table thead tr{
+        background-color: #ffffff
+    }
+    .word{
+        background-color: #eee
+    }
+    .layui-table td, .layui-table th {
+        position:static;
+    }
+    #project_datas input{
+        min-width: 60px;
+    }
+</style>
+    
+    <div class="layui-card" style="height:97%;width:100%;position:fixed;background-color:#fffff;border: 1px solid #cec9c9 " id="diolog">
+        <blockquote class="layui-elem-quote news_search" style="height :3%">
+            <div class="layui-inline" style="width: 95%">
+                <a class="layui-btn layui-btn-sm layui-btn-danger" href="javascript:;" id="submit_datas">提交报价</a>
+                <a class="layui-btn layui-btn-sm layui-btn-warm"  href="javascript:;" id="import_tmp">导入模板</a>
+                <div class="layui-inline layui-btn layui-btn-primary" >
+                    客户名称：{$customer_info['customer_name']}
+                </div>
+                <div class="layui-inline">
+                    <input type="text" name="unit" value="" placeholder="单位/公司" class="layui-input">
+                </div>
+                <div class="layui-inline">
+                    <input type="text" name="remark" value="" placeholder="订单备注" class="layui-input">
+                </div>
+                
+            </div>     
+        </blockquote>
+        <div class="left" style="float: left;width: 7%;height: 92% ;overflow:auto;border-right: 1px solid #eee">
+            <ul>
+                <!-- 空间 -->
+                <?php $i = 1; ?>
+                <?php foreach($offer_type[2] as $k=>$v){ ?>
+                    <li {$i==1?'class="checkli"':''} data-val="{$v['name']}">{$v['name']}</li>
+                    <?php $i++;?>
+                <?php } ?>
+            </ul>
+        </div>
+        <div class="right" style="float: left;width: 8%;height: 92%;overflow:auto;border-right: 1px solid #eee">
+            
+            <ul style="height: 100%">
+                <!-- 工种 -->
+                <?php $i = 2; ?>
+                <?php foreach($offer_type[1] as $k=>$v){ ?>
+                    <li {$i==1?'class="checkli"':''} data-val="{$v['name']}">{$v['name']}</li>
+                    <?php $i++;?>
+                <?php } ?>
+                
+            </ul>
+        </div>
+
+
+        <div class="layui-card-body" id="seach_project_div" style="width: 22%;float: left;text-align: center;border-right: 1px solid #eee;padding:0;overflow:auto;height:92%">
+            <table class="layui-table" id="seach_project" >
+                <colgroup>
+                    <col width="40">
+                    <col width="80">
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="pad_0"></th>
+                        <th>编号</th>
+                        <th>项目名称</th>
+                    </tr> 
+                    <tr>
+                        <th class="pad_0"><a href="javascript:;" id="clear_search" title="清空筛选"><i class="layui-icon layui-icon-delete"></i></a></th>
+                        <th><input type="text" class="layui-input height26" id="select_item_number"></th>
+                        <th><input type="text" class="layui-input height26" id="select_project"></th>
+                    </tr> 
+                </thead>
+                <tbody id="seach_datas">
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="layui-card-body" style="width: 61%;float: left;text-align: center;border-right: 1px solid #eee;padding:0;overflow:auto;height:92%">
+            <form id="datasform" action="/admin/offerlist/add_order_operation" method="post">
+                <input type="hidden" name="customerid" value="{$customer_info['id']}" >
+                <input type="hidden" name="framename" value="" >
+                <input type="hidden" name="remark" value="" >
+                <table class="layui-table" id="project">
+                    <colgroup>
+                        <col width="10">
+                        <col width="10">
+                        <col width="100">
+                        <col width="30">
+                        <col width="30">
+                        <col width="30">
+                        <col width="50">
+                        <col width="30">
+                        <col width="50">
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>编号</th>
+                            <th>项目名称</th>
+                            <th>工程量</th>
+                            <th>单位</th>
+                            <th>辅材单价</th>
+                            <th>辅材合价</th>
+                            <th>人工单价</th>
+                            <th>人工合价</th>
+                        </tr> 
+                    </thead>
+                    <tbody id="project_datas">
+                        
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+<form style="display:inline-block;" id="addone"></form>
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        //固定表头 start
+        var seach_project_div = document.querySelector('#seach_project_div');
+        var datasform_div = document.querySelector('#datasform_div');
+        var left = document.querySelector('.left');
+        function scrollHandle (e){
+            console.log(this);
+            var scrollTop = this.scrollTop;
+            this.querySelector('thead').style.transform = 'translateY(' + scrollTop + 'px)';
+        }
+        function scrollHandleUl (e){
+            console.log(this);
+            var scrollTop = this.scrollTop;
+            this.querySelector('#add_space').style.transform = 'translateY(' + scrollTop + 'px)';
+        }
+        seach_project_div.addEventListener('scroll',scrollHandle);
+        datasform_div.addEventListener('scroll',scrollHandle);
+        left.addEventListener('scroll',scrollHandleUl);
+        //固定表头 end
+    })
+
+    //======================提交订单
+    $('#submit_datas').click(function(){
+        var is_null = 0;
+        var unit = $('input[name="unit"]').val();
+        var remark = $('input[name="remark"]').val();
+        if(unit == ''){
+            layui.use('layer', function(){
+                layer.msg('请填写单位/公司');
+            }); 
+            return false;
+        }
+        $('input[name="framename"]').val(unit);
+        $('input[name="remark"]').val(remark);
+        if($('#project_datas input').length < 1){
+            layui.use('layer', function(){
+                layer.msg('请选择项目');
+            }); 
+            return false;
+        }
+        $('#project_datas input').each(function(k,v){
+            if($(v).val() == ''){
+                var word = $(v).parent().parent().attr('data-inword');
+                var project = $(v).attr('data-project');
+                layui.use('layer', function(){
+                    layer.msg(word+'-'+project+' 数量不得为空');
+                }); 
+                is_null = 1;
+                return null;
+            }
+        })
+        if(is_null){
+            return false;
+        }
+        $('#datasform').submit();
+    })
+    //======================提交订单end
+
+
+    //=======================导入模板start
+
+    $('#import_tmp').click(function(){
+        alert('功能待开发');
+        // $.post('',{},function(){
+
+        // },'json')
+    })
+
+    //=======================导入模板end
+
+
+
+    //点击空间换颜色
+    $('#diolog .left li').click(function(){
+        $('#diolog .left li').removeClass('checkli');
+        $(this).addClass('checkli');
+    })
+
+    //==============根据编号 项目名称筛选项目-start
+    $('#select_item_number').on('input propertychange',function(){
+        var item_number = $('#select_item_number').val();
+        var project = $('#select_project').val();
+        if(project || item_number){
+            $('#seach_datas tr').each(function(k,v){
+                if($(v).find('td').eq(1).text().indexOf(item_number) != -1 && $(v).find('td').eq(2).text().indexOf(project) != -1){
+                    $(v).show();
+                }else{
+                    $(v).hide();
+                }
+            })
+        }else{
+            $('#seach_datas tr').show();
+        }
+    })
+
+    $('#select_project').on('input propertychange',function(){
+        var item_number = $('#select_item_number').val();
+        var project = $('#select_project').val();
+        if(project || item_number){
+            $('#seach_datas tr').each(function(k,v){
+                if($(v).find('td').eq(1).text().indexOf(item_number) != -1 && $(v).find('td').eq(2).text().indexOf(project) != -1){
+                    $(v).show();
+                }else{
+                    $(v).hide();
+                }
+            })
+        }else{
+            $('#seach_datas tr').show();
+        }
+    })
+    //清空筛选
+    $('#clear_search').click(function(){
+        $('#select_item_number').val('');
+        $('#select_project').val('');
+        $('#seach_datas tr').show();
+    })
+    //==============根据编号 项目名称筛选项目-end
+
+    //选择工种 获取数据
+    $('#diolog .right li').click(function(){
+        if($(this).hasClass('checkli')){
+            return false;
+        }
+        $('#diolog .right li').removeClass('checkli');
+        $(this).addClass('checkli');
+        var word_name = $(this).data('val');
+        $('#seach_datas').html('');
+        $.post('/admin/offerlist/ajax_get_project',{word_name:word_name},function(res){
+            $(res.datas).each(function(k,v){
+                var html = '';
+                html += '<tr data-item_number="'+v.item_number+'" data-project="'+v.project+'" data-company="'+v.company+'" data-cost_value="'+v.cost_value+'" data-quota="'+v.quota+'" data-craft_show="'+v.craft_show+'" data-labor_cost="'+v.labor_cost+'" class="add_project">'
+                html += '<td class="pad_0"><i class="layui-icon layui-icon-add-1"></i></td>'
+                html += '<td>'+v.item_number+'</td>'
+                html += '<td>'+v.project+'</td>'
+                html += '</tr>'
+                $('#seach_datas').append(html);
+            })
+        },'json')
+    })
+
+    //点击+号  向右边报价表添加数据
+    $('#seach_datas').on('click',".add_project",function(){
+        var space = $('#diolog .left li[class="checkli"]').text();
+        var word = $('#diolog .right li[class="checkli"]').text();
+        if(!space || !word || space == '添加空间'){
+            layui.use('layer', function(){
+                layer.msg('工种/空间有误 请重新选择');
+            }); 
+            return false;
+        }
+        var data = $(this).data();
+        //判断该项目在当前功空间和工种下 是否已经存在
+        if($('input[data-project="'+space+'-'+data.item_number+'"]').length > 0){
+            layui.use('layer', function(){
+                layer.msg('该工种下项目已存在，请勿重复添加');
+            }); 
+            return false;
+        }
+        //加入右边报价表
+        var project = '';
+        project += '<tr class="project" data-inword="'+word+'" data-inspace="'+space+'">';
+        project += '<td><i class="layui-icon layui-icon-delete"></i></td>';
+        project += '<td>'+data.item_number+'</td>';
+        project += '<td>'+data.project+'</td>';
+        project += '<td><input type="text" class="layui-input height26" data-project="'+space+'-'+data.item_number+'" name="data['+space+']['+data.item_number+']" /></td>';
+        project += '<td>'+data.company+'</td>';
+        project += '<td>'+data.quota+'</td>';
+        project += '<td></td>';
+        project += '<td>'+data.craft_show+'</td>';
+        project += '<td></td>';
+        project += '</tr>';
+        //选择添加的地方
+        //判断当前工种下 空间是否存在
+        if($('tr[data-space="'+word+'-'+space+'"]').length > 0){
+            $('tr[data-inspace="'+space+'"][data-inword="'+word+'"]').last().after(project);
+        }else{
+            //空间不存在 新建空间
+            var space_html = '';
+            space_html += '<tr class="space" data-space="'+word+'-'+space+'" data-inword="'+word+'" data-inspace="'+space+'">';
+            space_html += '<td><i class="layui-icon layui-icon-delete"></i></td>'
+            space_html += '<td></td>'
+            space_html += '<td colspan="3" style="text-align: left;padding-left:10px">'+space+'</td>'
+            space_html += '<td colspan="1"></td>';
+            space_html += '<td class="space_material_total" colspan="1"></td>';
+            space_html += '<td colspan="1"></td>';
+            space_html += '<td class="space_artificial_total" colspan="1"></td>';
+            space_html += '</tr>'
+            //判断工种是否不存 
+            if($('tr[data-word="'+word+'"]').length > 0){
+                $('tr[data-inword="'+word+'"]').last().after(space_html);
+                $('tr[data-inspace="'+space+'"][data-inword="'+word+'"]').last().after(project);
+            }else{
+                //不存在 添加工种
+                var word_html = '';
+                word_html += '<tr class="word" data-word="'+word+'" data-inword="'+word+'">';
+                word_html += '<td><i class="layui-icon layui-icon-delete"></i></td>';
+                word_html += '<td colspan="4" style="text-align: left;padding-left:10px">'+word+'</td>';
+                word_html += '<td colspan="1"></td>';
+                word_html += '<td class="word_material_total" colspan="1"></td>';
+                word_html += '<td colspan="1"></td>';
+                word_html += '<td class="word_artificial_total" colspan="1"></td>';
+                word_html += '</tr>';
+                $('#project_datas').append(word_html);
+                $('tr[data-word="'+word+'"]').after(space_html);
+                $('tr[data-space="'+word+'-'+space+'"]').after(project);
+            }
+        }
+    })
+
+    //删除报价单项目
+    $('#project_datas').on('click',".layui-icon-delete",function(){
+        var type = $(this).parent().parent().attr('class');
+        
+        if(type == 'word'){
+            var msg = '确定要删除选中工种及所属项目吗？';
+            var inword = $(this).parent().parent().attr('data-inword');
+        }else if(type == 'space'){
+            var msg = '确定要删除选中空间及所属项目吗？';
+            var inspace = $(this).parent().parent().attr('data-inspace');
+        }else if(type == 'project'){
+            // var msg = '确定要删除选中项目吗？';
+            $(this).parent().parent().remove();
+             return false;
+        }else{
+            layui.use('layer', function(){
+                layer.msg('非法操作');
+            }); 
+            return false;
+        }
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.open({
+            content: msg,
+            title:'删除确认',
+            btn: ['删除', '取消'],
+                yes: function(index, layero){
+                    if(type == 'word'){
+                        $('tr[data-inword="'+inword+'"]').remove();
+                    }else if(type == 'space'){
+                        $('tr[data-inspace="'+inspace+'"]').remove();
+                    }
+                    layer.close(index);
+                },
+                btn2: function(index, layero){
+                    layer.close(index);
+                },
+                cancel: function(){ 
+                //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        }); 
+    })
+    //======================价格统计start
+    var old_val = '';
+    $("#project_datas").on('focus',".layui-input", function () {
+        old_val = $(this).val();
+    })
+    $('#project_datas').on('change',".layui-input",function(){
+        var num = $(this).val();
+        if(isNaN(num)){
+            layui.use('layer', function(){
+                layer.msg('输入数量有误，请重新输入');
+            }); 
+            $(this).val(old_val);
+            return false;
+        }
+        var tr = $(this).parent().parent();
+        var artificial_price = $(tr).find('td').eq(5).text();
+        var material_price = $(tr).find('td').eq(7).text();
+        var project_artificial_total = artificial_price*num;
+        var project_material_total = material_price*num;
+        $(tr).find('td').eq(6).text(project_artificial_total.toFixed(2)); //单条项目人工总价
+        $(tr).find('td').eq(8).text(project_material_total.toFixed(2)); //单条项目辅材总价
+        //统计当前空间
+        var space = $(tr).attr('data-inspace')
+        var word = $(tr).attr('data-inword')
+
+        var space_artificial_total = 0;
+        var space_material_total = 0;
+        $('#project_datas tr[data-inword="'+word+'"][data-inspace="'+space+'"][class="project"]').each(function(k,v){
+            //循环当前空间内的所有项目
+            space_artificial_total += Number($(v).find('td').eq(6).text());
+            space_material_total += Number($(v).find('td').eq(8).text());
+        })
+        $('.space[data-space="'+word+'-'+space+'"]').find('td').eq(4).text(space_artificial_total.toFixed(2));
+        $('.space[data-space="'+word+'-'+space+'"]').find('td').eq(6).text(space_material_total.toFixed(2));
+
+        var word_artificial_total = 0;
+        var word_material_total = 0;
+        $('#project_datas tr[data-inword="'+word+'"][class="project"]').each(function(k,v){
+            //循环当前工种内的所有项目
+            word_artificial_total += Number($(v).find('td').eq(6).text());
+            word_material_total += Number($(v).find('td').eq(8).text());
+        })
+        $('.word[data-word="'+word+'"]').find('td').eq(3).text(word_artificial_total.toFixed(2));
+        $('.word[data-word="'+word+'"]').find('td').eq(5).text(word_material_total.toFixed(2));
+    })
+    //======================价格统计end
+</script>
+{/block}

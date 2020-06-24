@@ -1,0 +1,92 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+td {
+    text-align: center
+}
+th{
+    text-align: center !important;
+}
+</style>
+
+<style type="text/css">
+    .layui-table-cell {
+        height: auto;
+        line-height: 40px;
+    }
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+
+            <table class="layui-table" lay-data="{page:false, id:'demo'}" lay-filter="demo">
+                <thead>
+                <tr style="height: 200px">
+                    <th lay-data="{field:'id'}">监理姓名</th>
+                    <th lay-data="{field:'water'}">水工</th>
+                    <th lay-data="{field:'electricity'}">电工</th>
+                    <th lay-data="{field:'timber'}">木工</th>
+                    <th lay-data="{field:'tile'}">瓦工</th>
+                    <th lay-data="{field:'grey' }">灰工</th>
+                    <th lay-data="{field:'painter' }">油漆</th>
+                    <th lay-data="{field:'rests'}">杂工</th>
+                    <th lay-data="{field:'operation',height:200}">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $user as  $k=>$v}
+                <tr >
+                    <td>{$v.name} </td>
+                    <td>{$v.supervision.water} </td>
+                    <td>{$v.supervision.electricity} </td>
+                    <td>{$v.supervision.timber} </td>
+                    <td>{$v.supervision.tile} </td>
+                    <td>{$v.supervision.grey} </td>
+                    <td>{$v.supervision.painter} </td>
+                    <td>{$v.supervision.rests} </td>
+                    <td>
+                        <a href="javascript:;" key="{$v.userid}" class="layui-btn layui-btn-primary ckgd">查看工地</a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+    });
+</script>
+<script>
+    layui.use('layer', function () {
+        var layer = layui.layer;
+        $(document).on('click','.ckgd', function(){
+            var Tresult=$(this).attr('key');
+            layer.open({
+                type: 2,
+                title: '查看工地',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1000px', '80%'],
+                content: '/admin/Statistical/construction?id='+ Tresult
+            });
+        });
+
+    });
+</script>
+{/block}

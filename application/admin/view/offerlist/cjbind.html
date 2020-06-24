@@ -1,0 +1,155 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <table class="layui-table" style="text-align: center">
+                <thead >
+                <tr>
+                    <td>项目名称</td>
+                    <td>单位</td>
+                    <td>辅材单价</td>
+                    <td>人工单价</td>
+                    <td>工艺说明</td>
+                    <td>提交人</td>
+                    <td>公司</td>
+                    <td>提交时间</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $data as $key=>$vo }
+                <tr>
+
+                    <td>{$vo.project}</td>
+                    <td>{$vo.company}</td>
+                    <td>{$vo.quota}</td>
+                    <td>{$vo.craft_show}</td>
+                    <td>{$vo.material}</td>
+                    <td>{$vo.gname}</td>
+                    <td>{$vo.frame}</td>
+                    <td>{$vo.add_time|date="Y-m-d H:i"}</td>
+                    <td>
+                        {if $vo.of_fb==2}
+                        <button key="{$vo.id}" class="layui-btn layui-btn-primary fbsh" >绑定非标</button>
+                        {elseif $vo.of_fb==3 /}绑定成功
+                        {elseif $vo.of_fb==4 /}
+                        绑定成功
+                        {else/}
+                        {/if}
+                        <button key="{$vo.id}" class="layui-btn layui-btn-primary cjsh" >新增报价条目</button>
+                        <button key="{$vo.id}" class="layui-btn layui-btn-primary cjbd" >绑定到报价库</button>
+                    </td>
+                </tr>
+                {/foreach}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+</script>
+
+
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            $(document).on('click','.fbsh', function(){
+                var Tresult=$(this).attr('key');
+                layer.open({
+                    type: 2,
+                    title: '绑定非标',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1000px', '50%'],
+                    content: '/admin/offerlist/cjbindedit?id='+ Tresult
+                });
+            });
+
+        });
+
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            $(document).on('click','.cjsh', function(){
+                var Tresult=$(this).attr('key');
+                layer.open({
+                    type: 2,
+                    title: '新增非标报价',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['800px', '70%'],
+                    content: '/admin/offerlist/createfb?id='+ Tresult
+                });
+            });
+
+        });
+
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            $(document).on('click','.cjbd', function(){
+                var Tresult=$(this).attr('key');
+                layer.open({
+                    type: 2,
+                    title: '绑定到报价库',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['800px', '70%'],
+                    content: '/admin/offerlist/superbind?id='+ Tresult
+                });
+            });
+
+        });
+    })
+</script>
+<script>
+    $(function () {
+        $(document).on('click','.cjsh', function(){
+            var a=$(this).attr('key');
+
+            $.ajax({
+                type: "get",
+                url: "/admin/Offerlist/cjbindedit",
+                data: {key:a,status:4},
+                success: function (e) {
+                    console.log(e);
+                    window.location.reload();
+                }
+            })
+        });
+    })
+</script>
+
+{/block}

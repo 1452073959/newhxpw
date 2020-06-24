@@ -1,0 +1,253 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.form-control{display: inline-block;padding: 5px;}
+/*.text-limit{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;max-width: 110px;}*/
+	.text-center{text-align: center !important;}
+    td{
+        text-align: center;
+        padding:9px 5px !important;
+    }
+    th{
+        padding:9px 10px !important;
+    }
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="">
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-inline">
+					<!-- <a class="layui-btn layui-btn-sm" id="export" href = "{:url('admin/offerlist/excel_export',['customerid'=>input('customerid'),'report_id'=>input('report_id')])}">导出报表</a> -->
+                    <button class="layui-btn layui-btn-sm" type="button" data-fun="print" id="btn_export">打印</button>
+				</form>
+            </blockquote>
+			<div id="export-table">
+				{notempty name="datas"}
+                <!-- <table class="layui-table" style="word-break:break-all"> -->
+                <table class="layui-table">
+                      <colgroup>
+                        <col width="10">
+                        <col width="50">
+                        <col width="10">
+                        <col width="10">
+                        <col width="40">
+                        <col width="40">
+                        <col width="40">
+                        <col width="40">
+                        <col width="200">
+                      </colgroup>
+					<thead>
+						<tr>
+							<th rowspan="2" colspan="3"><img style="max-width:160px;" src="__STATIC__/imgs/logo.png"></th>
+							<th class="text-center text-large" colspan="5"><h3>住宅装饰工程增减项单</h3></th>
+							<th rowspan="2" colspan="1"></th>
+					    </tr>
+					    <tr>
+							<th class="text-center" colspan="5">全国统一24小时客服热线<br />
+                            400-628-1968</th>
+					    </tr>
+						<tr>
+							<th style="text-align:center;" colspan="9">单位：{$order_info.unit}</th>        
+						</tr>
+						<tr>
+							<th colspan="3">工程名称：{$userinfo.address}</th>       
+							<th colspan="3">客户姓名：{$userinfo.customer_name}</th>       
+							<th colspan="2">设计师姓名：{$userinfo.designer_name}</th>       
+							<th colspan="2">报价师姓名：{$userinfo.quoter_name}</th>       
+						</tr>
+						<tr>      
+                            <th rowspan="2" colspan="1">序号</th>
+							<th class="text-center" rowspan="2">工程项目名称</th>         
+							<th class="text-center" rowspan="2">数量</th>       
+							<th class="text-center" rowspan="2">单位</th>
+							<th class="text-center" colspan="2">辅材费</th> 
+							<th class="text-center" colspan="2">人工费</th>    
+							<th class="text-center" rowspan="2">施工工艺及材料说明</th> 
+						</tr>
+						<tr>   
+							<th class="text-center" colspan="1">单价</th>       
+							<th class="text-center">合计</th>       
+							<th class="text-center">单价</th>       
+							<th class="text-center">合计</th> 
+						  </tr>
+					</thead>
+					<tbody> 
+						{notempty name="datas"}
+                            <?php 
+                                $num1 = 65;
+                                $total_quota = 0;
+                                $total_craft_show = 0;
+                            ?>
+    						{foreach name="datas" item="v1" key="k1"}
+                                <tr data-cate="tr{$k1}">
+                                    <td><?php echo chr($num1); ?></td>
+                                    <td colspan="2">{$k1}</td>
+                                    <td colspan="7"></td>
+                                </tr>
+                                <?php $num1++;$num2=97; ?>
+                                {foreach name="$v1" key="k2" item="v2"}
+                                    <tr id="tr{$k2}">
+                                        <td><?php echo chr($num2); ?></td>
+                                        <td class="text-center" colspan="9">{$k2}</td>
+                                    </tr>
+                                    <?php $num3=1; $num2++; ?>
+                                    {foreach name="$v2" item="v3" key="k3"}
+                                        <tr class="tr{$k1}{$k2}">
+                                            <td>{$num3}</td>
+                                            <td>{$v3['info']['project']}</td>
+                                            <td>{$v3.num}</td>
+                                            <td>{$v3['info']['company']}</td>
+                                            <td>{$v3['info']['quota']}</td>
+                                            <td>{$v3.num?$v3.num*$v3['info']['quota']:''}</td>
+                                            <td>{$v3['info']['craft_show']}</td>
+                                            <td>{$v3.num?$v3.num*$v3['info']['craft_show']:''}</td>
+                                            <td>{$v3['info']['material']}</td>
+                                            <input type="hidden" form="myform" name="" value="">
+                                        </tr>
+                                        <?php 
+                                            $total_quota += $v3['num']?$v3['num']*$v3['info']['quota']:0;
+                                            $total_craft_show += $v3['num']?$v3['num']*$v3['info']['craft_show']:0;
+                                            $num3++;
+                                         ?>
+                                    {/foreach}
+                                {/foreach}
+                                <tr class="tr{$k1}total">
+                                        <td class="text-center" colspan="2">小计</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                            {/foreach}
+                            <tr>
+                                <td class="text-center" colspan="2">合计</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{$total_quota}</td>
+                                <td></td>
+                                <td>{$total_craft_show}</td>
+                                <td></td>
+                            </tr>
+						{/notempty}
+
+    					</tbody>
+    				</table>
+				{/notempty}
+			</div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<!-- 打印 -->
+<script src="__STATIC__/bootstrap/js/table/printThis.min.js"></script>
+<script>
+  $(document).ready(function(){
+
+    $('tr').each(function(){
+    	var cate = $(this).attr('data-cate');
+        if(cate){
+          var fd_total = 0,rd_total = 0;
+             $('tr[class*='+cate+']').each(function(){
+             	var fd = $(this).find('td').eq(5).html() * 1;//辅材合价
+             	var rd = $(this).find('td').eq(7).html() * 1;//人工合价
+               fd_total += fd;
+               rd_total += rd;
+             });
+          $('.'+cate+'total').find('td').eq(4).html(Math.round(fd_total * 100)/100);
+          $('.'+cate+'total').find('td').eq(6).html(Math.round(rd_total * 100)/100);
+         }
+    });
+    
+     //打印
+      $(document).on('click','[data-fun="print"]',function(){
+          $("table").printThis({
+             debug: false,
+             importCSS: true,
+             importStyle: true,
+             printContainer: true,
+    //       loadCSS: "/Content/Themes/Default/style.css",
+             pageTitle: "姓名查询汇总表",
+             removeInline: false,
+             printDelay: 333,
+             header: null,
+             formValues: false
+           });
+      })
+		//改变报表标签
+    $(document).on('change','#changestatus',function(){
+      var id= $(this).attr('data-id'),customerid = $(this).attr('data-customerid'),status = $(this).val();
+      // mystatus(id,customerid);
+      $.ajax({
+          type : 'post',
+          url  :  '{:url("offerlist/status")}',
+          dataType : 'json',
+          data : {id:id,customerid:customerid,status:status},
+          success : function(re){
+            console.log(re);
+            // if(re.status == 0){
+               alert(re.msg);
+               window.location.reload();
+            // }else{
+            //   alert(re.msg);return false;
+            // }
+          }
+        });
+    });
+		
+		// $('#export').click(function(){
+		// 	window.location.href = "{:url('admin/offerlist/excel_export',['customerid'=>input('customerid'),'report_id'=>input('report_id')])}";
+		// });
+    
+  });
+</script>
+{/block}
+
+      

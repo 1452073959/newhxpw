@@ -1,0 +1,470 @@
+<link rel="stylesheet" href="__STATIC__/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="/layui_exts/laydateNote/laydateNote.css"/>
+<link rel="stylesheet" href="__STATIC__/12/admin/css/font-awesome.min.css" media="all"/>
+<script src="__STATIC__/12/admin/js/jquery-2.0.0.js"></script>
+<script src="__STATIC__/layui/layui.js"></script>
+<link rel="stylesheet" href="__STATIC__/12/admin/css/index.css"/>
+<link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css"/>
+<script src="__STATIC__/12/admin/js/highcharts.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/12/admin/js/exporting.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC__/12/admin/js/highcharts-zh_cn.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.xinxiaxue.cn/js/jquery.leoweather.all.js"></script>
+
+<style>
+    .skin2 {
+        display: inline-block;
+        border: 1px solid #DDDDDD;
+    }
+
+    .skin2 .top {
+        font-size: 14px;
+        overflow: hidden;
+        border-bottom: 1px solid #DDDDDD;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .skin2 .mid {
+        overflow: hidden;
+        border-bottom: 1px solid #DDDDDD;
+        padding: 20px;
+    }
+
+    .skin2 .mid .fl {
+        float: left;
+        background: #6495ED;
+        padding: 20px;
+    }
+
+    .skin2 .mid .fl img {
+        height: 80px;
+    }
+
+    .skin2 .mid .fr {
+        float: right;
+        padding: 20px;
+    }
+
+    .skin2 .mid .fr h2 {
+        font-size: 20px;
+        line-height: 28px;
+        margin: 0;
+    }
+
+    .skin2 .mid .fr p {
+        font-size: 20px;
+        line-height: 28px;
+        margin: 0;
+    }
+
+    .skin2 .bot {
+        font-size: 16px;
+        padding: 20px;
+    }
+
+    .skin2 .bot ul {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .skin2 .bot li {
+        border-top: 1px dashed #DDDDDD;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+
+    .skin2 .bot li:first-child {
+        border-top: 0;
+        padding-top: 0;
+        margin-top: 0;
+    }
+
+    .skin2 .bot li * {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .skin2 .bot li em {
+        font-style: normal;
+        width: 100px;
+    }
+
+    .skin2 .bot li span {
+        font-style: normal;
+        width: 117px;
+    }
+
+    .skin2 .bot li strong {
+        font-style: normal;
+        width: 117px;
+    }
+
+    .layui-breadcrumb div {
+        height: 38px;
+        line-height: 38px;
+        float: left;
+    }
+
+    .layui-btn {
+        width: 70%;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    #newlist {
+        width: 70%;
+        overflow: hidden;
+    }
+
+    .gg_class {
+        margin: 10px;
+        padding: 0 10px;
+        width: 70%;
+        background: yellow;
+        color: #333;
+        overflow: hidden;
+    }
+
+    .gg_class .news {
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .gg_class .news span {
+        font-weight: bold;
+    }
+
+    .newsstyle {
+        color: #0b0b0b;
+    }
+
+    .balce_row {
+        width: 100%;
+        padding: 10px 0;
+        box-sizing: border-box;
+    }
+
+    .bot .left_row, .bot .right_row {
+        height: 50%;
+    }
+
+    .bot .left_row {
+        border-bottom: 1px solid #e6e6e6;
+    }
+
+    .countInfo .inforight .bot {
+        padding: 0;
+        height: 67%;
+    }
+
+    .total-notice {
+        margin: 10px 0;
+        float: left;
+        width: 128px;
+        height: 40px;
+        background: url(images/sign.png) no-repeat;
+        background-position: center;
+        background-size: 100%;
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .total-notice a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: #fff !important;
+    }
+
+    .total-notice a:hover {
+        color: #fff !important;
+    }
+
+    .tips {
+        opacity: 0;
+    }
+
+    .xinxi {
+        float: left;
+        width: 50%;
+        text-align: center;
+    }
+
+    .xinxi .index-p {
+        padding: 0 25px
+    }
+
+
+    /*设置内容*/
+    div.news_list .news_content {
+        width: 100%;
+        padding: 8px;
+        height: 130px;
+        overflow: auto;
+    }
+
+    /*设置时间*/
+    div.news_list .news_content ul li span {
+        font-size: 15px;
+        color: red;
+    }
+
+    /*具体内容*/
+    div.news_list .news_content ul li {
+        width: 90%;
+        padding-left: 20px;
+        border-bottom: 1px dashed #ddd;
+        margin-bottom: 6px;
+        background: url("/static/imgs/3.gif") no-repeat 0px 7px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+</head>
+<!-- body -->
+<div class="layui-body" id="admin-body" style="left:0">
+    <div class="layui-tab" lay-allowClose="true" lay-filter="tabMain">
+        <div class="layui-tab-content" id="main" >
+            <div class="layui-tab-item layui-show">
+                <div class="m_box">
+                    <div class="content clearfix">
+                        <div class="layui-breadcrumb" lay-separator=">" style="visibility: visible;">
+                            <div style="margin: 10px 0;height: 38px">您当前所在位置：<a><cite>首页</cite></a></div>
+                        </div>
+                        <div class="background"></div>
+                        <div class="layui-fluid main" style="padding-bottom:15px  ">
+                            <div class="layui-row" style="height: 450px">
+                                <div class="information-box" style="width: 35%; float: left; border:1px solid #DDDDDD; height: 425px">
+                                    <p class="index-title">帐户信息<a href="{:url('main/edit')}"><span
+                                            style="margin-left:30px;color:green;display:none;">信息修改</span></a></p></p>
+                                    {if $Think.session.admin_user_auth.pyid != '0'}
+                                    <div class="countInfo">
+                                        <div class="infoleft">
+                                            <div class="tu">
+                                                <img src="__STATIC__/12/admin/images/user.png" alt=""/>
+                                            </div>
+                                            <div class="mess" style="float:left;">
+                                                <h3 class="" style="font-weight: bold;padding-top: 10px;">
+                                                    {$Think.session.admin_user_auth.name}</h3>
+                                                <!--<p class="index-p">邮箱:<span>--</span></p>-->
+                                                <p class="index-p">
+                                                    手机:<span>{$Think.session.admin_user_auth.phone}</span></p>
+                                                <p class="index-p">上次登录时间:<span>{$Think.session.admin_user_auth.last_login_time|date='Y-m-d H:i:s'}</span>
+                                                </p>
+                                                <!--<p class="index-p">上次登录IP:<span>113.77.146.30</span></p>-->
+                                                <p class="index-p">上次登录地址:<span class="userct">{$Think.session.admin_user_auth.last_login_address}</span>
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                        <div style="width: 50%;text-align: center;margin-top: 30px" >
+                                            <h2 style="text-align: center;line-height:52px">{$rerole['title']}</h2>
+                                            <p class="index-p">所属公司：{$rerole['name']}</p>
+                                            <p class="index-p">{$rerole['description']|raw}</p>
+                                        </div>
+                                        <!-- <?php dump($rerole)?> -->
+                                    </div>
+                                    {else /}
+                                    <h1 style="text-align: center;line-height: 10rem;">超级管理员</h1>
+                                    {/if}
+
+                                </div>
+                                <div class="information-box"
+                                     style="width: 550px; border:1px solid #DDDDDD;float: left;height: 425px; margin-left: 5px ;position: relative;">
+                                    <iframe seamless="seamless"	width="550" scrolling="no" frameborder="no" height="425" src="https://cdn.xinxiaxue.cn/html/index.html"></iframe>
+                                </div>
+<!--                                <div style="clear: both"></div>-->
+                                <div class="information-box" style="border:1px solid #DDDDDD; width: 260px;margin-right: 10px; height:425px; overflow-y: auto;">
+                                    <h3 style="text-align: center">通讯录</h3>
+                                    <div id="test1" class="demo-tree demo-tree-box"></div>
+                                </div>
+                            </div>
+                            <div class="layui-row">
+                                <div class="layui-col-xs12 layui-col-sm12 inf-box" style="margin-top: 20px;">
+                                    <div id="container3" style="width: 35%; float: left; height: 200px; border:1px solid #DDDDDD;">
+                                         <div class="news_list">
+                                             <div style="text-align: center; font-size: 30px;"><b>公告</b>
+                                                 {if $re['roleid']==1}
+                                                 <button id="issue" style="width: 100px" ;
+                                                         class="layui-btn layui-btn-normal">发布公告
+                                                 </button>
+                                                 {else}
+                                                 {/if}
+                                             </div>
+                                             <div class="news_content">
+                                                 <ul style="font-size: 20px;overflow: hidden;text-overflow:ellipsis;"
+                                                     id="oid">
+                                                     {foreach $notice as $v}
+                                                     <li id="{$v.id}">
+                                                         <span style="margin-right: 30px;">{$v.create_time|date="Y-m-d H:i"}</span>
+                                                         <a href="#">{$v.title}</a></li>
+                                                     {/foreach}
+                                                 </ul>
+                                             </div>
+                                         </div>
+                                    </div>
+                                    <div id="container2" style="float: left; margin-left:15px ">
+                                            <div class="welcome-info">
+                                    <div class="skin2"  style="width:550px;height: 200px;overflow: hidden;"; id="weather1"></div>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<!--<script>
+    //调用
+    layui
+        .config({
+            base: '/layui_exts' //假设这是你存放拓展模块的根目录
+        })
+        .extend({
+            //设定模块别名
+            laydateNote: '/laydateNote/laydateNote', //如果 mymod.js 是在根目录，也可以不用设定别名
+            artTemplate: '/artTemplate/artTemplate'
+        })
+
+    layui.use(['laydateNote'], function () {
+        //调用
+        var laydateNote = layui.laydateNote
+        laydateNote({
+            elem: '#test-n2', //容器id,CLass
+            url: '/admin/main/query', //异步数据接口,本地浏览时可不设置
+            fine: '.laydateNotebook', //开启详细模式
+            sort: 'up', //日期排序，默认不设置不排序，up 日期升序，down 日期降序
+            done: function (data, chooseData, type) {
+                console.log(data, chooseData, type)
+                // console.log(chooseData);
+                // chooseData;
+                // console.log(a);
+                $.ajax({
+                    type: "get",
+                    url: "/admin/main/memo",
+                    data: {chooseData, type},
+                    success: function (e) {
+                        console.log(e);
+                    }
+                });
+            }
+        })
+    })
+</script>-->
+
+<script>
+    $('#weather1').leoweather({
+        appid: '46331815', appsecret: 'KNUBQ3eG',
+        format: '<div class="top">' +
+            '{时段}好！现在是：{年}/{月}/{日} {时}:{分}:{秒} 星期{周}' +
+            '</div>' +
+            '<div class="mid">' +
+            '<div class="fl">当前天气:</div>' +
+            '<div class="fr"><h2>{城市} {天气}</h2><p>{最低气温}~{最高气温}</p><p>{风向}{风级}</p></div>' +
+            '</div>' +
+            '<div class="bot">' +
+            '<ul>' +
+            '<li><strong>{人性化日期+1}</strong><span>{天气+1}</span><em>{最低气温+1}~{最高气温+1}</em></li>' +
+            '<li><strong>{人性化日期+2}</strong><span>{天气+2}</span><em>{最低气温+2}~{最高气温+2}</em></li>' +
+            '<li><strong>{人性化日期+3}</strong><span>{天气+3}</span><em>{最低气温+3}~{最高气温+3}</em></li>' +
+            '<li><strong>{人性化日期+4}</strong><span>{天气+4}</span><em>{最低气温+4}~{最高气温+4}</em></li>' +
+            '<li><strong>{人性化日期+5}</strong><span>{天气+5}</span><em>{最低气温+5}~{最高气温+5}</em></li>' +
+            '<li><strong>{人性化日期+6}</strong><span>{天气+6}</span><em>{最低气温+6}~{最高气温+6}</em></li>' +
+            '</ul>' +
+            '</div>'
+    });
+</script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+
+            var layer = layui.layer;
+            $("#issue").click(function () {
+                layer.open({
+                    type: 2,
+                    title: '发布公告',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1000px', '80%'],
+                    content: '/admin/main/notice/' //iframe的url
+                });
+            });
+
+
+            $("#oid li  ").click(function () {
+                var Uarry = $("#oid li");
+                var count = $(this).index();//获取li的下标
+                var Tresult = Uarry.eq(count).attr("id");
+                console.log(Tresult);
+                layer.open({
+                    type: 2,
+                    title: '公告内容',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['80%', '80%'],
+                    content: '/admin/main/show?id=' + Tresult
+                });
+
+            })
+
+        });
+
+    })
+
+</script>
+
+<script>
+    $(function () {
+/*        $(".laydate-btns-clear").css("display","none");
+        $("#oid li:even").css("background-color","#c2c2c2");*/
+        // $("#oid li:odd").addClass("layui-bg-green");
+        // $("#oid li:even").addClass("even");
+
+    });
+</script>
+<script src="https://www.layuicdn.com/layui/layui.js"></script>
+<script>
+    layui.use(['tree', 'util'], function () {
+        var tree = layui.tree
+            , layer = layui.layer
+            , util = layui.util
+            //模拟数据1
+        //常规用法
+        $.ajax({
+            type: "get",
+            url: "/admin/main/calendar",
+            async:false,
+            success: function (e) {
+                 da=e;
+            }
+
+        });
+        console.log(da);
+        tree.render({
+            elem: '#test1' //默认是点击节点可进行收缩
+            , data: da
+            ,click: function(obj){
+            console.log(obj.data); //得到当前点击的节点数据
+            console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+            console.log(obj.elem); //得到当前节点元素
+
+            console.log(obj.data.children); //当前节点下是否有子节点
+        }
+            // ,data:data3
+        });
+
+
+    });
+</script>
+
+

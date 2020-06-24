@@ -1,0 +1,107 @@
+{extend name="index_layout"/}
+{block name="main"}
+
+<form class="layui-form" action="/admin/Offerlist/createfb" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">编号</label>
+        <div class="layui-input-block">
+            <input type="text" name="item_number" required lay-verify="required" value="" placeholder="请输入编号"
+                   autocomplete="off" class="layui-input">
+            <input type="hidden" name="key" value="{$data['id']}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">工种类别</label>
+        <div class="layui-input-block">
+            <select name="type_word_id" lay-filter="type_word_id" lay-search required  lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="type_work" id="vo"}
+                <option value="{$vo['id']}">{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required lay-verify="required" value="{$data['project']}"
+                   placeholder="请输入项目名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单位</label>
+        <div class="layui-input-block">
+            <input type="text" name="unit" required lay-verify="required" value="{$data['company']}"
+                   placeholder="请输入单位" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">工艺说明</label>
+        <div class="layui-input-block">
+            <input type="text" name="content" required lay-verify="required" value="{$data['material']}"
+                   placeholder="请工艺说明" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin:5px 0"><label class="layui-form-label"
+                                                             style="width:70px;padding:9px 5px">用料：</label>
+        <div class="layui-input-block" style="margin-left:85px;line-height:36px;"><a href="javascript:;:;"
+                                                                                     onclick="add_material(2)"><i
+                style="font-size: 24px" class="layui-icon layui-icon-add-circle-fine"></i></a></div>
+    </div>
+<span id="om" >
+</span>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function add_material() {
+
+        var arr=<?php echo json_encode($fines);?>;
+         aarr=eval(arr);
+        var option = '';
+        aarr.forEach(function(e){
+            option += "<option value='"+e.fine+"'>"+e.fine+"</option>"
+        });
+        var html = '<div class="layui-form-item project_select" style="margin:5px 0;">'
+        html += '  <label class="layui-form-label" style="width:70px;padding:9px 5px">辅材：</label>'
+        html += '  <div class="layui-inline"  style="width: 20px ;float: left; ">'
+        html += '    <a href="javascript:;"  onclick="del_material(this)"><i class="layui-icon layui-icon-close"></i></a>'
+        html += '  </div>'
+        html += '  <div class="layui-input-inline" >'
+        html += '    <select style="width:50px" name="find[]" lay-filter="test1" lay-search>'
+        html +=         option
+        html += '    </select>'
+        html += '  </div>'
+        html += '  <div class="layui-input-inline" >'
+        html += '    <input type="text" style="width:130px;display: inline;" name="funit[]" autocomplete="off" placeholder="数量 - 单位" class="layui-input">'
+        html += '  </div>'
+        html += '</div>'
+        $('#om').append(html);
+        layui.use('form', function(){
+            var form = layui.form;
+            form.render();
+        });
+
+    }
+
+
+</script>
+
+<script>
+    function del_material(o){
+        $(o).parent().parent().remove();
+    }
+</script>
+
+{/block}

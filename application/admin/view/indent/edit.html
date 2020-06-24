@@ -1,0 +1,109 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">.p_tex{line-height:38px;color:#666;}.layui-form-label{width: 120px}</style>
+<div class="layui-card">
+    <div class="layui-card-header">订单查看</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/Indent/edit')}" method="post">
+    
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系人 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="name" autocomplete="off" placeholder="联系人" class="layui-input" value="{$data.name}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="phone" autocomplete="off" placeholder="电话" class="layui-input" value="{$data.phone}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">下单人id</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="useid" autocomplete="off" placeholder="下单人id" class="layui-input" value="{$data.useid}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">出发地址 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="place" autocomplete="off" placeholder="出发地址" class="layui-input" value="{$data.place}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">出发地纬度 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="placelatitude" autocomplete="off" placeholder="出发地纬度" class="layui-input" value="{$data.placelatitude}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">出发地经度 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="placelongitude" autocomplete="off" placeholder="出发地经度" class="layui-input" value="{$data.placelongitude}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">到达地 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="arrive" autocomplete="off" placeholder="到达地" class="layui-input" value="{$data.arrive}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">到达地纬度 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="arrivelatitude" autocomplete="off" placeholder="到达地经度" class="layui-input" value="{$data.arrivelatitude}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">到达地经度 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="arrivelongitude" autocomplete="off" placeholder="到达地" class="layui-input" value="{$data.arrivelongitude}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">订单金额 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="pay" autocomplete="off" placeholder="订单金额" class="layui-input" value="{$data.pay}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="remark" autocomplete="off" placeholder="备注" class="layui-input" value="{$data.remark}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="status" autocomplete="off" placeholder="状态" class="layui-input" value="{if condition="($data['status']==0)"}未接单{elseif condition="($data['status']==1)"/}已接单{else /} 已完成{/if}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">司机id </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="driveid" autocomplete="off" placeholder="司机id" class="layui-input" value="{$data.driveid}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">下单时间 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="time" autocomplete="off" placeholder="下单时间" class="layui-input" value="{$data.time}">
+                </div>
+            </div>
+
+
+            <input type="hidden" name="id" value="{$data.Id}" />
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <!-- <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button> -->
+                    <a style="margin-left: 50px" class="layui-btn layui-btn-normal" href="{:url('admin/Indent/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+{/block}

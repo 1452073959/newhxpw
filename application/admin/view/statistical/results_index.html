@@ -1,0 +1,160 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <form class="layui-form layui-inline" action="" id="registerform">
+                    <div class="layui-form-item" >
+                        <label class="layui-form-label">职位</label>
+                        <div class="layui-input-block">
+                            <select name="position" lay-search>
+                                <option value=""></option>
+                                <option value="p_1" {if(input('position') == 'p_1')}selected{/if}>设计师</option>
+                                <option value="p_2" {if(input('position') == 'p_2')}selected{/if}>报价师</option>
+                                <option value="p_3" {if(input('position') == 'p_3')}selected{/if}>商务经理</option>
+                                <option value="a_13" {if(input('position') == 'a_13')}selected{/if}>监理</option>
+                                <option value="a_15" {if(input('position') == 'a_15')}selected{/if}>质检</option>
+                                <option value="a_16" {if(input('position') == 'a_16')}selected{/if}>工程经理</option>
+                                <option value="p_14" {if(input('position') == 'p_14')}selected{/if}>业务员</option>
+                                <option value="p_15" {if(input('position') == 'p_15')}selected{/if}>画图</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" placeholder="" value="{:input('name')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline" style="float: left;margin-right: 15px">
+                        <label class="layui-form-label">签单时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="begin_time" name="begin_time" autocomplete="off" value="{:input('begin_time')}" placeholder="开始时间">
+                        </div>
+                        <span> - </span>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="end_time" name="end_time" autocomplete="off" value="{:input('end_time')}" placeholder="结束时间">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-left:10px;float: right">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                            <a href="/admin/statistical/results_index" class="layui-btn layui-btn-primary">重置</a>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:[],limit:20}">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <!-- <th class="" lay-data="{field:'id',hide:'true',width:100}">id</th> -->
+                        <th lay-data="{field:'position',width:100}">职位</th>
+                        <th lay-data="{field:'username',width:100}">姓名</th>
+                        <th lay-data="{field:'total_money',width:150}">开工额</th>
+                        <th lay-data="{field:'avg_profits',width:100}">平均毛利</th>
+                        <th lay-data="{field:'avg_area', width:200}">平米均价</th>
+                        <th lay-data="{field:'total_num',width:100}">开工数量</th>
+                        <th lay-data="{field:'old_house_num',width:100}">二手房数量</th>
+                        <th lay-data="{field:'num1',width:100}">套房数量</th>
+                        <th lay-data="{field:'num2',width:100}">复式数量</th>
+                        <th lay-data="{field:'num3',width:100}">别墅数量</th>
+                        <th lay-data="{field:'num4',width:100}">公装数量</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {foreach $personnel as $k=>$v}
+                        <tr>
+                            <td>{$job[$v['job']]}</td>
+                            <td>{$v['name']}</td>
+                            <td>{$v['total_money']}</td>
+                            <td>{:round($v['total_profits']/$v['total_num'],2)}</td>
+                            <td>{if($v['total_area'] != 0)}{:round($v['total_money']/$v['total_area'],2)}{/if}</td>
+                            <td>{$v['total_num']}</td>
+                            <td>{$v['old_house_num']}</td>
+                            <td>{$v['num1']}</td>
+                            <td>{$v['num2']}</td>
+                            <td>{$v['num3']}</td>
+                            <td>{$v['num4']}</td>
+                        </tr>
+                    {/foreach}
+                    {foreach $admin as $k=>$v}
+                        <tr>
+                            <td>{$role[$v['roleid']]['title']}</td>
+                            <td>{$v['name']}</td>
+                            <td>{$v['total_money']}</td>
+                            <td>{:round($v['total_profits']/$v['total_num'],2)}</td>
+                            <td>{if($v['total_area'] != 0)}{:round($v['total_money']/$v['total_area'],2)}{/if}</td>
+                            <td>{$v['total_num']}</td>
+                            <td>{$v['old_house_num']}</td>
+                            <td>{$v['num1']}</td>
+                            <td>{$v['num2']}</td>
+                            <td>{$v['num3']}</td>
+                            <td>{$v['num4']}</td>
+                        </tr>
+                    {/foreach}
+                    {if($total['total_num'] > 0)}
+                        <tr>
+                            <td>合计</td>
+                            <td></td>
+                            <td>{$total['total_money']}</td>
+                            <td>{:round($total['total_profits']/$total['total_num'],2)}</td>
+                            <td>{if($total['total_area'] != 0)}{:round($total['total_money']/$total['total_area'],2)}{/if}</td>
+                            <td>{$total['total_num']}</td>
+                            <td>{$total['old_house_num']}</td>
+                            <td>{$total['num1']}</td>
+                            <td>{$total['num2']}</td>
+                            <td>{$total['num3']}</td>
+                            <td>{$total['num4']}</td>
+                        </tr>
+                    {/if}
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+</script>
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+    })
+    //初始化时间差距
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#begin_time'
+        });
+        laydate.render({
+            elem: '#end_time'
+        });
+    })
+    $(function () {
+        $(".typ").click(function(){
+            $("#registerform").submit();
+        });
+    })
+</script>
+{/block}

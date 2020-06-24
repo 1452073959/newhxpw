@@ -1,0 +1,121 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.text-center{text-align: center !important;}
+.text-large{font-size:24px!important;font-weight:900!important;}
+
+.layui-form-select{float:left;margin-right:10px}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+</style>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <a class="layui-btn layui-btn-sm" href="{:url('admin/quote/addmould')}">新建模板</a>
+            </blockquote>
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th class="taleft">模板名称</th>
+                        <th class="taleft">拥有人</th>
+                        <th class="taleft">上一次修改时间</th>
+                        <th class="taleft">操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {volist name="data" id="vo" empty=""}
+                    <tr>   
+                       <td class="taleft">{$vo.tmp_name}</td>
+                       <td class="taleft">{$admin_list[$vo['adminid']]['name'] ?: ''}</td>
+                       <td class="taleft">{:date('Y-m-d H:i:s',$vo.update_time)}</td>    
+					    <td>
+							<a href="{:url('admin/quote/checkmould',['tmp_id'=>$vo.tmp_id,'type'=>'preview'])}" class="checkmould" data-id="{$vo.tmp_id}"><i class="layui-icon layui-icon-search" title="查看"></i></a>
+						    <a href="{:url('admin/quote/addmould',['tmp_id'=>$vo.tmp_id])}" class="checkmould" data-id="{$vo.tmp_id}"><i class="layui-icon layui-icon-edit" title="编辑"></i></a>
+						    <a class="deletemould" href="{:url('admin/quote/deletemould',['id'=>$vo.tmp_id])}" data-id="{$vo.tmp_id}"><i class="layui-icon layui-icon-delete" title="删除"></i></a>
+					    </td>
+                    </tr>   
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{/block}
+{block name="script"}
+<script src="/static/admin/js/jquery.min.js"></script>
+<script src="__STATIC__/admin/js/layer.js"></script>
+<script type="text/javascript">
+    
+	$(document).ready(function(){
+		//关闭弹窗
+		$('#close').click(function(){
+		    $('#offerlist').toggle();
+		});
+		$(document).on('click','.deletemould',function(){
+			var id = $(this).attr('data-id');
+			if(!id){
+				alert('删除有误');
+			}
+			if(!confirm('确定要删除该模板吗？')){return false;}
+			$.ajax({
+				url:"{:url('admin/quote/deletemould')}",
+				type:"post",
+				data:{id:id},
+				success:function(result){
+					alert(result.msg);
+					if(result.code == 1){
+						window.location.href = result.url;
+					}
+				}
+			});
+			return false;
+		});
+	});
+
+</script>
+<script type="text/javascript">
+  //简单显示上传文件信息
+     $("#imgInput").change(function(e){
+       $("#imgs").html("<span style='color:green;position:absolute;top:-25px;right:-5px;font-size:20px'>✔</span>");
+    });  
+</script>
+{/block}

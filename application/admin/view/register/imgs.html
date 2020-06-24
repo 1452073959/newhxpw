@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>图片在线</title>
+    <meta name="author" content="YZNCMS">
+</head>
+
+<body class="childrenBody">
+  <p class="fasong">获取图片</p>
+   <div id="box"></div>
+
+</body>
+
+</html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.fasong').click(function() {
+            var getval = $(this).html();
+              $.ajax({
+              type : 'post',
+              url  :  'http://localhost/fh_offer/public/static/module/json/data3.json',
+              data : {value:getval},
+              success : function(re){
+               console.log(re);
+               var _html = '';
+               var data = re.list;
+               for (var i = 0; i <re.num; i++) {
+                   _html += '<div><span>'+data[i]['name']+'</span><img src="'+data[i]['large']+'" style="margin:5px"></div>';
+               }
+               $("#box").html(_html);
+              }
+             });
+        })
+    });
+</script>

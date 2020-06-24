@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>用户列表</title>
+	<style type="text/css">
+	.wrap {
+		width: 98%;
+		margin-left: 1%;
+		padding-top: 20px;
+	}
+	.onLine-list .layui-col-md3 {
+		margin-top: 20px;
+	}
+	.onLine-list {
+		margin-top: 20px;
+	}
+	.cxBtn{
+		text-align: right;
+	}
+	.layui-breadcrumb a:last-child cite{
+		color: #5FB878;
+	}
+	.layui-table-cell{
+		padding: 0 5px!important;
+	}
+	.scroll-wrapper {  
+	    /*-webkit-overflow-scrolling: touch;*/  
+	    /*overflow-y: scroll;*/  
+	} 
+		.layui-layer-setwin .layui-layer-maxmin{
+		display: inline-block!important;		
+	}
+		
+	</style>
+<link rel="stylesheet" href="/static/12/admin/css/layui.css" media="all"/>
+<link rel="stylesheet" href="/static/12/admin/css/font-awesome.min.css" media="all"/>
+<script src="/static/12/admin/js/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+	<style type="text/css">
+		.panel-body {
+			padding: 20px;
+		}
+		.layui-form input[type=checkbox], .layui-form input[type=radio], .layui-form select {
+			display: inherit !important;
+		}
+		.qxgl-radio {
+			padding: 9px 0;
+		}
+		.qxgl-radio2 {
+			padding: 9px 0;
+			width: 120px;
+			float: left;
+		}
+		.qxgl-set {
+			width: 500px;
+			float: left;
+		}
+		.wdc {
+			width: 100px;
+			display: inline-block;
+		}
+		.input-group-addon:nth-child(3n) {
+			margin-right: 20px;
+		}
+		.text-danger {
+			color: #FFB800;
+		}
+		.layui-form-label {
+			width: 120px;
+		}
+		.layui-input-block {
+			margin-left: 155px;
+		}
+		.must:after{
+			content: "*";
+			color: red;
+			clear: both;
+		}
+		.help-block{
+			color: #999;
+			line-height: 38px;
+			margin-left: 10px;
+		}
+		.help-block2{
+			color: #FFB800;
+			line-height: 38px;
+			margin-left: 10px;
+		}
+		.promote-box{
+			width: 60%;
+			height: 100%;
+			float: left;
+			overflow: hidden;
+			margin-left: 0;
+		}
+		.promote-box ul{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.promote-box li{
+			width: 158px;
+			height: 286px;
+			float: left;
+			margin-right: 20px;
+			margin-bottom: 10px;
+			position: relative;
+			border: 5px solid #fff;
+		}
+		.promote-box li#page{
+			width: 100%;
+			height: auto;
+		}
+		.promote-box li .mask{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			background: rgba(0,0,0,0.6);
+		}
+		.promote-box li i{
+			display: block;
+			width: 30px;
+			height: 38px;
+			background: url(/admin/skin/images/promote/icon_lock.png);
+			position: absolute;
+			top: 50%;
+			margin-top: -15px;
+			left: 50%;
+			margin-left: -19px;
+		}
+		.promote-box li img{
+			width: 100%;
+			height: 100%;
+		}
+		.preview-box{
+			width: 24%;
+			float: left;
+			text-align: center;
+			
+		}
+		.preview-phone img{
+			display: none;			
+		}		
+		.preview-phone img:nth-child(1){
+			display: block;		
+		}
+		.preview-phone img{
+			position: absolute;
+			width: 150px;
+			height: 267px;
+			top: 40px;
+			left: 12px;
+			z-index: 9;
+		}
+		.preview-phone img#iphone{
+			width: 173px;
+			height: 347px;
+			display: block!important;
+			position: inherit!important;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+		.preview-phone img#logo{
+			display: block!important;
+			width: 30px;
+			height: 30px;
+			position: absolute;
+			top: 50px;
+			left: 22px;
+			z-index: 10;
+		}
+		.pro-block{
+			display: block;
+		}
+		.pro-none{
+			display: none;
+		}
+		.selected{
+			border: 5px solid #009688!important;
+			/*-moz-box-shadow: 10px 10px 5px #888888; !* 老的 Firefox *!*/
+			/*box-shadow: 10px 10px 5px #888888;*/
+		}
+		.wen{
+			display:inline-block;
+			width: 15px;
+			height: 15px;
+			background:#ccc;
+			border-radius:50%;
+			text-align:center;
+			color: #fff;
+			line-height:14px;
+			margin-right:10px;
+			margin-left: 3px;
+			font-style: normal;
+			margin-top: 3px;
+			position: absolute;
+			top: -10px;right: -28px;
+			-webkit-tab-highlight-color: rgba(0,0,0,0);
+		}
+		.layui-layer-dialog .layui-layer-content{
+			padding: 20px 18px 20px 20px!important;
+		}
+		[name=url]{
+			color: rgb(84,84,84);
+		}
+		.layui-btn:hover {
+		    opacity: .8;
+		    filter: alpha(opacity=80);
+		    color: #fff;
+		}
+	</style>
+</head>
+<body>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<form name="frm" method="post" autocomplete="on" >
+			
+			<div class="layui-form-item">
+					<label class="layui-form-label">项目经理姓名</label>
+					<div class="layui-input-inline">
+						 <input type="text" class="layui-input" name="compact_name" value="{$info['compact_name']|default=''}" >
+					</div>
+			</div>
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">项目经理手机 </label>
+			      <div class="layui-input-inline">
+			        <input type="tel" name="compact_phone" lay-verify="required|phone" value="{$info['compact_phone']|default=''}" autocomplete="off" class="layui-input">
+			      </div>
+			    </div>
+			 </div>
+		    <div class="layui-form-item">
+		    	<div class="layui-inline">
+					<label class="layui-form-label">合同落定金额　</label>
+					<div class="layui-input-inline">
+						 <input type="text" class="layui-input" name="compact_money" value="{$info['compact_phone']|default='0.00'}" >
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">选择签约时间　</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="compact_time" value="{$info['compact_time']|default=''}" id="date" lay-verify="date" placeholder="年 / 月 / 日" autocomplete="off" class="layui-input">
+			      </div>
+			    </div>
+		  	</div>
+		  	<div class="layui-form-item">
+			    <div class="layui-inline">
+			      <label class="layui-form-label">选择交付时间　</label>
+			      <div class="layui-input-inline">
+			        <input type="text" name="compact_paytime" value="{$info['compact_paytime']|default=''}" id="date1" lay-verify="date" placeholder="年 / 月 / 日" autocomplete="off" class="layui-input">
+			      </div>
+			    </div>
+		  	</div>
+		  	<div class="layui-form-item">
+		    	<div class="layui-inline">
+					<label class="layui-form-label">一期金额　　　</label>
+					<div class="layui-input-inline">
+						 <input type="text" class="layui-input" name="phase1" value="{$info['phase1']|default='0.00'}" >
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+		    	<div class="layui-inline">
+					<label class="layui-form-label">二期金额　　　</label>
+					<div class="layui-input-inline">
+						 <input type="text" class="layui-input" name="phase2" value="{$info['phase2']|default='0.00'}" >
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+		    	<div class="layui-inline">
+					<label class="layui-form-label">三期金额　　　</label>
+					<div class="layui-input-inline">
+						 <input type="text" class="layui-input" name="phase3" value="{$info['phase3']|default='0.00'}" >
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+                    <div  class="layui-inline">
+                        <div class="layui-col-md6" style="width: 214px;">
+                            <label class="layui-form-label">合同图片　　　</label>
+                            <button type="button" name="url" class="layui-btn layui-btn-normal" style="color: #fff;" id="test1">上传</button>
+                            <div class="layui-upload">
+                              
+                            </div>
+                        </div>
+                 <div class="layui-col-md6">
+                    <div class="layui-upload-list" id="#demo2">
+                            <img class="layui-upload-img" src="{$info['contract_pic']|default=''}" id="demo1" style="width: 250px;height: 250px;margin-left: 126px;">
+                            <p id="demoText"></p>
+                    </div> 
+                </div>
+                    </div>
+                </div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn layui-btn-normal submit" type="button">确认</button>
+					<!--<button type="button" id="reset" class="layui-btn layui-btn-primary">重置</button>-->
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+	function arrayToJson(formArray){
+		var dataArray = {};
+		$.each(formArray,function(){
+			if(dataArray[this.name]){
+				if(!dataArray[this.name].push){
+					dataArray[this.name] = [dataArray[this.name]];
+				}
+				dataArray[this.name].push(this.value || '');
+			}else{
+				dataArray[this.name] = this.value || '';
+			}
+		});
+		return JSON.stringify(dataArray);
+	}
+	function aa(e){
+		if(e.keyCode==116){
+			location.reload();
+			return false;
+		}
+	}
+	document.onkeydown = aa;
+	
+	//	判断如果是顶层页面禁止全屏展示按钮出现
+	if (window == top) {
+		$("#feedback").hide();
+	} else {
+		var url = window.location.href;
+		$("#feedback").attr("href", url);
+	}
+	var pic = $('#demo1').attr('src');
+	if (pic == "") {
+		$('#demo1').css('display','none');
+	}
+	//ipad端禁止缩放屏幕
+	window.onload=function () {  
+        document.addEventListener('touchstart',function (event) {  
+            if(event.touches.length>1){  
+                event.preventDefault();  
+            }  
+        })  
+        var lastTouchEnd=0;  
+        document.addEventListener('touchend',function (event) {  
+            var now=(new Date()).getTime();  
+            if(now-lastTouchEnd<=300){  
+                event.preventDefault();  
+            }  
+            lastTouchEnd=now;  
+        },false)  
+    }
+</script>
+<script type="text/javascript">
+	layui.use(['form', 'laydate','upload'], function(){
+	  var form = layui.form
+	  ,layer = layui.layer
+	  ,laydate = layui.laydate
+	  ,upload = layui.upload;
+	  
+	  //日期
+	  laydate.render({
+	    elem: '#date'
+	  });
+	  laydate.render({
+	    elem: '#date1'
+	  });
+
+	  //普通图片上传
+  var uploadInst = upload.render({
+    elem: '#test1'
+    ,url: '/admin/order/compact.html?id='+{$id['id']}
+    ,data:{
+            id:  {$id['id']}
+        }//额外
+    ,before: function(obj){
+      //预读本地文件示例，不支持ie8
+      obj.preview(function(index, file, result){
+        $('#demo1').attr('src', result);
+        $('#demo1').css('display','block'); //图片链接（base64）
+      });
+    }
+    ,done: function(res){
+      //如果上传失败
+      if(res.code != 1){
+        return layer.msg('上传失败');
+      }
+    }
+    ,error: function(){
+      //演示失败状态，并实现重传
+      var demoText = $('#demoText');
+      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+      demoText.find('.demo-reload').on('click', function(){
+        uploadInst.upload();
+      });
+    }
+  });
+	});
+
+	$(document).on('click','.submit',function () {
+      var data = $('[name=frm]').serializeArray();
+        $.post('/admin/order/compact.html?id='+{$id['id']},data, function (data) {
+            if (data.status == 1) {
+                layer.alert(data.info);
+            } else {
+                var msg = '未授权访问';
+                if (data.info) {
+                    msg = data.info;
+                }
+                layer.alert(msg);
+            }
+        },'json');
+    });
+</script>
+</body>
+</html>

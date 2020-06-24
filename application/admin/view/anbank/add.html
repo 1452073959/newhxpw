@@ -1,0 +1,116 @@
+{extend name="index_layout"/}
+{block name="main"}
+<div class="layui-card">
+    <div class="layui-card-header">添加</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/anbank/add')}" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择分公司</label>
+                <div class="layui-input-inline w300">
+                  <select name="frameid" lay-verify="required"  lay-filter="business" lay-search>
+                  <option value=""></option>
+                  {volist name="data" id="vo"}
+                    <option value="{$vo.id}">{$vo.name}</option>
+                  {/volist}
+                  </select>
+                </div>
+            </div> 
+            <div class="layui-form-item">
+                <label class="layui-form-label">辅材编码</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="amcode" autocomplete="off" placeholder="辅材编码" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工种类别</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="category" autocomplete="off" placeholder="工种类别" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">辅材细类</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="fine" autocomplete="off" placeholder="辅材细类" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">品牌</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="brand" autocomplete="off" placeholder="品牌" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">产地</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="place" autocomplete="off" placeholder="产地" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">辅材名称</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="name" autocomplete="off" placeholder="辅材名称" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">单位</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="units" autocomplete="off" placeholder="单位" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">单价</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="price" autocomplete="off" placeholder="单价" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">规格</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="norms" autocomplete="off" placeholder="规格" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">包装规格</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="phr" autocomplete="off" placeholder="包装规格" class="layui-input">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">供应来源</label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="remarks" autocomplete="off" placeholder="供应来源" class="layui-input">
+                    <!-- <textarea name="material" style="padding:10px;border:1px solid #D2D2D2;width:100%;height:200px; resize:none;"></textarea> -->
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/anbank/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script>
+layui.use(['layedit','form'], function(){
+  var layedit = layui.layedit;
+  layedit.build('demo'); //建立编辑器
+
+//   var form = layui.form, layer = layui.layer;
+
+// form.on('select(business)', function(data){
+
+//     alert($('select option:selected').val());
+
+// })
+
+});
+
+
+</script>
+{/block}

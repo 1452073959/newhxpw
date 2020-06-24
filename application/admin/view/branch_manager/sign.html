@@ -1,0 +1,75 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+    .layui-form-item{
+        margin-bottom: 0;
+        width: 250px;
+        float: left;
+        clear:none;
+    }
+</style>
+
+<!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-tab layui-tab-brief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this"><a href="/admin/branch_manager/sign">工地查询</a></li>
+                        <li class=""><a href="/admin/branch_manager/signtwo">工人查询</a></li>
+                    </ul>
+                </div>
+                <form class="layui-form layui-inline" action="">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" placeholder="" autocomplete="off" class="layui-input" value="<?php echo input('name') ?>">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">客户地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="address" placeholder="" autocomplete="off" class="layui-input" value="<?php echo input('addres') ?>">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-left: 30px">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </blockquote>
+
+            <table class="layui-table" style="text-align: center">
+                <thead >
+                <tr>
+                    <td>客户姓名</td>
+                    <td>工程地址</td>
+                    <td>打卡次数</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $data as $key=>$vo }
+                <tr>
+                    <td>{$vo.customer_name}</td>
+                    <td>{$vo.address}</td>
+                    <td>{$vo.count}</td>
+                    <td><button class="layui-btn layui-btn-primary" onclick="window.location.href='/admin/branch_manager/man?id={$vo.id}'">查看详情</button></td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+
+{/block}

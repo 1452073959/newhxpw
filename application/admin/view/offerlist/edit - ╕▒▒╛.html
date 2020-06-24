@@ -1,0 +1,337 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.p_tex{line-height:38px;color:#666;}
+.layui-form-label{width: 120px}
+.layui-table-view .layui-table{width:100%}
+.layui-form-label{width:40px}
+.layui-form-item{margin:20px 0}
+#frameid{    width: 250px;
+    padding: 10px;}
+</style>
+<div class="layui-card">
+    <div class="layui-card-header"> <a class="layui-btn layui-btn-sm" id="newentries" href="{:url('admin/Offerlist/addlist',['id'=>$data.id])}">新建条目
+
+
+    </a></div>
+    <div class="layui-card-body">
+
+        <!-- <form class="layui-form form-horizontal" action="{:url('admin/Offerlist/edit')}" method="post"> -->
+        <table class="layui-table" lay-filter="test3" id="test3" lay-data="{id: '#test3',limit:20,toolbar: '#toolbarDemo',totalRow: true}" style="width:100%"> 
+            <thead>
+                    <tr>
+                        <th class="taleft" lay-data="{field:'framename',align:'center'}" style="text-align:center;" colspan="15">
+                          <input type="text">
+                        </th>        
+                    </tr>
+                    <tr>
+                        <th class="taleft" lay-data="{field:'id'}" colspan="6">工程地址：{$data.address}</th>       
+                        <th class="taleft" lay-data="{field:'id'}" colspan="5">客户姓名：{$data.customer_name}</th>       
+                        <th class="taleft" lay-data="{field:'id'}" colspan="5">设计师姓名：{$data.designer_name}</th>       
+                        <th class="taleft" lay-data="{field:'id'}" colspan="5">报价师姓名：{$data.quoter_name}</th>       
+                    </tr>
+                    <tr>
+                        <th class="taleft" lay-data="{field:'id',type: 'checkbox',width:120, totalRowText: '合计'}"></th>       
+                        <th class="taleft" lay-data="{field:'item_number', }">项目编号</th>       
+                        <th class="taleft" lay-data="{field:'project',}">项目名称</th>       
+                        <th class="taleft" lay-data="{field:'kongjian', event: 'setSign',}">空间类型</th>       
+                        <th class="taleft" lay-data="{field:'type_of_work',width:100}">工种</th>       
+                        <th class="taleft" lay-data="{field:'gcl',width:150, edit: 'text'}">工程量</th>       
+                        <th class="taleft" lay-data="{field:'company',}">单位</th>       
+                        <th class="taleft" lay-data="{field:'quota',}">辅材基价</th>       
+                        <th class="taleft" lay-data="{field:'quotaall', totalRow: true}">辅材合价</th>       
+                        <th class="taleft" lay-data="{field:'craft_show',}">人工基价</th>       
+                        <th class="taleft" lay-data="{field:'craft_showall',totalRow: true}">人工合价</th> 
+                        <th class="taleft" lay-data="{field:'material',width:250}">施工工艺及材料说明</th> 
+                        <th lay-data="{field:'edit',fixed: 'right', width:178, align:'center',}">操作</th>      
+                    </tr>
+                </thead>
+
+                <tbody> 
+          {if $data['content']}
+             <?php 
+               $i=0;
+               foreach($data['content'] as $key=>$val){         
+                $i++; 
+             ?> 
+                    <tr>           
+                      <td class="taleft">{$key}</td>    
+                      <td class="taleft">{$val.item_number}</td>    
+                      <td class="taleft">{$val.project}</td>                          
+                      <td class="taleft">{$val.kongjian}</td>    
+                      <td class="taleft">{$val.type_of_work}</td>
+                      <td class="taleft">{$val.gcl}</td>       
+                      <td class="taleft">{$val.company}</td>   
+                      <td class="taleft">{$val.quota}</td>   
+                      <td class="taleft">{$val.quotaall}</td>   
+                      <td class="taleft">{$val.craft_show}</td>   
+                      <td class="taleft">{$val.craft_showall}</td>
+                      <td class="taleft">{$val.material}</td>   
+                      <td class="taleft"><a class="layui-btn layui-btn-danger layui-btn-xs" onclick="myfundel('{$data.id}','{$val.cid}','{$val.gcl}')" >删除</a></td>
+                    </tr>     
+                <?php };?> 
+           {/if}
+
+                </tbody>
+            </table>
+            <script type="text/html" id="toolbarDemo">
+              <div class="layui-btn-container">
+                <a class="layui-btn layui-btn-sm" lay-event="getCheckData">检查数据编号</a>
+                <!-- <a class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</a> -->
+                <!-- <a class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</a> -->
+              </div>
+            </script>
+            <!-- <script type="text/html" id="barDemo">
+              <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">添加行</a>
+              <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+              <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+              <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>   -->
+            <input type="hidden" name="id" value="{$data.id}" />
+            <input type="hidden" name="tival" value="" />
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" id="tijiao" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Offerlist/index')}">返回</a>
+                </div>
+            </div>
+        <!-- </form> -->
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript">
+/**
+  * @myfundel  删除工程项目
+  * @author  Han
+  * @version  1.0
+  * @param $id 客户id   $cid 项目所属公司id
+*/
+ function myfundel($id,$cid,gcl){
+    //id 
+   layer.confirm('确认要删除吗,删除后不可恢复？', {
+            btn : [ '确定', '取消' ]//按钮
+            ,icon: 3,
+        }, function(index) {
+            // layer.msg($id);
+            $.ajax({
+                type : 'post',
+                url  :  '{:url("Offerlist/delete")}',
+                dataType : 'json',
+                data : {id:$id,cid:$cid,gcl:gcl},
+                success : function(re){
+                  if(re.status == 0){
+                     layer.msg(re.msg);
+                     window.location.reload();
+                  }else{
+                    layer.msg(re.msg);return false;
+                  }
+                }
+            });
+            
+        }); 
+ }
+</script>
+
+<script type="text/javascript">
+layui.use('table', function(){
+  var table = layui.table;
+
+
+
+  //头工具栏事件
+  table.on('toolbar(test3)', function(obj){
+    var checkStatus = table.checkStatus(obj.config.id);
+    switch(obj.event){
+      case 'getCheckData':
+
+        var data = checkStatus.data;
+        var zhi = JSON.parse(JSON.stringify(data));
+        var _html = '';
+        for (var i = 0; i < zhi.length; i++) {
+            _html += zhi[i]['item_number']+'<br>';
+        }
+        layer.alert(_html);
+           
+
+
+        $('input[name="tival"]').val(JSON.stringify(data));    
+      break;
+      case 'getCheckLength':
+        var data = checkStatus.data;
+        layer.msg('选中了：'+ data.length + ' 个');
+      break;
+      case 'isAll':
+        layer.msg(checkStatus.isAll ? '全选': '未全选');
+      break;
+    };
+  });
+
+
+  table.on('tool(test3)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'detail'){
+      layer.msg('ID：'+ data.id + ' 的查看操作');
+    } else if(obj.event === 'del'){
+      layer.confirm('真的删除行么', function(index){
+      //执行删除操作
+ 
+
+        // obj.del();
+        // layer.close(index);
+      });
+    } else if(obj.event === 'edit'){
+      layer.alert('编辑行：<br>'+ JSON.stringify(data))
+    } else if(obj.event === 'add'){
+        alert(111);
+
+
+    }  
+  });
+
+  //监听单元格编辑
+  table.on('edit(test3)', function(obj){
+    var value = obj.value //得到修改后的值
+    ,data = obj.data //得到所在行所有键值
+    ,field = obj.field; //得到字段
+    // $(".layui-table-body tbody tr td");
+    // layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+    // alert(data.quota);
+    if (isNaN(value)){layer.msg('请输入数字');}
+    var all1 = data.quota*value;
+    var all2 = data.craft_show*value;
+    var dataid = "{$data.id}";
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("Offerlist/gcledits")}',
+        dataType : 'json',
+        data : {dataid:dataid,j:data.id,gcl:value,quotaall:all1,craft_showall:all2},
+        success : function(re){
+          console.log(re);
+          if(re.status == 0){
+             layer.msg(re.msg);
+             obj.update({
+              quotaall: all1,
+              craft_showall: all2
+            });
+             // window.location.reload();
+          }else{
+            layer.msg(re.msg);return false;
+          }
+        }
+       });
+
+
+    
+
+  });
+
+  //监听单元格事件
+  table.on('tool(test3)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'setSign'){
+     
+
+     var josnarr = JSON.parse(JSON.stringify(<?php echo json_encode($spatial);?>));
+
+     var _nbox = '';
+    for (var i = 0; i < josnarr.length; i++) {
+        _nbox += '<option value="'+josnarr[i]['name']+'">'+josnarr[i]['name']+'</option>';     
+    }
+     var newselect = '<div class="newaddbox"><div class="layui-form-item"><label class="layui-form-label">上级</label><div class="layui-input-inline"><select name="frameid" id="frameid">'+_nbox+'</select></div></div><div class="layui-input-inline w300"><button id="edit_ajax" style="margin-left:70px" class="layui-btn ajax-post">立即提交</button></div></div>';
+     //页面层
+    layer.open({
+      type: 1,
+      skin: 'layui-layer-rim', //加上边框
+      area: ['420px', '240px'], //宽高
+      title: '信息'+data.id, //宽高
+      content: newselect
+    });
+
+     $("#edit_ajax").click(function() {
+        var kongjian = $("#frameid option:selected").val();
+        var dataid = "{$data.id}";
+        // alert(kongjian);return false;
+        $.ajax({
+          type : 'post',
+          url  :  '{:url("Offerlist/kjedits")}',
+          dataType : 'json',
+          data : {dataid:dataid,j:data.id,kongjian:kongjian},
+          success : function(re){
+            if(re.status == 0){
+               layer.msg(re.msg);window.location.reload();
+            }else{
+              layer.msg(re.msg);return false;
+            }
+          }
+         });
+      });
+
+
+      // layer.prompt({
+      //   formType: 2
+      //   ,title: '修改  '+ data.id +' 的用户签名'
+      //   ,value: data.kongjian
+      // }, function(value, index){
+
+      //   layer.close(index);
+        
+      //   //这里一般是发送修改的Ajax请求
+        
+      //   //同步更新表格和缓存对应的值
+      //   obj.update({
+      //     kongjian: value
+      //   });
+      // });
+    }
+  });
+   // 提交
+$("#tijiao").on("click",function(){
+    var tival = $('input[name="tival"]').val();
+    var customerid = "{$data.customerid}";
+    if (!tival || tival=='[]') {layer.msg('请检查数据编号');return false;}
+    // alert(tival);return false;
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("Offerlist/adds")}',
+        dataType : 'json',
+        data : {customerid:customerid,tival:tival},
+        success : function(re){
+          if(re.status == 0){
+             layer.msg(re.msg);
+             // window.location.reload();
+             window.location.replace("{:url('admin/Offerlist/index')}");
+          }else{
+            layer.msg(re.msg);return false;
+          }
+        }
+       });
+});
+
+
+
+
+ // 新增一行
+// $("#newentries").on("click",function(){
+//  var dataBak = []; 
+//        dataBak.push({   
+//         "item_number": ""
+//         ,"project": ""
+//         ,"kongjian": ""
+//         ,"quotaall": ""
+//         ,"craft_showall": ""
+//     });
+
+
+//      table.reload("test3",{
+//         data:dataBak   // 将新数据重新载入表格
+//     });
+// });
+
+
+ });
+</script>
+{/block}

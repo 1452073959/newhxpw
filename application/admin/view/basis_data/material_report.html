@@ -1,0 +1,162 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.layui-form-item .layui-input-inline{
+    margin-right: 0px;
+    
+}
+.layui-form-item{
+    clear:none;
+    float: left;
+    margin-bottom:5px;
+
+}
+.layui-form-label{
+    width:60px;
+}
+.layui-form-select .layui-input{
+    padding-right:5px;
+}
+.layui-input-block{
+    width:300px;
+}
+#datafrom{
+    background-color: #ffffff
+}
+</style>
+<div class="layui-form">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-input-inline" style="">
+            <form class="layui-form" method="post" action="{:url('basis_data/material_report')}" class="layui-form form-signin" enctype="multipart/form-data">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">工种类别</label>
+                    <div class="layui-input-block">
+                        <select name="type_of_work" id="" lay-filter="" xm-select="type_of_word" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach name="type_of_work" item="v"}
+                                <option value="{$v.type_of_work}" {if(!empty(input('type_of_work') && in_array($v['type_of_work'],explode(',',input('type_of_work')))))}selected{/if}>{$v.type_of_work}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">辅材细类</label>
+                    <div class="layui-input-block">
+                        <select name="classify" id="" lay-filter="" xm-select="classify" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach name="classify" item="v"}
+                                <option value="{$v.classify}" {if(!empty(input('classify') && in_array($v['classify'],explode(',',input('classify')))))}selected{/if}>{$v.classify}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类</label>
+                    <div class="layui-input-block">
+                        <select name="fine" id="" lay-filter="" xm-select="fine" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach name="fine" item="v"}
+                                <option value="{$v.fine}" {if(!empty(input('fine') && in_array($v['fine'],explode(',',input('fine')))))}selected{/if}>{$v.fine}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">来源</label>
+                    <div class="layui-input-block">
+                        <select name="source" id="" lay-filter="" xm-select="source" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach name="source" item="v"}
+                                <option value="{$v.source}" {if(!empty(input('source') && in_array($v['source'],explode(',',input('source')))))}selected{/if}>{$v.source}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分公司</label>
+                    <div class="layui-input-block">
+                        <select name="frame" id="" lay-filter="" xm-select="frame" xm-select-type="1" xm-select-search>
+                            <option value=""></option>
+                            {foreach name="frame" item="v"}
+                                <option value="{$v.id}" {if(!empty(input('frame') && in_array($v['id'],explode(',',input('frame')))))}selected{/if}>{$v.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-left: 10px">
+                        <button type="submit" class="layui-btn layui-btn-blue">搜索</button>
+                        <a href="{:url('basis_data/material_report')}" class="layui-btn layui-btn-blue">清空筛选</a>
+                </div>
+            </form>
+        </div>
+    </blockquote>
+    <!-- <table lay-filter="demo"> -->
+        <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:['filter'],page: true,limit:20,limits:[50,100,300,500,1000,2000,5000]}">
+        <thead>
+            <tr>
+                <th lay-data="{field:'amcode', width:100,sort:true,align:'center',style:'font-size:12px',align:'center'}">辅材编码</th>
+                <th lay-data="{field:'frame', sort:true, width:120,align:'center',style:'font-size:12px',align:'center'}">公司</th>
+                <th lay-data="{field:'name', sort:true, width:200,align:'center',style:'font-size:12px',align:'center'}">辅材名称</th>
+                <th lay-data="{field:'type_of_work', sort:true, width:120,align:'center',style:'font-size:12px',align:'center'}">工种类别</th>
+                <th lay-data="{field:'classfly', sort:true, width:120,align:'center',style:'font-size:12px',align:'center'}">辅材细类</th>
+                <th lay-data="{field:'fine', sort:true, width:120,align:'center',style:'font-size:12px',align:'center'}">分类</th>
+
+                <th lay-data="{field:'brank', sort:true, width:80,align:'center',style:'font-size:12px',align:'center'}">品牌</th>
+                <th lay-data="{field:'place', sort:true, width:100,align:'center',style:'font-size:12px',align:'center'}">产地</th>
+                <th lay-data="{field:'in_price', width:100, sort:true,align:'center',style:'font-size:12px',align:'center'}">入库价</th>
+                <th lay-data="{field:'price', width:100, sort:true,align:'center',style:'font-size:12px',align:'center'}">出库价</th>
+                <th lay-data="{field:'unit_price', width:140, sort:true,align:'center',style:'font-size:12px',align:'center'}">计量入库单价</th>
+                <th lay-data="{field:'pack', width:120, sort:true,align:'center',style:'font-size:12px',align:'center'}">包装数量</th>
+                <th lay-data="{field:'unit', width:120, sort:true,align:'center',style:'font-size:12px',align:'center'}">计量单位</th>
+                <th lay-data="{field:'phr', width:120, sort:true,align:'center',style:'font-size:12px',align:'center'}">出库单位</th>
+                <th lay-data="{field:'source', sort:true, width:120,align:'center',style:'font-size:12px',align:'center'}">供应来源</th>
+            </tr> 
+        </thead>
+        <tbody>
+            {foreach name="data" item="v"}
+                <tr>
+                    <td>{$v['amcode']}</td>
+                    <td>{$frame[$v['fid']]['name']}</td>
+                    <td>{$v['name']}</td>
+                    <td>{$v['type_of_work']}</td>
+                    <td>{$v['classify']}</td>
+                    <td>{$v['fine']}</td>
+
+                    <td>{$v['brank']}</td>
+                    <td>{$v['place']}</td>
+                    <td>{$v['in_price']}</td>
+                    <td>{$v['price']}</td>
+                    <td>{if(is_numeric($v['pack']))}{:round($v['in_price']/$v['pack'],2)}{else/}0{/if}</td>
+                    <td>{$v['pack']}</td>
+                    <td>{$v['unit']}</td>
+                    <td>{$v['phr']}</td>
+                    <td>{$v['source']}</td>
+                </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+  
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+<!-- 引入select多选 -->
+<script src="https://raw.githack.com/hnzzmsf/layui-formSelects/master/dist/formSelects-v4.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/hnzzmsf/layui-formSelects/master/dist/formSelects-v4.css" />
+<script type="text/javascript">
+    layui.use('table', function(){
+        var table = layui.table;
+        //转换静态表格
+        // table.init('demo', {
+        //   height: 800, //设置高度
+        //   limit: 50,
+        //   limits:[50,100,300,500,1000,2000,5000],
+        //   toolbar: 'exports'  ,
+        //   defaultToolbar: ['filter', 'print', 'exports'],
+        //   page: true //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+        //   //支持所有基础参数
+        // }); 
+    })
+</script>
+{/block}

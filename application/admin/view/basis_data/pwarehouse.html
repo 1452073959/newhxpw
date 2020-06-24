@@ -1,0 +1,459 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.layui-form-select{float:left;margin-right:10px}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.layui-form-item{
+    margin-bottom: 0;
+    width: 250px;
+    float: left;
+    clear:none;
+}
+.ty{
+    /*border: 1px dashed red;*/
+    width: 100%;
+    margin-top: 100px;
+}
+
+    .ty li{
+        float: left;
+    }
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-tab layui-tab-brief">
+                  <ul class="layui-tab-title">
+                    <li class="layui-this"><a href="{:url('admin/basis_data/pwarehouse')}">辅材基础库</a></li>
+                    <li class=""><a href="{:url('admin/basis_data/apply_new_material_index')}">新辅材申请列表</a></li>
+                  </ul>
+                  <div class="layui-tab-content"></div>
+                </div>
+                <form class="layui-form layui-inline" action="" id="registerform">
+                    <div class="layui-form-item" >
+                        <label class="layui-form-label">辅材名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" placeholder="" value="{:input('name')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分类</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="fine" placeholder="" value="{:input('fine')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">编码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="samcode" placeholder="" value="{:input('samcode')}" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-left:10px;">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                            <a href="/admin/basis_data/pwarehouse" class="layui-btn layui-btn-primary">重置</a>
+                        </div>
+                    </div>
+
+
+                <div>
+                    <ul class="ty">
+                        <li class="typ" >
+                            <input type="radio" name="typeof" value="" {if (input('typeof')=='')} checked {/if} title="全部">
+                        </li>
+                        {foreach typeof as $k=>$v}
+                        <li class="typ">
+                            <input type="radio" name="typeof" value="{$v.type_of_work}" {if (input('typeof')==$v.type_of_work)} checked {/if} title="{$v.type_of_work}">
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+
+
+                </form>
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <a class="layui-btn layui-btn-sm" href="javascript:;" lay-event="apply_new">申请新辅材</a> 
+                </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3', toolbar: '#toolbarDemo',defaultToolbar:[],limit:20}">
+                <colgroup>
+                    <col width="80">
+                    <col width="80">
+                    <col width="160">
+                </colgroup>
+                <thead >
+                    <tr>
+                        <!-- <th class="" lay-data="{field:'id',hide:'true',width:100}">id</th> -->
+                        <th class="" lay-data="{field:'amcode',width:100}">编码</th>
+                        <th class="" lay-data="{field:'type_of_work',width:100}">工种类别</th>
+                        <th class="" lay-data="{field:'classify',width:150}">辅材细类</th>
+                        <th class="" lay-data="{field:'fine',width:100}">分类</th>
+                        <th class="" lay-data="{field:'name', width:200}">辅材名称</th>
+
+                        <th width="150" lay-data="{edit:'text',field:'warehouse_id',width:120}">仓库编码</th>
+                        <th width="150" lay-data="{edit:'text',field:'brank',width:100}">品牌</th>
+                        <th width="150" lay-data="{edit:'text',field:'place',width:100}">产地</th>
+                        <th width="150" lay-data="{edit:'text',field:'in_price',width:100}">入库价</th>
+                        <th width="150" lay-data="{edit:'text',field:'price',width:100}">出库价</th>
+                        <th width="150" lay-data="{edit:'text',field:'pack',width:100}">包装数量</th>
+                        <th class="" lay-data="{field:'unit',width:100}">计量单位</th>
+                        <th width="150" lay-data="{edit:'text',field:'phr',width:100}">出库单位</th>
+                        <th width="150" lay-data="{edit:'text',field:'source',width:100}">来源</th>
+
+
+                        <th width="150" lay-data="{field:'edit',width:100}">操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  {foreach name="data" item="vo"}
+                    <tr>
+                        <!-- <td class="">{$vo.id}</td> -->
+                        <td class="">{$vo.amcode}</td>
+                        <td class="">{$vo.type_of_work}</td>
+                        <td class="">{$vo.classify}</td>
+                        <td class="">{$vo.fine}</td>
+                        <td class="">{if(in_array($vo['amcode'],$amcode))}<i style="margin-left:5px;color:red" class="layui-icon layui-icon-ok" title="已添加"></i>{/if}{$vo.name}</td>
+
+                        <td>{$vo.warehouse_id ?: ''}</td>
+                        <td>{$vo.brank ?: ''}</td>
+                        <td>{$vo.place ?: ''}</td>
+                        <td>{$vo.in_price ?: ''}</td>
+                        <td>{$vo.price ?: ''}</td>
+                        <td>{$vo.pack ?: ''}</td>
+                        <td class="">{$vo.unit}</td>
+                        <td>{$vo.phr ?: ''}</td>
+                        <td>{$vo.source ?: '公司仓库'}</td>
+                        <td>
+                            <a href="javascript:;" style="color:#007498" lay-event="add">添加到仓库</a>
+                        </td>
+                    </tr>       
+                 {/foreach}
+                </tbody>
+            </table>
+            {$data->render()|raw}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function add_tr(o){
+        html  = '     <tr>'
+        html += '       <td><input class="layui-input" name="name[]" /></td>'
+        html += '       <td><input class="layui-input" name="warehouse_id[]" /></td>'
+        html += '       <td><input class="layui-input" name="in_price[]" /></td>'
+        html += '       <td><input class="layui-input" name="price[]" /></td>'
+        html += '       <td><input class="layui-input" name="pack[]" /></td>'
+        html += '       <td><input class="layui-input" name="unit[]" /></td>'
+        html += '       <td><input class="layui-input" name="phr[]" /></td>'
+        html += '       <td><input class="layui-input" name="source[]" /></td>'
+        html += '       <td><input class="layui-input" name="brank[]" /></td>'
+        html += '       <td><input class="layui-input" name="place[]" /></td>'
+        html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+        html += '     </tr>'
+        $('#apply_new tbody').append(html);
+    }
+    function delete_tr(o){
+        $(o).parent().parent().remove();
+    }
+    layui.use('table', function(){
+        var table = layui.table;
+
+        table.on('toolbar(test3)',function(obj){
+            if(obj.event == 'apply_new'){
+                var html  = '<form id="formdatas">'
+                html += '   <table class="layui-table" id="apply_new" >'
+                html += '     <colgroup>'
+                html += '         <col width="200">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="100">'
+                html += '         <col width="50">'
+                html += '         <col>'
+                html += '     </colgroup>'
+                html += '     <thead>'
+                html += '       <tr>'
+                html += '           <th>辅材名称</th>'
+                html += '           <th>仓库编码</th>'
+                html += '           <th>入库价</th>'
+                html += '           <th>出库价</th>'
+                html += '           <th>包装数量</th>'
+                html += '           <th id="tip_unit">计量单位</th>'
+                html += '           <th>出库单位</th>'
+                html += '           <th>来源</th>'
+                html += '           <th>品牌</th>'
+                html += '           <th>产地</th>'
+                html += '           <th><a href="javascript:;" onclick="add_tr(this)"><i class="layui-icon layui-icon-add-1"></i></a></th>'
+                html += '       </tr> '
+                html += '     </thead>'
+                html += '     <tbody>'
+                // 要个初始值  不然第一个为空 后面就对不上了
+                html += '     <tr style="display:none">'
+                html += '       <td><input class="layui-input" value="1" name="name[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="warehouse_id[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="in_price[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="price[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="pack[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="unit[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="phr[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="source[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="brank[]" /></td>'
+                html += '       <td><input class="layui-input" value="1" name="place[]" /></td>'
+                html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+                html += '     </tr>'
+                // 要个初始值  不然第一个为空 后面就对不上了
+                
+                html += '     <tr>'
+                html += '       <td><input class="layui-input" name="name[]" /></td>'
+                html += '       <td><input class="layui-input" name="warehouse_id[]" /></td>'
+                html += '       <td><input class="layui-input" name="in_price[]" /></td>'
+                html += '       <td><input class="layui-input" name="price[]" /></td>'
+                html += '       <td><input class="layui-input" name="pack[]" /></td>'
+                html += '       <td><input class="layui-input" name="unit[]" /></td>'
+                html += '       <td><input class="layui-input" name="phr[]" /></td>'
+                html += '       <td><input class="layui-input" name="source[]" /></td>'
+                html += '       <td><input class="layui-input" name="brank[]" /></td>'
+                html += '       <td><input class="layui-input" name="place[]" /></td>'
+                html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+                html += '     </tr>'
+
+                html += '     <tr>'
+                html += '       <td><input class="layui-input" name="name[]" /></td>'
+                html += '       <td><input class="layui-input" name="warehouse_id[]" /></td>'
+                html += '       <td><input class="layui-input" name="in_price[]" /></td>'
+                html += '       <td><input class="layui-input" name="price[]" /></td>'
+                html += '       <td><input class="layui-input" name="pack[]" /></td>'
+                html += '       <td><input class="layui-input" name="unit[]" /></td>'
+                html += '       <td><input class="layui-input" name="phr[]" /></td>'
+                html += '       <td><input class="layui-input" name="source[]" /></td>'
+                html += '       <td><input class="layui-input" name="brank[]" /></td>'
+                html += '       <td><input class="layui-input" name="place[]" /></td>'
+                html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+                html += '     </tr>'
+
+                html += '     <tr>'
+                html += '       <td><input class="layui-input" name="name[]" /></td>'
+                html += '       <td><input class="layui-input" name="warehouse_id[]" /></td>'
+                html += '       <td><input class="layui-input" name="in_price[]" /></td>'
+                html += '       <td><input class="layui-input" name="price[]" /></td>'
+                html += '       <td><input class="layui-input" name="pack[]" /></td>'
+                html += '       <td><input class="layui-input" name="unit[]" /></td>'
+                html += '       <td><input class="layui-input" name="phr[]" /></td>'
+                html += '       <td><input class="layui-input" name="source[]" /></td>'
+                html += '       <td><input class="layui-input" name="brank[]" /></td>'
+                html += '       <td><input class="layui-input" name="place[]" /></td>'
+                html += '       <td><a href="javascript:;" onclick="delete_tr(this)"><i class="layui-icon layui-icon-delete "></i></a></td>'
+                html += '     </tr>'
+
+                html += '     </tbody>'
+                html += '   </table>'
+                html += ' </form>'
+                layer.open({
+                    content: html,
+                    title:'申请新辅材',
+                    area: ['70%', '60%'], //宽高
+                    btn: ['提交'],
+                    yes: function(index, layero){
+                        var addform = $('#formdatas').serializeArray();
+                        var datas = {};  
+                        $.each(addform, function() {  
+                            if (datas[this.name]) {  
+                                if (!datas[this.name].push) {  
+                                    datas[this.name] = [ datas[this.name] ];  
+                                }  
+                                datas[this.name].push(this.value || '');  
+                            } else {  
+                                datas[this.name] = this.value || '';  
+                            } 
+                        });  
+                        $.post('/admin/basis_data/apply_new_material',datas,function(res){
+                            if(res.code === 0){
+                                alert(res.msg);
+                            }else{
+                                layer.msg(res.msg);
+                            }
+                        },'json')
+                    },
+                    cancel: function(){ 
+                    //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+            }
+        })
+        
+        //工具栏事件
+        table.on('tool(test3)', function(obj){
+            if(obj.event == 'add'){
+                var data = obj.data; //获得当前行数据
+                var amcode = data.amcode;
+                var brank = data.brank;
+                var place = data.place;
+                var in_price = data.in_price;
+                var price = data.price;
+                var pack = data.pack;
+                var phr = data.phr;
+                var source = data.source;
+                var warehouse_id = data.warehouse_id;
+                if(!brank || !place || !in_price || !price || !pack || !phr || !source){
+                    layer.msg('数据不能留空，无数据可添"无"');
+                    return false;
+                }
+                if (source != '公司仓库' && source != '监理自购' && source != '公司定点') {
+                    layer.msg('来源只能输入"公司仓库" 或 "监理自购" 或 "公司定点');
+                    return false;
+                }
+                if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9]{1,})?$)/.test(price))){
+                    layer.msg('请输入正确的金额格式');
+                    return false;
+                }
+                if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9]{1,})?$)/.test(in_price))){
+                    layer.msg('请输入正确的金额格式');
+                    return false;
+                }
+                if(!(/(^[1-9]([0-9]+)?(\.[0-9]{1,})?$)|(^[0-9]\.[0-9]([0-9])?$)/.test(pack)) && pack <= 0){
+                    layer.msg('请输入正确的出库单位');
+                    return false;
+                }
+                $.post('/admin/basis_data/add_fwarehouse_operation',{p_amcode:amcode,brank:brank,place:place,in_price:in_price,price:price,pack:pack,phr:phr,source:source,warehouse_id:warehouse_id},function(res){
+                    if(res.code == 1){
+                        obj.update({
+                            name: '<i style="margin-left:5px;color:red" class="layui-icon layui-icon-ok" title="已添加"></i>'+data.name,
+                            // brank:'',
+                            // place:'',
+                            // in_price:'',
+                            // price:'',
+                            // pack:'',
+                            // phr:'',
+                            // source:'',
+                        });
+                        layer.msg(res.msg);
+                    }else{
+                        layer.msg(res.msg);
+                    }
+                },'json')
+            }
+            
+        });
+    });
+    $(document).on('mouseenter', '#apply_new #tip_unit', function(){
+        var content = '计量单位为该辅材的最小计算单位，例如油漆的计量单位为"L"，砂纸的计量单位为"张"';
+        tip_index = layer.tips(content, this, {time: 0,tips: [1, '#5BC0DE']})
+    }).on('mouseleave', '#apply_new #tip_unit', function(){
+        if(tip_index){
+            layer.close(tip_index);
+        }
+        
+    });
+    //鼠标经过表头显示文字
+    $(document).on('mouseenter', '.layui-table th', function(){
+        var th = $(this).find('span').text();
+        var content = '';
+        switch(th) {
+            case '编码':
+                content = '编码';
+                break;
+            case '辅材名称':
+                content = '辅材名称，打钩表示已添加，可重复添加';
+                break;
+            case '计量单位':
+                content = '辅材计量单位';
+                break;
+            case '品牌':
+                content = '辅材品牌(必填)';
+                break;
+            case '品牌':
+                content = '辅材品牌(必填)';
+                break;
+            case '产地':
+                content = '辅材产地(必填)';
+                break;
+            case '入库价':
+                content = '辅材入库单价(必填)';
+                break;
+            case '出库价':
+                content = '辅材出库单价(必填)';
+                break;
+            case '包装数量':
+                content = '辅材包装数量(必填)，例如油漆计量单位为"L"，出库单位为"桶"，此处填入10，最终形成10L/桶';
+                break;
+            case '出库单位':
+                content = '辅材出库单位(必填)，例如油漆计量单位为"L"，包装数量为"10"，此处填入桶，最终形成10L/桶';
+                break;
+            case '来源':
+                content = '辅材来源，目前只能输入 "公司仓库" 、 "监理自购"';
+                break;
+            default:
+                content = '';
+        } 
+        if(content != ''){
+            tip_index = layer.tips(content, this, {time: 0,tips: [1, '#5BC0DE']});
+        }
+        // tip_index = layer.tips('项目情况', this, {time: 0,tips: [2, '#5BC0DE']});
+    }).on('mouseleave', '.layui-table th', function(){
+        if(tip_index){
+            layer.close(tip_index);
+        }
+        
+    });
+</script>
+
+<script>
+$(function () {
+    $(".typ").click(function(){
+        $("#registerform").submit();
+    });
+})
+</script>
+{/block}

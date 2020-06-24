@@ -1,0 +1,112 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+.upload-file{    position: relative;display: inline-block;height: 38px;line-height: 38px;padding: 0 18px;background-color: #009688;color: #fff;white-space: nowrap;
+    text-align: center; font-size: 14px;border: none;border-radius: 2px;cursor: pointer;}
+.upload-file span{ text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
+    .upload-file input[type='file']{height: 100%; width: 100%; position: absolute;  top: 0; right: 0;opacity: 0;  filter: alpha(opacity=0);cursor: pointer;}
+</style>
+<style type="text/css">.p_tex{line-height:38px;color:#666;}.layui-form-label{width: 120px}</style>
+<div class="layui-card">
+    <div class="layui-card-header">司机审核修改</div>
+    <div class="layui-card-body">
+        <form class="layui-form form-horizontal" action="{:url('admin/Carlist/edit')}"  enctype="multipart/form-data" method="post">
+
+             <div class="layui-form-item">
+                <label class="layui-form-label">上传logo</label>
+                <div class="layui-upload">
+                  <!-- <input type="file" id="imgInput" > -->
+                  <div class="upload-file">
+                    <input type="file" class="input-file" name="file"  id="imgInput">  
+                    <span class="tip">选择图片</span>
+                  </div>
+                
+                  <div class="layui-upload-list" style="padding-left:110px">
+                    <p id="demoText" style="width:200px;">
+                        <img src="__UPLOADS__/{$data.img_url}"  style="width:200px;height:150px;" id="imgs">
+                    </p>
+                  </div>
+                </div>  
+
+             </div> 
+
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">车辆名 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="name" autocomplete="off" placeholder="车辆名" class="layui-input" value="{$data.name}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">载重 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="load" autocomplete="off" placeholder="载重" class="layui-input" value="{$data.load}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">长*宽*高 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="lwh" autocomplete="off" placeholder="长宽高" class="layui-input" value="{$data.lwh}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">载货体积 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="volume" autocomplete="off" placeholder="载货体积" class="layui-input" value="{$data.volume}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">起步价 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="start_money" autocomplete="off" placeholder="起步价" class="layui-input" value="{$data.start_money}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">超里程 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="extra_mileage" autocomplete="off" placeholder="超里程" class="layui-input" value="{$data.extra_mileage}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注 </label>
+                <div class="layui-input-inline w300">
+                    <input type="text" name="remarks" autocomplete="off" placeholder="备注" class="layui-input" value="{$data.remarks}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序 </label>
+                <div class="layui-input-inline w300">
+                    <input type="number" name="sort" autocomplete="off" placeholder="排序" class="layui-input" value="{$data.sort}">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+               <div class="layui-input-block">
+                  <input type="radio" name="status" value="0" title="显示" {eq name="data.status" value="0" }checked{/eq}>
+                  <input type="radio" name="status" value="1" title="隐藏" {eq name="data.status" value="1" }checked{/eq}>
+                </div>
+            </div>
+
+
+            <input type="hidden" name="id" value="{$data.vehicle_type_id}" />
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn ajax-post" lay-submit="" lay-filter="*" target-form="form-horizontal">立即提交</button>
+                    <a class="layui-btn layui-btn-normal" href="{:url('admin/Carlist/index')}">返回</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+     $("#imgInput").change(function(){
+      $("#imgs").attr("src",URL.createObjectURL($(this)[0].files[0])).css({"width":"200px","height":"150px"});
+   });       
+</script>
+{/block}

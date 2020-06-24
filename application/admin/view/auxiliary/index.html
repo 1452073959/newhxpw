@@ -1,0 +1,284 @@
+{extend name="index_layout"/}
+{block name="main"}
+<style type="text/css">
+/*分页样式*/
+.pagination{text-align:center;margin-top:20px;margin-bottom: 20px;}
+.pagination li{margin:0px 10px; border:1px solid #e6e6e6;padding: 3px 8px;display: inline-block;}
+.pagination .active{background-color: #dd1a20;color: #fff;}
+.pagination .disabled{color:#aaa;}
+.onfile {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.onfile input {
+    position: absolute;
+    font-size: 20px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.onfile:hover {
+  opacity:0.8;
+  color: #1E88C7
+   /* background: #AADFFD;
+    border-color: #78C3F3;
+    color: #fff;
+    text-decoration: none;*/
+}
+.daoru{position:absolute;top:1px;right:-90px;}
+.daorus{position:absolute;top:1px;right:-50px;height:35px}
+.bigbox{padding:10px}
+.bigbox input{margin-bottom:10px}
+#imgs{position:relative;}
+.batchs span{cursor:pointer;}
+.ulall li{float:left;border: 1px solid #ccc;padding: 5px;margin-right: 5px;}
+</style>
+
+  <!-- 导出完成 -->
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div class="layui-form">
+
+            <blockquote class="layui-elem-quote news_search">
+                <div class="layui-inline">
+                   <ul class="ulall">
+                      <li>客户姓名：{$userinfo.customer_name}</li>
+                      <li>工程地址：{$userinfo.address}</li>
+                      <li>联系电话：</li>
+                      <li>报价师姓名：{$userinfo.quoter_name}</li>
+                      <li>设计师姓名：{$userinfo.designer_name}</li>
+                      <li>面积：{$userinfo.area}</li>
+                      <li>房屋类型：{$userinfo.room_type}</li>
+                      <li class="click print" style="display: none" title="打印"><i class="layui-icon layui-icon-print"></i></li>
+                   </ul>
+                </div> 
+            </blockquote>
+            <script type="text/html" id="toolbarDemo">
+              <div class="layui-btn-container">
+              </div>
+            </script>
+            <table class="layui-table" lay-filter="test3"  lay-data="{id: '#test3',toolbar:'#',limit:20}">
+                <colgroup>
+                </colgroup>
+                <thead >
+                    <tr>
+                        <th class="taleft" lay-data="{field:'id', width:80,}">ID</th>
+                        <th class="taleft" lay-data="{field:'status',width:80}">标签</th>
+                        <th class="taleft" lay-data="{field:'remark',width:150}">订单备注</th>
+                        <th class="taleft" lay-data="{field:'direct_cost',width:150}">直接费</th>
+                        <th class="taleft" lay-data="{field:'quota_all',width:150}">辅材费用</th>
+                        <th class="taleft" lay-data="{field:'entrytime',width:150}">录入时间</th>
+                        <th class="taleft" lay-data="{field:'history',width:80}">操作</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                  
+                  {foreach name="datas" item="vo"}
+                    <tr>
+                      <td class="taleft">{$vo.id}</td>
+                      <td class="taleft">
+                        {switch name="vo.status"}
+                        {case value="0"} <a class="layui-btn layui-btn-xs layui-btn-primary">预报单</a>{/case}
+                        {case value="1"} <a class="layui-btn layui-btn-xs">预报单</a>{/case}
+                        {case value="2"} <a class="layui-btn layui-btn-xs layui-btn-normal">无效单</a>{/case}
+                        {case value="3"} <a class="layui-btn layui-btn-xs layui-btn-warm">合同单(未审)</a>{/case}
+                        {case value="4"} <a class="layui-btn layui-btn-xs layui-btn-warm">合同单</a>{/case}
+                        {case value="5"} <a class="layui-btn layui-btn-xs">待结算</a>{/case}
+                        {case value="6"} <a class="layui-btn layui-btn-xs layui-btn-danger">结算单</a>{/case}
+                        {default /}
+                        <a class="layui-btn layui-btn-xs layui-btn-primary">预报单</a>
+                        {/switch}
+                      </td>
+                      <td class="taleft">{$vo.remark}</td>
+                      <td class="taleft">{$vo.direct_cost}</td>
+                      <td class="taleft">{$vo.quota_all}</td>
+                      <td class="taleft">{:date('Y-m-d H:i',$vo.entrytime)}</td>
+                      
+                      <td class="taleft">
+                        <a class="" href="{:url('admin/Auxiliary/history',['id'=>$vo.id])}"><i class="layui-icon layui-icon-search" title="查看详情"></i></a></td>   
+                    </tr>       
+                 {/foreach}
+                </tbody>
+            </table>
+              
+        </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="__STATIC__/admin/js/common.js"></script>
+<script src="/static/admin/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+  //简单显示上传文件信息
+     $("#imgInput").change(function(e){
+       var fileMsg = e.currentTarget.files;
+       var fileName = fileMsg[0].name;
+       var fileSize = Math.floor(((fileMsg[0].size)/1024))+'kb';     
+       var fileType = fileMsg[0].type;
+       var _html = '<p>文件名：'+fileName+'</p><p>文件大小：'+fileSize+'</p><p>文件类型：'+fileType+'</p>'
+         layer.tips(_html, '#imgs', {
+          tips: [1, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+       $("#imgs").html("<span style='color:green;position:absolute;top:-25px;right:-5px;font-size:20px'>✔</span>");
+    });       
+    $("#tishi").click(function(){
+      var content = '<p>这是我定义的说明<br />只能导入excel文件。其他后缀名不识别<br />下载空模板可以使用添加数据导入</p>';
+      //自定页
+      layer.tips(content, '#tishi', {
+          tips: [4, '#3595CC'],
+          area:["auto","auto"],
+          time: 5000
+        });
+
+       });
+</script>
+<script type="text/javascript">
+layui.use('table', function(){
+  var table = layui.table;
+
+  //工具栏事件
+  table.on('toolbar(test3)', function(obj){
+    var checkStatus = table.checkStatus(obj.config.id);
+    var data = checkStatus.data;
+    // var shujuzu = JSON.stringify(data);//json数据组
+    // layer.alert(JSON.stringify(data));return false;  
+    if (obj.event == 'getCheckData'){
+      if(data.length == 0){
+          layer.msg('请勾√选数据');
+       }else{
+         var jsonObj = JSON.parse(JSON.stringify(data));//转换为json对象
+         var hezi = "";
+         for (var i = 0; i < data.length; i++) {
+           hezi += jsonObj[i]['id']+',';
+         }
+         hezi = hezi.substring(0, hezi.length - 1);//移除最后一个逗号
+        // layer.alert(hezi);return false;  
+          var box = '<div class="batchs"><span data-fieldval="type_of_work">工种</span><br /><span data-fieldval="project">工程项目</span><br /><span data-fieldval="company">单位</span><br /><span data-fieldval="cost_value">成本价值</span><br /><span data-fieldval="quota">报价定额</span><br /><span data-fieldval="craft_show">工艺说明</span><br /><span data-fieldval="material">工艺说明辅材明细</span></div>';
+
+        //自定页
+        layer.tips(box, '#batch', {
+            tips: [2, '#3595CC'],
+            area:["auto","auto"],
+            time: 5000
+          });
+
+        $('.batchs span').click(function(){
+            var fieldval = $(this).data('fieldval');
+            var fieldtext = $(this).text();
+            var newcon = '<div class="zidauns"><input type="text" style="text-align:center;margin:10px;width:96%" name="valname" autocomplete="off" value="" class="layui-input"><button id="edit_batch" style="margin-left:190px" class="layui-btn ajax-post">立即提交</button></div>';
+            //页面层
+            layer.open({
+              type: 1,
+              fixed: false,    //取消固定定位，因为固定定位是相对body的
+              offset: ['20%', '30%'],   //相对定位
+              skin: 'layui-layer-rim', //加上边框
+              area: ['500px', '150px'], //宽高
+              title: '输入修改<span style="color:green">'+fieldtext+'</span>字段内容',
+              content: newcon
+            }); 
+            $("#edit_batch").click(function(){
+                var xiugais = $(this).parents(".zidauns").find("input[name='valname']").val();
+                if (!xiugais){layer.msg('字段不能为空');return false}
+                // alert(fieldval+'--'+xiugais+'-----'+hezi);return false;
+                $.ajax({
+                  type : 'post',
+                  url  :  '{:url("Auxiliary/batchedit")}',
+                  dataType : 'json',
+                  data : {batchname:fieldval,value:xiugais,idarray:hezi},
+                  success : function(re){
+                    if(re.status == 0){
+                       layer.msg(re.msg);
+                       window.location.reload();
+
+                    }else{
+                      layer.msg(re.msg);return false;
+                    }
+                  }
+                 });
+            });
+
+        });
+ 
+       }
+    }
+
+  });
+
+
+
+
+
+
+  // 监听单元格编辑
+  table.on('edit(test3)', function(obj){
+    var value = obj.value //得到修改后的值
+    ,data = obj.data //得到所在行所有键值
+
+    ,field = obj.field; //得到字段
+    // layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+    // alert('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+    $.ajax({
+        type : 'post',
+        url  :  '{:url("Auxiliary/singlefield_edit")}',
+        dataType : 'json',
+        data : {id:data.id,field:field,value:value},
+        success : function(re){
+          if(re.status == 1){
+             layer.msg(re.msg);return false;
+          }
+          layer.msg(re.msg);
+          // window.location.reload();
+        }
+       });
+  });
+
+  //监听行单击事件（单击事件为：rowDouble）
+  // table.on('rowDouble(test3)', function(obj){
+  //   var data = obj.data;
+  //   var newdata = JSON.stringify(data);
+
+  //   layer.alert(newdata, {
+  //     title: '当前行数据：'
+  //   });
+    
+  //   //标注选中样式
+  //   obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+  // });
+
+  //监听单元格事件
+  table.on('tool(test3)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'setSign'){
+      layer.prompt({
+        formType: 2
+        ,title: '修改 ID 为 ['+ data.id +'] 的条目'
+        ,value: data.type_of_work
+      }, function(value, index){
+        layer.close(index);
+        
+        //这里一般是发送修改的Ajax请求
+        
+        //同步更新表格和缓存对应的值
+        obj.update({
+          type_of_work: value
+        });
+      });
+    }
+  });
+
+
+});
+</script>
+{/block}

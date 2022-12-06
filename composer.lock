@@ -70,79 +70,17 @@
             "time": "2018-11-22T23:07:24+00:00"
         },
         {
-            "name": "tecnickcom/tcpdf",
-            "version": "6.2.26",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "367241059ca166e3a76490f4448c284e0a161f15"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/367241059ca166e3a76490f4448c284e0a161f15",
-                "reference": "367241059ca166e3a76490f4448c284e0a161f15",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "config",
-                    "include",
-                    "tcpdf.php",
-                    "tcpdf_parser.php",
-                    "tcpdf_import.php",
-                    "tcpdf_barcodes_1d.php",
-                    "tcpdf_barcodes_2d.php",
-                    "include/tcpdf_colors.php",
-                    "include/tcpdf_filters.php",
-                    "include/tcpdf_font_data.php",
-                    "include/tcpdf_fonts.php",
-                    "include/tcpdf_images.php",
-                    "include/tcpdf_static.php",
-                    "include/barcodes/datamatrix.php",
-                    "include/barcodes/pdf417.php",
-                    "include/barcodes/qrcode.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Nicola Asuni",
-                    "email": "info@tecnick.com",
-                    "role": "lead"
-                }
-            ],
-            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
-            "homepage": "http://www.tcpdf.org/",
-            "keywords": [
-                "PDFD32000-2008",
-                "TCPDF",
-                "barcodes",
-                "datamatrix",
-                "pdf",
-                "pdf417",
-                "qrcode"
-            ],
-            "time": "2018-10-16T17:24:05+00:00"
-        },
-        {
             "name": "topthink/framework",
-            "version": "v5.1.24",
+            "version": "v5.1.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "03ee17d1ea9c432a698fa1d2411df53974420187"
+                "reference": "ecf1a90d397d821ce2df58f7d47e798c17eba3ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/03ee17d1ea9c432a698fa1d2411df53974420187",
-                "reference": "03ee17d1ea9c432a698fa1d2411df53974420187",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/ecf1a90d397d821ce2df58f7d47e798c17eba3ad",
+                "reference": "ecf1a90d397d821ce2df58f7d47e798c17eba3ad",
                 "shasum": ""
             },
             "require": {
@@ -180,7 +118,11 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2018-09-05T03:37:46+00:00"
+            "support": {
+                "issues": "https://github.com/top-think/framework/issues",
+                "source": "https://github.com/top-think/framework/tree/v5.1.42"
+            },
+            "time": "2022-10-25T15:04:49+00:00"
         },
         {
             "name": "topthink/think-captcha",
@@ -220,23 +162,23 @@
         },
         {
             "name": "topthink/think-installer",
-            "version": "v2.0.0",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-installer.git",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675"
+                "reference": "38ba647706e35d6704b5d370c06f8a160b635f88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675",
+                "url": "https://api.github.com/repos/top-think/think-installer/zipball/38ba647706e35d6704b5d370c06f8a160b635f88",
+                "reference": "38ba647706e35d6704b5d370c06f8a160b635f88",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0"
+                "composer-plugin-api": "^1.0||^2.0"
             },
             "require-dev": {
-                "composer/composer": "1.0.*@dev"
+                "composer/composer": "^1.0||^2.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -257,7 +199,11 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "time": "2018-05-11T06:45:42+00:00"
+            "support": {
+                "issues": "https://github.com/top-think/think-installer/issues",
+                "source": "https://github.com/top-think/think-installer/tree/v2.0.5"
+            },
+            "time": "2021-01-14T12:12:14+00:00"
         }
     ],
     "packages-dev": [],
@@ -269,5 +215,6 @@
     "platform": {
         "php": ">=5.6.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
